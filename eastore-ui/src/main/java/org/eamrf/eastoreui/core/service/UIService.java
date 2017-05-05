@@ -1,0 +1,118 @@
+package org.eamrf.eastoreui.core.service;
+
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
+
+import org.eamrf.core.logging.stereotype.InjectLogger;
+import org.eamrf.eastoreui.core.exception.ServiceException;
+import org.eamrf.eastoreui.core.model.file.FileResponse;
+import org.slf4j.Logger;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.stereotype.Service;
+
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.ObjectMapper;
+
+/**
+ * main service class for feeding data back to our front-end (javascript/angular UI)
+ * 
+ * @author slenzi
+ */
+@Service
+public class UIService {
+
+    @InjectLogger
+    private Logger logger;
+    
+    @Value( "${ea.store.name}" )    
+    private String EA_STORE_NAME_PRODOC;
+    
+    @Value( "${ea.store.root.dir.name}" )    
+    private String EA_STORE_ROOT_DIR_NAME_PRODOC;    
+    
+    @Autowired
+    private EAStoreService EAStoreService;
+    
+    /**
+     * Calls E-A Store JSON service getBreadcrumbsByNodeId(...) method
+     * 
+     * @param nodeId - id of the path resource node
+     * @return - JSON array of path resources, first element being the root, and last element being the child most element.
+     * @throws ServiceException
+     */
+    public String getBreadcrumbsByNodeId(Long nodeId) throws ServiceException {
+    	
+    	return EAStoreService.getBreadcrumbsByNodeId(nodeId);
+    	
+    }
+    
+    /**
+     * Calls E-A Store JSON service getBreadcrumbsByPath(...) method
+     * 
+	 * @param relPath - the relative path of a resource within the source.
+     * @return - JSON array of path resources, first element being the root, and last element being the child most element.
+     * @throws ServiceException
+     */
+    public String getBreadcrumbsByPath(String relPath) throws ServiceException {
+    	
+    	return EAStoreService.getBreadcrumbsByPath(EA_STORE_NAME_PRODOC, relPath);
+    	
+    }    
+    
+    /**
+     * Calls E-A Store JSON service getChildPathResourceByPath(...) method
+     * 
+     * @param relPath - the relative path of a resource within the source.
+     * @return JSON array, a listing of first-level child resource under resource with the provided 'relPath'
+     * @throws ServiceException
+     */
+    public String getChildPathResourceByPath(String relPath) throws ServiceException {
+    	
+    	return EAStoreService.getChildPathResourceByPath(EA_STORE_NAME_PRODOC, relPath);
+    	
+    }
+    
+    /**
+     * Calls E-A Store action service, downloadFile(...) method
+     * 
+     * @param fileNodeId - node id of the file meta resource to download
+     * @return
+     * @throws ServiceException
+     */
+    public FileResponse getFile(Long fileNodeId) throws ServiceException {
+    	
+    	return EAStoreService.getFileReponse(fileNodeId);
+    	
+    }
+    
+    /**
+     * Pull list of protocol names, in lowercase, from all the directory path resources in the json response.
+     * 
+     * @param jsonResponse
+     * @return
+     * @throws JsonProcessingException
+     * @throws IOException
+     */
+    private List<String> getProtNames(String jsonResponse) throws JsonProcessingException, IOException{
+    	
+    	ObjectMapper mapper = new ObjectMapper();
+    	JsonNode root = mapper.readTree(jsonResponse);
+    	
+    	List<String> prots = new ArrayList<String>();
+    	
+    	if(root.isArray()){
+    		for(JsonNode pathResource : root){
+    			if(pathResource.path("resourceType").asText().toLowerCase().equals("directory")){
+    				prots.add(pathResource.path("nodeName").asText().trim().toLowerCase());
+    			}
+    		}
+    	}
+    	
+    	return prots;
+    	
+    }
+
+}

@@ -1,0 +1,90 @@
+
+.noselect {
+    -webkit-touch-callout: none;
+    -webkit-user-select: none;
+    -khtml-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+}
+
+/**
+ * Buttons in IE were not taking up the full width of the left sidenav, despite
+ * using a flex column layout. Works fine in Chrome and Firefox, of course. This
+ * min-width attribute is to fix IE.
+ */
+.leftNavButton {
+	min-width:288px;
+	text-align: left;
+	font-weight: bold;
+}
+
+.shadow {
+    -webkit-filter: drop-shadow( 2px 2px 5px #aaa );
+            filter: drop-shadow( 2px 2px 5px #aaa ); /* Same syntax as box-shadow */
+}
+
+/**
+ * Used for some angular buttons
+ */
+ .redbutton span {
+	color: red;
+ }
+
+/**
+ * Angular Material Override - button style on dialogs
+ */
+.md-dialog-container .md-button {
+	color: #000;
+}
+/**
+ * Angular Material Override - font color on active tabs
+ */
+md-tab-item.md-active  span {
+	color: red;
+}
+
+/**
+ * Angular menu inside smart table
+ */
+ /*
+.fstoreSmartTable .md-button {
+	height: 15px;
+	line-height: 0px;
+	width: 20px;
+	min-height: 10px;
+}
+*/
+
+/**
+ * Angular Smart Table:  selected row
+ */
+.mySmartTable {
+	border-collapse: collapse;
+}
+.mySmartTable tr.st-selected {
+	background-color: #FF9E9E; /* was #FFB84D */
+	border: 1px dashed red;
+}
+.mySmartTable tr.st-selected  a {
+	color: #FFFFFF;
+}
+
+.mySmartTable th {
+	white-space: nowrap;
+	text-decoration: underline;
+}
+
+.mySmartTable td:first-child, .mySmartTable th:first-child {
+	min-width: 300px;
+	max-width:500px;
+	width:35%;
+}
+
+/**
+ * temp fix for md-menu showing a scrollbar
+ * https://github.com/angular/material/issues/3266
+ */
+body {
+    overflow-y: auto!important;
+}

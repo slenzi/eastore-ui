@@ -1,0 +1,361 @@
+<project
+	xmlns="http://maven.apache.org/POM/4.0.0"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+	
+	<modelVersion>4.0.0</modelVersion>
+	<groupId>org.eamrf</groupId>
+	<artifactId>eastore-ui</artifactId>
+	<version>0.0.1</version>
+	<packaging>war</packaging>
+	<name>eastore-ui</name>
+	<description>EA Store UI</description>
+
+	<properties>
+	
+		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+		
+		<java.version.source>1.8</java.version.source>
+		<java.version.target>1.8</java.version.target>
+		
+		<!-- Unit test dependencies -->
+		<version.junit>4.12</version.junit>
+	
+		<!-- logging dependencies -->
+		<version.logback>1.1.7</version.logback>
+		
+		<!-- javax dependencies -->
+		<version.javax.servlet>3.1.0</version.javax.servlet>
+		<version.javax.mail>1.5.5</version.javax.mail>
+		<version.javax.mail-api>1.5.6</version.javax.mail-api>
+		<version.javax.ws.rs-api>2.0.1</version.javax.ws.rs-api>		
+		
+		<!-- spring dependencies -->
+		<version.spring>4.2.5.RELEASE</version.spring>		
+		
+		<!-- apache dependencies -->
+		<version.apache.cxf>3.1.10</version.apache.cxf>
+		
+		<!-- misc dependencies -->
+		<version.gson>2.8.0</version.gson>
+		<version.jackson>2.8.1</version.jackson>
+		<version.jodatime>2.9.3</version.jodatime>
+		<version.hikaricp>2.6.1</version.hikaricp>
+		
+		<!-- EA-MRF dependencies -->
+		<version.eamrf.common>0.3.0</version.eamrf.common>
+		<version.authworld>ecog2-0.5.3</version.authworld>				
+	
+	</properties>
+	
+	<profiles>
+	
+		<!-- deployment on lenzi's personal desktop machine at EA-MRF, using development database -->
+		<profile>
+			<id>eamrf.lenzi.development</id>
+			<properties>
+				<property.file>eamrf.lenzi.development.properties</property.file>
+			</properties>
+		</profile>		
+	
+	</profiles>
+	
+	<dependencies>
+	
+		<dependency>
+			<groupId>junit</groupId>
+			<artifactId>junit</artifactId>
+			<version>${version.junit}</version>
+		</dependency>
+		
+		<dependency>
+			<groupId>joda-time</groupId>
+			<artifactId>joda-time</artifactId>
+			<version>${version.jodatime}</version>
+		</dependency>
+		
+		<!-- https://mvnrepository.com/artifact/com.google.code.gson/gson -->
+		<dependency>
+		    <groupId>com.google.code.gson</groupId>
+		    <artifactId>gson</artifactId>
+		    <version>${version.gson}</version>
+		</dependency>			
+		
+		<dependency>
+			<groupId>javax.servlet</groupId>
+			<artifactId>javax.servlet-api</artifactId>
+			<version>${version.javax.servlet}</version>
+			<scope>provided</scope>
+		</dependency>
+		
+		<dependency>
+			<groupId>com.sun.mail</groupId>
+			<artifactId>javax.mail</artifactId>
+			<version>${version.javax.mail}</version>
+		</dependency>
+		<!-- implementation -->
+		<!-- https://mvnrepository.com/artifact/javax.mail/javax.mail-api -->
+		<dependency>
+		    <groupId>javax.mail</groupId>
+		    <artifactId>javax.mail-api</artifactId>
+		    <version>${version.javax.mail-api}</version>
+		</dependency>
+		
+		<dependency>
+			<groupId>javax.ws.rs</groupId>
+			<artifactId>javax.ws.rs-api</artifactId>
+			<version>${version.javax.ws.rs-api}</version>
+		</dependency>				
+		
+		<dependency>
+			<groupId>ch.qos.logback</groupId>
+			<artifactId>logback-classic</artifactId>
+			<version>${version.logback}</version>
+		</dependency>
+		
+		<dependency>
+			<groupId>org.springframework</groupId>
+			<artifactId>spring-webmvc</artifactId>
+			<version>${version.spring}</version>
+		</dependency>
+		<dependency>
+			<groupId>org.springframework</groupId>
+			<artifactId>spring-test</artifactId>
+			<version>${version.spring}</version>
+		</dependency>
+		
+		<!-- https://mvnrepository.com/artifact/org.springframework/spring-jdbc -->
+		<dependency>
+		    <groupId>org.springframework</groupId>
+		    <artifactId>spring-jdbc</artifactId>
+		    <version>${version.spring}</version>
+		</dependency>		
+		
+		<!-- JSON provider used in our RESTful services -->		
+		<dependency>
+			<groupId>com.fasterxml.jackson.jaxrs</groupId>
+			<artifactId>jackson-jaxrs-json-provider</artifactId>
+			<version>${version.jackson}</version>
+		</dependency>
+		
+		<dependency>
+			<groupId>org.apache.cxf</groupId>
+			<artifactId>cxf-rt-frontend-jaxrs</artifactId>
+			<version>${version.apache.cxf}</version>
+		</dependency>
+		
+		<!-- cxf webclient api -->
+		<!-- https://mvnrepository.com/artifact/org.apache.cxf/cxf-rt-rs-client -->
+		<dependency>
+		    <groupId>org.apache.cxf</groupId>
+		    <artifactId>cxf-rt-rs-client</artifactId>
+		    <version>${version.apache.cxf}</version>
+		</dependency>
+		
+		<!-- https://mvnrepository.com/artifact/org.apache.cxf/cxf-rt-rs-extension-providers -->
+		<!--
+		<dependency>
+		    <groupId>org.apache.cxf</groupId>
+		    <artifactId>cxf-rt-rs-extension-providers</artifactId>
+		    <version>${version.apache.cxf}</version>
+		</dependency>
+		-->
+		
+		<!-- database connection pooling library -->
+		<!-- https://mvnrepository.com/artifact/com.zaxxer/HikariCP -->
+		<dependency>
+		    <groupId>com.zaxxer</groupId>
+		    <artifactId>HikariCP</artifactId>
+		    <version>${version.hikaricp}</version>
+		</dependency>		
+		
+		<dependency>
+		    <groupId>org.frontier.ecog</groupId>
+		    <artifactId>common-lib</artifactId>
+		    <version>${version.eamrf.common}</version>
+		</dependency>
+		
+		<dependency>
+		    <groupId>org.frontier.ecog</groupId>
+		    <artifactId>authworld</artifactId>
+		    <version>${version.authworld}</version>
+			<!-- exclude transitive dependencies -->
+			<exclusions>
+		        <exclusion>
+		            <groupId>*</groupId>
+		            <artifactId>*</artifactId>
+		        </exclusion>		                
+    		</exclusions>		    
+		    <scope>provided</scope>
+		</dependency>										
+	
+	</dependencies>
+	
+	<!-- for upload to artifactory -->
+	<distributionManagement>
+	    <repository>
+	        <id>ea-artifactory-central</id>
+	        <name>ecog2.dfci.harvard.edu-releases</name>
+	        <url>https://dev.webapps.ecog.org/artifactory/libs-release-local</url>
+	    </repository>
+	</distributionManagement>
+	
+	<repositories>
+		
+		<!-- ecog-acrin artifactory -->
+		<repository>
+			<snapshots>
+				<enabled>false</enabled>
+			</snapshots>
+			<id>ea-artifactory-central</id>
+			<name>libs-release</name>
+			<url>https://dev.webapps.ecog.org/artifactory/libs-release</url>
+		</repository>
+		<repository>
+			<snapshots />
+			<id>ea-artifactory-snapshots</id>
+			<name>libs-snapshot</name>
+			<url>https://dev.webapps.ecog.org/artifactory/libs-snapshot</url>
+		</repository>
+				
+	</repositories>
+	
+	<pluginRepositories>
+		
+		<!-- ecog-acrin artifactory -->
+		<pluginRepository>
+			<snapshots>
+				<enabled>false</enabled>
+			</snapshots>
+			<id>ea-artifactory-central</id>
+			<name>plugins-release</name>
+			<url>https://dev.webapps.ecog.org/artifactory/plugins-release</url>
+		</pluginRepository>
+		<pluginRepository>
+			<snapshots />
+			<id>ea-artifactory-snapshots</id>
+			<name>plugins-snapshot</name>
+			<url>https://dev.webapps.ecog.org/artifactory/plugins-snapshot</url>
+		</pluginRepository>			
+		
+		<!-- other -->
+		<pluginRepository>
+			<id>maven-annotation-plugin</id>
+			<url>http://maven-annotation-plugin.googlecode.com/svn/trunk/mavenrepo</url>
+			<releases>
+			</releases>
+			<snapshots>
+			</snapshots>
+		</pluginRepository>
+		
+	</pluginRepositories>
+	
+	<build>
+	
+		<!-- final build file name (for war, or jar) -->
+		<finalName>prodoc</finalName>
+		
+		<!-- property file used for filtering during build process -->
+		<filters>
+			<filter>${property.file}</filter>
+		</filters>
+		
+		<!-- define src/main/resources to filter  -->
+		<resources>
+		
+			<!-- filter java, xml, and properties files from main source folder -->
+			<resource>
+				<directory>${basedir}/src/main/java</directory>
+				<filtering>true</filtering>
+				<includes>
+					<include>**/*.java</include>
+					<include>**/*.xml</include>
+					<include>**/*.properties</include>
+				</includes>
+			</resource>
+			
+			<!-- filter xml and property files from resources folder -->
+			<resource>
+				<directory>${basedir}/src/main/resources</directory>
+				<filtering>true</filtering>
+				<includes>
+					<include>**/*.xml</include>
+					<include>**/*.properties</include>
+				</includes>
+			</resource>
+			
+			<!-- make sure we get other resource from resources folder, but don't filter them (breaks binary files) -->
+			<resource>
+				<directory>${basedir}/src/main/resources</directory>
+				<filtering>false</filtering>
+				<excludes>
+					<exclude>**/*.xml</exclude>
+					<exclude>**/*.properties</exclude>
+				</excludes>
+			</resource>
+				
+		</resources>
+		
+		<!-- define src/test/resources to filter  -->
+		<testResources>
+		
+			<testResource>
+				<directory>${basedir}/src/test/resources</directory>
+				<filtering>true</filtering>
+				<includes>
+					<include>**/*.xml</include>
+					<include>**/*.properties</include>
+				</includes>			
+			</testResource>
+		
+		</testResources>
+		
+		<plugins>
+		
+			<plugin>
+			    <groupId>org.apache.maven.plugins</groupId>
+			    <artifactId>maven-compiler-plugin</artifactId>
+			    <version>3.1</version>
+			    <configuration>
+			        <source>${java.version.source}</source>
+			        <target>${java.version.target}</target>
+			        <!-- need this line for maven processor plugin to correctly generate metamodels without complaining of duplicate classes -->
+			        <compilerArgument>-proc:none</compilerArgument>
+			    </configuration>
+			</plugin>		
+		
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-war-plugin</artifactId>
+				<version>2.6</version>
+				<configuration>
+					<warName>${war.name}</warName>
+					<!-- we use java config to bootsrap the application -->
+					<failOnMissingWebXml>false</failOnMissingWebXml>
+					<webResources>
+						<resource>
+							<filtering>true</filtering>
+							<directory>${basedir}/src/main/webapp/WEB-INF</directory>
+							<includes>
+								<include>**/*.xml</include>
+							</includes>
+							<targetPath>WEB-INF</targetPath>
+						</resource>
+						<!-- filter application specific javascript files (not 3rd party javascript libraries) -->
+						<resource>
+							<filtering>true</filtering>
+							<directory>${basedir}/src/main/webapp/assets/scripts</directory>
+							<includes>
+								<include>**/*.js</include>
+							</includes>
+							<targetPath>assets/scripts</targetPath>
+						</resource>
+					</webResources>
+				</configuration>
+			</plugin>		
+		
+		</plugins>		
+	
+	</build>
+  
+</project>
