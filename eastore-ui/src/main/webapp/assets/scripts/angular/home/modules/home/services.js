@@ -49,6 +49,7 @@
 					method: 'GET',
 					isArray: true,
 					params: {
+						storeName: '@storeName',
 						relPath : '@relPath'
 					}	
 				},
@@ -69,6 +70,7 @@
 					method: 'GET',
 					isArray: true,
 					params: {
+						storeName: '@storeName',
 						relPath : '@relPath'
 					}	
 				}				
@@ -95,11 +97,11 @@
 			
 		}
 		
-		function _breadcrumbPath(relativePath){
+		function _breadcrumbPath(storeName, relativePath){
 			
 			$log.debug('Calling jax-rs _breadcrumbPath service method');
 			
-			return eastoreuiService.breadcrumbPath({ relPath : relativePath }).$promise;					
+			return eastoreuiService.breadcrumbPath({ storeName : storeName, relPath : relativePath }).$promise;					
 			
 		}		
 		
@@ -111,11 +113,11 @@
 			
 		}
 		
-		function _loadRelPath(relativePath){
+		function _loadRelPath(storeName, relativePath){
 			
 			$log.debug('Calling jax-rs loadRelPath service method');
 			
-			return eastoreuiService.loadRelPath({ relPath : relativePath }).$promise;		
+			return eastoreuiService.loadRelPath({ storeName : storeName, relPath : relativePath }).$promise;		
 			
 		}
 		

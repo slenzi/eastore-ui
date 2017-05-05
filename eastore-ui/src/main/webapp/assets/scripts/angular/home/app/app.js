@@ -185,10 +185,15 @@
 							
 							//$log.debug(JSON.stringify($stateParams));
 							
+							var storeName = $stateParams.store.name;
 							var relPathToLoad = '/docs' + $stateParams.relPath;
 							
+							//
+							// TODO - need to fetch root directory for store!
+							//							
+							
 							return homeRestService
-								.loadRelPath(relPathToLoad)
+								.loadRelPath(storeName, relPathToLoad)
 								.then( function ( jsonData ){
 									//$log.debug('resolved path resources');
 									//$log.debug(JSON.stringify(jsonData))
@@ -238,12 +243,17 @@
 							
 							$log.debug(JSON.stringify($stateParams));
 							
+							var storeName = $stateParams.store.name;
 							var crumbRelPath = '/docs' + $stateParams.relPath;
+							
+							//
+							// TODO - need to fetch root directory for store!
+							//
 							
 							$log.debug('Crumb relPath = ' + crumbRelPath);
 							
 							return homeRestService
-								.breadcrumbPath(crumbRelPath)
+								.breadcrumbPath(storeName, crumbRelPath)
 								.then( function ( jsonData ){
 									$log.debug('resolved breadcrumb tree');
 									//$log.debug(JSON.stringify(jsonData))

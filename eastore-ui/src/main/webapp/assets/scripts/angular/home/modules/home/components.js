@@ -11,7 +11,7 @@
 		
 		bindings: { headerTitle: '<' },
 		
-		templateUrl : '/prodoc/assets/scripts/angular/home/modules/home/partials/left_menu.jsp',
+		templateUrl : '@application.context@/assets/scripts/angular/home/modules/home/partials/left_menu.jsp',
 		
 		controller : function($log, $state, homeRestService){
 			
@@ -29,9 +29,9 @@
 				
 			};
 			
-			this.clickProtList = function(){
+			this.clickStoreList = function(){
 				
-				$state.go('prot');
+				$state.go('stores');
 				
 			};
 			
@@ -48,7 +48,7 @@
 		
 		bindings: { headerTitle: '<' },
 		
-		templateUrl : '/prodoc/assets/scripts/angular/home/modules/home/partials/title_header.jsp',
+		templateUrl : '@application.context@/assets/scripts/angular/home/modules/home/partials/title_header.jsp',
 		
 		controller : function($log){
 			//$log.debug('titleHeaderComponent controller');
@@ -69,7 +69,7 @@
 		//	'Protocol List'
 		//,
 		
-		templateUrl : '/prodoc/assets/scripts/angular/home/modules/home/partials/store_list_header.jsp',
+		templateUrl : '@application.context@/assets/scripts/angular/home/modules/home/partials/store_list_header.jsp',
 		
 		controller : function($log){
 			//$log.debug('storesHeaderComponent controller');
@@ -86,7 +86,7 @@
 		
 		bindings: { stores: '<' },
 		
-		templateUrl : '/prodoc/assets/scripts/angular/home/modules/home/partials/store_list_content.jsp',
+		templateUrl : '@application.context@/assets/scripts/angular/home/modules/home/partials/store_list_content.jsp',
 		
 		controller : function($log, $state){
 			
@@ -125,7 +125,7 @@
 				breadcrumb: '<'
 		},
 		
-		templateUrl : '/prodoc/assets/scripts/angular/home/modules/home/partials/path_header.jsp',
+		templateUrl : '@application.context@/assets/scripts/angular/home/modules/home/partials/path_header.jsp',
 		
 		controller : function($log, $state, $stateParams){
 			
@@ -173,7 +173,7 @@
 		
 		bindings: { pathresources: '<' },
 		
-		templateUrl : '/prodoc/assets/scripts/angular/home/modules/home/partials/path_content.jsp',
+		templateUrl : '@application.context@/assets/scripts/angular/home/modules/home/partials/path_content.jsp',
 		
 		controller : function($log, $state, $stateParams, homeRestService){
 			

@@ -30,8 +30,8 @@ public class UIService {
     //@Value( "${ea.store.name}" )    
     //private String EA_STORE_NAME_PRODOC;
     
-    @Value( "${ea.store.root.dir.name}" )    
-    private String EA_STORE_ROOT_DIR_NAME_PRODOC;    
+    //@Value( "${ea.store.root.dir.name}" )    
+    //private String EA_STORE_ROOT_DIR_NAME_PRODOC;    
     
     @Autowired
     private EAStoreService EAStoreService;

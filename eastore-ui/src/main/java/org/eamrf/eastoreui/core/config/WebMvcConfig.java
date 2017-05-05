@@ -23,7 +23,7 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurerAdapter
  * 
  * Component scanning notes:
  * -- org.eamrf.core.logging : custom LoggerBeanPostProccessor which enables us to inject a logger using @InjectLogger annotation.
- * -- org.eamrf.prodoc.web.main.controller : main controllers package
+ * -- org.eamrf.eastoreui.web.main.controller : main controllers package
  * 
  * @author slenzi
  */
@@ -32,7 +32,7 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurerAdapter
 @ComponentScan(
 	basePackages = {
 		"org.eamrf.core.logging",
-		"org.eamrf.prodoc.web.main.controller"
+		"org.eamrf.eastoreui.web.main.controller"
 		}
 )
 public class WebMvcConfig extends WebMvcConfigurerAdapter {
