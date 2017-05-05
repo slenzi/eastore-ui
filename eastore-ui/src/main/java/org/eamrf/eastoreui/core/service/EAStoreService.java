@@ -51,6 +51,27 @@ public class EAStoreService {
 	}
 	
 	/**
+	 * Calls E-A Store JSON service, getStores
+	 * 
+	 * @return
+	 * @throws ServiceException
+	 */
+	public String getStores() throws ServiceException {
+		
+		EAStoreClient client = eaStoreClientProvider.getClient();
+		
+    	String jsonResponse = null;
+    	try {
+    		jsonResponse = client.getStores();
+		} catch (WebServiceException e) {
+			throw new ServiceException("Error fetching stores, " + e.getMessage(), e);
+		}
+    	
+    	return jsonResponse;
+		
+	}	
+	
+	/**
 	 * Calls E-A Store JSON service, getBreadcrumbsByNodeId(...) method
 	 *
 	 * @param nodeId - id of the path resource node

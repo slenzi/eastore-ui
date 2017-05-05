@@ -98,74 +98,44 @@
 		 */
 		function uiRouteConfig(appConstants, $stateProvider, $urlRouterProvider){
 			
-			$urlRouterProvider.otherwise("/prot");
-			
-			/* this works when you don't have a name on <ui-view></ui-view>
-			var states = [
-				{
-					name : 'prot',
-					url : '/prot',
-					component : 'protComponent',
-					resolve : {
-						// fetch protocol list
-						prots : function (homeRestService, $log) {
-							$log.debug('resolving prots');
-							return homeRestService
-								.protList()
-								.then( function ( jsonData ){
-									$log.debug(JSON.stringify(jsonData));
-									return jsonData;
-								}, function( error ){
-									alert('Error calling prots() service method' + JSON.stringify(error));
-								});
-						}
-					}
-				}
-			]
-			
-			// Loop over the state definitions and register them
-			states.forEach(function(state) {
-				$stateProvider.state(state);
-			});						
-						
-			*/
+			$urlRouterProvider.otherwise("/stores");
 			
 			//
-			// protocol listing state - display a list of protocols that have documents
+			// store listing state - display a list of stores
 			//
 			$stateProvider.state(
 			
-				'prot', {
-					url: '/prot',
+				'stores', {
+					url: '/stores',
 					views : {
 						uicontent : {
-							component : 'protContentComponent' // when 'prot' state is active, render 'protContentComponent' into view with name 'uicontent'
+							component : 'storeListContentComponent' // when 'stores' state is active, render 'storeListContentComponent' into view with name 'uicontent'
 						},
 						uiheader : {
-							component : 'protHeaderComponent' // when 'prot' state is active, render 'protHeaderComponent' into view with name 'uiheader'
+							component : 'storeListHeaderComponent' // when 'stores' state is active, render 'storeListHeaderComponent' into view with name 'uiheader'
 						},
 						uititle : {
 							//template : 'Protocol Listing'
-							component : 'titleHeaderComponent' // when 'prot' state is active, render 'titleHeaderComponent' into view with name 'uititle'
+							component : 'titleHeaderComponent' // when 'stores' state is active, render 'titleHeaderComponent' into view with name 'uititle'
 						},
 						uileftmenu : {
 							//template : 'Protocol Listing'
-							component : 'leftMenuComponent' // when 'prot' state is active, render 'leftMenuComponent' into view with name 'uileftmenu'
+							component : 'leftMenuComponent' // when 'stores' state is active, render 'leftMenuComponent' into view with name 'uileftmenu'
 						}
 					},
 					params : {
-						prot : null
+						store : null
 					},
 					resolve : {
-						prots : function (homeRestService, $log) {
+						stores : function (homeRestService, $log) {
 							return homeRestService
-								.protList()
+								.storeList()
 								.then( function ( jsonData ){
 									//$log.debug('resolved prots');
 									//$log.debug(JSON.stringify(jsonData));
 									return jsonData;
 								}, function( error ){
-									alert('Error calling prots() service method' + JSON.stringify(error));
+									alert('Error calling storeList() service method' + JSON.stringify(error));
 								});
 						},
 						headerTitle : function ($log, $stateParams){
@@ -174,7 +144,7 @@
 							
 							//$log.debug(JSON.stringify($stateParams));
 							
-							return 'Protocol List';
+							return 'Store List';
 							
 						}
 					}					
@@ -206,7 +176,7 @@
 						}
 					},
 					params : {
-						prot : null
+						store : null
 					},					
 					resolve : {
 						pathresources : function (homeRestService, $log, $state, $stateParams) {
@@ -236,14 +206,14 @@
 							
 							var title = 'Documents for ';
 							
-							if($stateParams.prot){
+							if($stateParams.store){
 							
-								// use current prot id in our state params, if we have it
-								title = title + $stateParams.prot;
+								// use current store name in our state params, if we have it
+								title = title + $stateParams.store.name;
 							
 							}else{
 								
-								// parse the prot value from the relPath
+								// parse the store name value from the relPath
 								var relPath = $stateParams.relPath;
 								if(relPath.startsWith('/')){
 									relPath = relPath.slice(1); // remove '/' from front

@@ -113,6 +113,33 @@ public class EAStoreClient {
 	}
 	
 	/**
+	 * Call E-A Store /fsys/json/store
+	 * 
+	 * @return
+	 * @throws WebServiceException
+	 */
+	public String getStores() throws WebServiceException {
+		
+		logger.info("Calling " + EAStoreClient.class.getSimpleName() + " getStores method");
+		
+		resetClient();
+		
+		String path = "/fsys/json/store";
+		client.path(path);
+		Response resp = client.get();
+		
+		if(resp.getStatus() != Response.Status.OK.getStatusCode()){
+			throw new WebServiceException(WebExceptionType.CODE_IO_ERROR, 
+					"Response error from " + client.getCurrentURI().toString() + ", response code = " + resp.getStatus());
+		}
+		
+		String responseString = resp.readEntity(String.class);
+		
+		return responseString;		
+		
+	}	
+	
+	/**
 	 * Call E-A Store /fsys/json/breadcrumb/nodeId/{nodeId}
 	 * 
 	 * @param nodeId - id of the path resource node
@@ -138,7 +165,7 @@ public class EAStoreClient {
 		
 		return responseString;		
 		
-	}
+	}	
 	
 	/**
 	 * Call E-A Store /fsys/json/breadcrumb/path/{storeName}/{relPath:.+}

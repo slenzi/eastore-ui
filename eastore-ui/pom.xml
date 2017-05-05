@@ -253,7 +253,7 @@
 	<build>
 	
 		<!-- final build file name (for war, or jar) -->
-		<finalName>prodoc</finalName>
+		<finalName>eastore-ui</finalName>
 		
 		<!-- property file used for filtering during build process -->
 		<filters>

@@ -59,52 +59,42 @@
 	});
 	
 	//
-	// header for protocol list state
+	// header for store list state
 	//
-	mainModule.component('protHeaderComponent', {
+	mainModule.component('storeListHeaderComponent', {
 		
-		bindings: { prots: '<' },
+		bindings: { stores: '<' },
 		
 		//template :
 		//	'Protocol List'
 		//,
 		
-		templateUrl : '/prodoc/assets/scripts/angular/home/modules/home/partials/prot_header.jsp',
+		templateUrl : '/prodoc/assets/scripts/angular/home/modules/home/partials/store_list_header.jsp',
 		
 		controller : function($log){
-			//$log.debug('protHeaderComponent controller');
+			//$log.debug('storesHeaderComponent controller');
 		},
 		
-		controllerAs : 'protCtrl' // default is $ctrl
+		controllerAs : 'storeCtrl' // default is $ctrl
 		
 	});	
 	
 	//
-	// content for protocol list state
+	// content for store list state
 	//
-	mainModule.component('protContentComponent', {
+	mainModule.component('storeListContentComponent', {
 		
-		bindings: { prots: '<' },
+		bindings: { stores: '<' },
 		
-		//template :
-		//	'<h2>Protocols</h2>' +
-		//	'<ul>' +
-		//	'      <li ng-repeat="pt in protCtrl.prots">' +
-		//	'		{{pt.prot}}' +
-		//	'      </li>' +
-		//	'</ul>' +
-		//	'<div ui-view></div>' // add ui-view for optional nested states
-		//,
-		
-		templateUrl : '/prodoc/assets/scripts/angular/home/modules/home/partials/prot_content.jsp',
+		templateUrl : '/prodoc/assets/scripts/angular/home/modules/home/partials/store_list_content.jsp',
 		
 		controller : function($log, $state){
 			
-			//$log.debug('protContentComponent controller');
+			//$log.debug('storesContentComponent controller');
 			
-			this.clickProtHandler = function(prot){
+			this.clickStoreHandler = function(theStore){
 				
-				//alert('You clicked on protocol:\n\n' + JSON.stringify(prot));
+				alert('You clicked on store:\n\n' + JSON.stringify(theStore));
 				
 				//var relPathToLoad = '/docs/' + prot.prot;
 				
@@ -113,15 +103,15 @@
 				//$log.debug('transitioning to \'path\' state ');
 				
 				$state.go('path', {
-					relPath: '/' + prot.prot,
-					prot : prot.prot
+					relPath: '/' + theStore.name,
+					store : theStore
 					});
 				
 			};
 			
 		},
 		
-		controllerAs : 'protCtrl' // default is $ctrl
+		controllerAs : 'storeCtrl' // default is $ctrl
 		
 	});
 

@@ -35,20 +35,20 @@
 			}
 		};
 	}])
-	.directive('smartTableProtList', ['$log', function($log) {
+	.directive('smartTableStoreList', ['$log', function($log) {
 		
 		var controller = ['$scope', function ($scope) {
 
 			function init() {
 				
-				$scope.protListSafe = $scope.protList;
+				$scope.storeListSafe = $scope.storeList;
 				// a separate list copy for display. this is needed for smart table
-				$scope.protListView = [].concat($scope.protList);
+				$scope.storeListView = [].concat($scope.storeList);
 				
-				// update shipment list when protList array changes
-				$scope.$watch('protList', function(newProtList, oldProtList){
-					$scope.protListSafe = newProtList;
-					$scope.protListView = [].concat(newProtList);
+				// update shipment list when storeList array changes
+				$scope.$watch('storeList', function(newStoreList, oldStoreList){
+					$scope.storeListSafe = newStoreList;
+					$scope.storeListView = [].concat(newStoreList);
 				}, true);				
 				
 			}
@@ -57,24 +57,20 @@
 
 			$scope.tableGetters = function(){
 				return {
-					getProtName: function (protObj) {
-						return protObj.prot;
+					getStoreName: function (storeObj) {
+						return storeObj.name;
 					},
-					getShortName: function (protObj) {
-						return protObj.shortName;
+					getStoreDescription: function (storeObj) {
+						return storeObj.description;
 					},
-					getTitle: function (protObj) {
-						return protObj.title;
-					},
-					getNciProt: function (protObj) {
-						return protObj.nciProt;
+					getDateCreated: function (storeObj) {
+						return storeObj.dateCreated;
 					}						
 				}
 			};
 			
-			$scope.viewProtDocuments = function(protObj){
-				//alert('test click shipment = ' + JSON.stringify(shipment));
-				$scope.protClickHandler( {theProt: protObj} );
+			$scope.viewStore = function(storeObj){
+				$scope.storeClickHandler( {theStore: storeObj} );
 			};
 			
 		}];
@@ -82,30 +78,24 @@
 		// track by $index
 
 		var template = 
-			'<table st-table="protListView" st-safe-src="protListSafe" class="table mySmartTable">' +
+			'<table st-table="storeListView" st-safe-src="storeListSafe" class="table mySmartTable">' +
 			'	<thead>' +
 			'	<tr>' +
-			//'        <th>&nbsp;</th>' +
-			'        <th st-sort="tableGetters().getProtName">Prot</th>' +
-			'        <th st-sort="tableGetters().getShortName">Name</th>' +
-			'        <th st-sort="tableGetters().getTitle">Title</th>' +
-			//'        <th st-sort="tableGetters().getNciProt">NCI Prot</th>' +			
+			'        <th st-sort="tableGetters().getStoreName">Name</th>' +
+			'        <th st-sort="tableGetters().getStoreDescription">Description</th>' +
+			'        <th st-sort="tableGetters().getDateCreated">Created</th>' +		
 			'	</tr>' +
 			'	<tr>' +
-			//'		<th></th>' +
-			'		<th><input st-search="prot" placeholder="search by prot id" class="input-sm form-control" type="search"/></th>' +
-			'		<th><input st-search="shortName" placeholder="search by short name" class="input-sm form-control" type="search"/></th>' +	
-			'		<th><input st-search="title" placeholder="search by title" class="input-sm form-control" type="search"/></th>' +
-			//'		<th><input st-search="nciProt" placeholder="search by NCI prot" class="input-sm form-control" type="search"/></th>' +				
+			'		<th><input st-search="name" placeholder="search by name" class="input-sm form-control" type="search"/></th>' +
+			'		<th><input st-search="description" placeholder="search by description" class="input-sm form-control" type="search"/></th>' +	
+			'		<th><input st-search="dateCreated" placeholder="search by date created" class="input-sm form-control" type="search"/></th>' +				
 			'	</tr>' +			
 			'	</thead>' +
 			'	<tbody>' +
-			'	<tr st-select-row="protObj" st-select-mode="multiple" ng-repeat="protObj in protListView">' +
-			//'		 <td><md-button class=\"md-raised\" ng-click=\"viewProtDocuments(protObj);  $event.stopPropagation();\">View Documents</md-button></td>' +		
-			'        <td><a href ng-click=\"viewProtDocuments(protObj);  $event.stopPropagation();\">{{protObj.prot}}</a></td>' +
-			'        <td>{{protObj.shortName}}</td>' +
-			'        <td>{{protObj.title}}</td>' +
-			//'        <td>{{protObj.nciProt}}</td>' +			
+			'	<tr st-select-row="storeObj" st-select-mode="multiple" ng-repeat="storeObj in storeListView">' +	
+			'        <td><a href ng-click=\"viewStore(storeObj);  $event.stopPropagation();\">{{storeObj.name}}</a></td>' +
+			'        <td>{{storeObj.description}}</td>' +
+			'        <td>{{storeObj.dateCreated}}</td>' +			
 			'	</tr>' +
 			'	</tbody>' +
 			'	<tfoot>' +
@@ -120,8 +110,8 @@
 		return {
 			restrict: 'AE',
 			scope: {
-				protList: '=',
-				protClickHandler: '&'
+				storeList: '=',
+				storeClickHandler: '&'
 			},
 			controller: controller,
 			template: template

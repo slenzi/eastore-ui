@@ -35,9 +35,9 @@
 					}					
 				},
 				
-				// fetch list of prots which have documents (first-level directories under eastore /prodoc/docs/{protId})
-				protlist: {
-					url: appConstants.eastoreuiJaxrsService + '/ui/protlist',
+				// fetch list of all stores
+				storelist: {
+					url: appConstants.eastoreuiJaxrsService + '/ui/stores',
 					method: 'GET',
 					isArray: true,
 					params: {}					
@@ -103,11 +103,11 @@
 			
 		}		
 		
-		function _protList(){
+		function _storeList(){
 			
-			$log.debug('Calling jax-rs protList service method');
+			$log.debug('Calling jax-rs _storeList service method');
 			
-			return eastoreuiService.protlist().$promise;
+			return eastoreuiService.storelist().$promise;
 			
 		}
 		
@@ -141,7 +141,7 @@
 			
 			breadcrumbPath : _breadcrumbPath,
 			
-			protList : _protList,
+			storeList : _storeList,
 			
 			loadRelPath : _loadRelPath,
 			

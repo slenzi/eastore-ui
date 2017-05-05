@@ -42,6 +42,31 @@ public class UIResource extends BaseResourceHandler {
     private UIService uiService;
     
     /**
+     * fetch all eastores
+     * 
+     * @return
+     * @throws WebServiceException
+     */
+    @GET
+	@Path("/stores")
+	@Produces(MediaType.APPLICATION_JSON)    
+    public Response stores() throws WebServiceException {
+    	
+    	logger.info(UIResource.class.getSimpleName() + " stores() called");
+    	
+    	String jsonReponse = null;
+		try {
+			jsonReponse = uiService.getStores();
+		} catch (ServiceException e) {
+			logger.error(e.getMessage(), e);
+			throw new WebServiceException(WebExceptionType.CODE_IO_ERROR, e.getMessage(), e);
+		}
+		
+		return Response.ok(jsonReponse, MediaType.APPLICATION_JSON).build();
+    	
+    }    
+    
+    /**
      * Fetch breadcrumb tree by node id
      * 
      * @param nodeId - Id of some child path resource
@@ -68,16 +93,18 @@ public class UIResource extends BaseResourceHandler {
     }
     
     /**
-     * Fetch breadcrumb tree by relpath
+     * Fetch breadcrumb tree by store name and relpath
      * 
-     * @param nodeId - Id of some child path resource
+     * @param storeName
+     * @param relPath
      * @return
      * @throws WebServiceException
      */
     @GET
 	@Path("/breadcrumb/path")
 	@Produces(MediaType.APPLICATION_JSON)    
-    public Response breadcrumb(@QueryParam("relPath") String relPath) throws WebServiceException {
+    public Response breadcrumb(
+    		@QueryParam("storeName") String storeName, @QueryParam("relPath") String relPath) throws WebServiceException {
     	
     	logger.info(UIResource.class.getSimpleName() + " breadcrumb() called");
     	
@@ -85,7 +112,7 @@ public class UIResource extends BaseResourceHandler {
     	
     	String jsonReponse = null;
 		try {
-			jsonReponse = uiService.getBreadcrumbsByPath(relPath);
+			jsonReponse = uiService.getBreadcrumbsByPath(storeName, relPath);
 		} catch (ServiceException e) {
 			logger.error(e.getMessage(), e);
 			throw new WebServiceException(WebExceptionType.CODE_IO_ERROR, e.getMessage(), e);
@@ -98,13 +125,16 @@ public class UIResource extends BaseResourceHandler {
     /**
      * Fetch child resources for eastore prodoc relative path
      * 
+     * @param storeName
+     * @param relPath
      * @return
      * @throws WebServiceException
      */
     @GET
 	@Path("/loadRelPath")
 	@Produces(MediaType.APPLICATION_JSON)    
-    public Response loadRelativePath(@QueryParam("relPath") String relPath) throws WebServiceException {
+    public Response loadRelativePath(
+    		@QueryParam("storeName") String storeName, @QueryParam("relPath") String relPath) throws WebServiceException {
     	
     	logger.info(UIResource.class.getSimpleName() + " loadRelativePath() called");
     	
@@ -112,7 +142,7 @@ public class UIResource extends BaseResourceHandler {
     	
     	String jsonReponse = null;
 		try {
-			jsonReponse = uiService.getChildPathResourceByPath(relPath);
+			jsonReponse = uiService.getChildPathResourceByPath(storeName, relPath);
 		} catch (ServiceException e) {
 			logger.error(e.getMessage(), e);
 			throw new WebServiceException(WebExceptionType.CODE_IO_ERROR, e.getMessage(), e);

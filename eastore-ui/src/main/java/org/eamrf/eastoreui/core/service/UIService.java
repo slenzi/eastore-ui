@@ -27,14 +27,26 @@ public class UIService {
     @InjectLogger
     private Logger logger;
     
-    @Value( "${ea.store.name}" )    
-    private String EA_STORE_NAME_PRODOC;
+    //@Value( "${ea.store.name}" )    
+    //private String EA_STORE_NAME_PRODOC;
     
     @Value( "${ea.store.root.dir.name}" )    
     private String EA_STORE_ROOT_DIR_NAME_PRODOC;    
     
     @Autowired
     private EAStoreService EAStoreService;
+    
+    /**
+     * Calls E-A Store JSON service, getStores
+     * 
+     * @return
+     * @throws ServiceException
+     */
+    public String getStores() throws ServiceException {
+    	
+    	return EAStoreService.getStores();
+    	
+    }    
     
     /**
      * Calls E-A Store JSON service getBreadcrumbsByNodeId(...) method
@@ -52,26 +64,28 @@ public class UIService {
     /**
      * Calls E-A Store JSON service getBreadcrumbsByPath(...) method
      * 
+     * @param storeName - name of store
 	 * @param relPath - the relative path of a resource within the source.
      * @return - JSON array of path resources, first element being the root, and last element being the child most element.
      * @throws ServiceException
      */
-    public String getBreadcrumbsByPath(String relPath) throws ServiceException {
+    public String getBreadcrumbsByPath(String storeName, String relPath) throws ServiceException {
     	
-    	return EAStoreService.getBreadcrumbsByPath(EA_STORE_NAME_PRODOC, relPath);
+    	return EAStoreService.getBreadcrumbsByPath(storeName, relPath);
     	
     }    
     
     /**
      * Calls E-A Store JSON service getChildPathResourceByPath(...) method
      * 
+     * @param storeName - name of store
      * @param relPath - the relative path of a resource within the source.
      * @return JSON array, a listing of first-level child resource under resource with the provided 'relPath'
      * @throws ServiceException
      */
-    public String getChildPathResourceByPath(String relPath) throws ServiceException {
+    public String getChildPathResourceByPath(String storeName, String relPath) throws ServiceException {
     	
-    	return EAStoreService.getChildPathResourceByPath(EA_STORE_NAME_PRODOC, relPath);
+    	return EAStoreService.getChildPathResourceByPath(storeName, relPath);
     	
     }
     
