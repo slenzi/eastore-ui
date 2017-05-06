@@ -52,6 +52,14 @@
 	
 		<!-- deployment on lenzi's personal desktop machine at EA-MRF, using development database -->
 		<profile>
+			<id>lenzi.mac</id>
+			<properties>
+				<property.file>lenzi.mac.properties</property.file>
+			</properties>
+		</profile>
+	
+		<!-- deployment on lenzi's personal desktop machine at EA-MRF, using development database -->
+		<profile>
 			<id>eamrf.lenzi.development</id>
 			<properties>
 				<property.file>eamrf.lenzi.development.properties</property.file>

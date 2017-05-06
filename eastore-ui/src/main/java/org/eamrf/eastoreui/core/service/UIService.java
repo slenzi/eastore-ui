@@ -25,13 +25,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 public class UIService {
 
     @InjectLogger
-    private Logger logger;
-    
-    //@Value( "${ea.store.name}" )    
-    //private String EA_STORE_NAME_PRODOC;
-    
-    //@Value( "${ea.store.root.dir.name}" )    
-    //private String EA_STORE_ROOT_DIR_NAME_PRODOC;    
+    private Logger logger;  
     
     @Autowired
     private EAStoreService EAStoreService;
