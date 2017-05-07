@@ -35,6 +35,16 @@
 					}					
 				},
 				
+				// fetch a path resource by its node id
+				pathResourceByNodeId: {
+					url: appConstants.eastoreuiJaxrsService + '/ui/pathresource/node',
+					method: 'GET',
+					isArray: false,
+					params: {
+						nodeId : '@nodeId'
+					}	
+				},
+				
 				// fetch list of all stores
 				storelist: {
 					url: appConstants.eastoreuiJaxrsService + '/ui/stores',
@@ -89,6 +99,16 @@
 			
 		}
 		
+		// fetch a specific path resource by node id.
+		function _pathResourceByNodeId(theNodeId){
+			
+			$log.debug('Calling jax-rs _pathResourceByNodeId service method');
+			
+			return eastoreuiService.pathResourceByNodeId({ nodeId : theNodeId }).$promise;					
+			
+		}
+		
+		// fetch parent tree path for some child resource
 		function _breadcrumbNode(theNodeId){
 			
 			$log.debug('Calling jax-rs _breadcrumbNode service method');
@@ -97,6 +117,7 @@
 			
 		}
 		
+		// fetch parent tree path for some child resource
 		function _breadcrumbPath(storeName, relativePath){
 			
 			$log.debug('Calling jax-rs _breadcrumbPath service method');
@@ -105,6 +126,7 @@
 			
 		}		
 		
+		// fetch all stores
 		function _storeList(){
 			
 			$log.debug('Calling jax-rs _storeList service method');
@@ -113,6 +135,7 @@
 			
 		}
 		
+		// fetch first-level child resources for some parent resource
 		function _loadRelPath(storeName, relativePath){
 			
 			$log.debug('Calling jax-rs loadRelPath service method');
@@ -138,6 +161,8 @@
 	    return {
 	    	
 			echo : _echo,
+			
+			pathResourceByNodeId : _pathResourceByNodeId,
 			
 			breadcrumbNode : _breadcrumbNode,
 			

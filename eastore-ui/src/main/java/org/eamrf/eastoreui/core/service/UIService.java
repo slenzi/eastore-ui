@@ -28,7 +28,7 @@ public class UIService {
     private Logger logger;  
     
     @Autowired
-    private EAStoreService EAStoreService;
+    private EAStoreService storeService;
     
     /**
      * Calls E-A Store JSON service, getStores
@@ -38,9 +38,23 @@ public class UIService {
      */
     public String getStores() throws ServiceException {
     	
-    	return EAStoreService.getStores();
+    	return storeService.getStores();
     	
-    }    
+    }
+    
+	/**
+	 * Call E-A Store getPathResourceById(...)
+	 * 
+	 * @param nodeId - the id of the path resource. If the ID is of a file meta resource the binary
+	 * data for the file will not be inlcuded.
+	 * @return
+     * @throws ServiceException
+     */
+    public String getPathResourceById(Long nodeId) throws ServiceException {
+    	
+    	return storeService.getPathResourceById(nodeId);
+    	
+    }
     
     /**
      * Calls E-A Store JSON service getBreadcrumbsByNodeId(...) method
@@ -51,7 +65,7 @@ public class UIService {
      */
     public String getBreadcrumbsByNodeId(Long nodeId) throws ServiceException {
     	
-    	return EAStoreService.getBreadcrumbsByNodeId(nodeId);
+    	return storeService.getBreadcrumbsByNodeId(nodeId);
     	
     }
     
@@ -65,7 +79,7 @@ public class UIService {
      */
     public String getBreadcrumbsByPath(String storeName, String relPath) throws ServiceException {
     	
-    	return EAStoreService.getBreadcrumbsByPath(storeName, relPath);
+    	return storeService.getBreadcrumbsByPath(storeName, relPath);
     	
     }    
     
@@ -79,7 +93,7 @@ public class UIService {
      */
     public String getChildPathResourceByPath(String storeName, String relPath) throws ServiceException {
     	
-    	return EAStoreService.getChildPathResourceByPath(storeName, relPath);
+    	return storeService.getChildPathResourceByPath(storeName, relPath);
     	
     }
     
@@ -92,7 +106,7 @@ public class UIService {
      */
     public FileResponse getFile(Long fileNodeId) throws ServiceException {
     	
-    	return EAStoreService.getFileReponse(fileNodeId);
+    	return storeService.getFileReponse(fileNodeId);
     	
     }
     

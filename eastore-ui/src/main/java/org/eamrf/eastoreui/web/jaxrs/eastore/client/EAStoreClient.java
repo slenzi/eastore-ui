@@ -113,6 +113,35 @@ public class EAStoreClient {
 	}
 	
 	/**
+	 * Call E-A Store /fsys/json/resource/nodeId/{nodeId}
+	 * 
+	 * @param nodeId - the id of the path resource. If the ID is of a file meta resource the binary
+	 * data for the file will not be inlcuded.
+	 * @return
+	 * @throws WebServiceException
+	 */
+	public String getPathResourceById(Long nodeId) throws WebServiceException {
+		
+		logger.info("Calling " + EAStoreClient.class.getSimpleName() + " getStores method");
+		
+		resetClient();
+		
+		String path = "/fsys/json/resource/nodeId/" + nodeId.toString();
+		client.path(path);
+		Response resp = client.get();
+		
+		if(resp.getStatus() != Response.Status.OK.getStatusCode()){
+			throw new WebServiceException(WebExceptionType.CODE_IO_ERROR, 
+					"Response error from " + client.getCurrentURI().toString() + ", response code = " + resp.getStatus());
+		}
+		
+		String responseString = resp.readEntity(String.class);
+		
+		return responseString;
+		
+	}
+	
+	/**
 	 * Call E-A Store /fsys/json/store
 	 * 
 	 * @return

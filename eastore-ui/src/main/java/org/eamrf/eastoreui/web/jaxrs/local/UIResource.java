@@ -64,7 +64,35 @@ public class UIResource extends BaseResourceHandler {
 		
 		return Response.ok(jsonReponse, MediaType.APPLICATION_JSON).build();
     	
-    }    
+    }
+    
+    /**
+     * Fetch a path resource by it's id
+     * 
+     * @param nodeId - the id of the path resource. If the ID is of a file meta resource, the binary data
+     * will not be included.
+     * 
+     * @return
+     * @throws WebServiceException
+     */
+    @GET
+	@Path("/pathresource/node")
+	@Produces(MediaType.APPLICATION_JSON) 
+    public Response getPathResourceById(@QueryParam("nodeId") Long nodeId) throws WebServiceException {
+    	
+    	logger.info(UIResource.class.getSimpleName() + " stores() called");
+    	
+    	String jsonReponse = null;
+		try {
+			jsonReponse = uiService.getPathResourceById(nodeId);
+		} catch (ServiceException e) {
+			logger.error(e.getMessage(), e);
+			throw new WebServiceException(WebExceptionType.CODE_IO_ERROR, e.getMessage(), e);
+		}
+		
+		return Response.ok(jsonReponse, MediaType.APPLICATION_JSON).build();
+    	
+    }
     
     /**
      * Fetch breadcrumb tree by node id

@@ -186,12 +186,27 @@
 							//$log.debug(JSON.stringify($stateParams));
 							
 							var storeName = $stateParams.store.name;
-							var relPathToLoad = '/docs' + $stateParams.relPath;
+							var rootDirId = $stateParams.store.nodeId;
 							
-							//
-							// TODO - need to fetch root directory for store!
-							//							
+							// fetch root dir resource
+							var rootDir =  homeRestService
+								.pathResourceByNodeId(rootDirId)
+								.then( function ( jsonData ){
+									$log.debug('resolved root directory for store ' + storeName);
+									//$log.debug(JSON.stringify(jsonData))
+									return jsonData;
+								}, function( error ){
+									alert('Error calling loadRelPath(...) service method' + JSON.stringify(error));
+								});
 							
+							var relPathToLoad = rootDir.relPath;
+							
+							//  TODO - change 'stores' state to 'storeList', then create a new state
+							// called 'store'. That state will contain the currently selected store,
+							// and the root directory. From there you can hand off to the 'path' state
+							// where you load the next directory as the user navigates the tree for the store.
+													
+							// fetch child
 							return homeRestService
 								.loadRelPath(storeName, relPathToLoad)
 								.then( function ( jsonData ){
