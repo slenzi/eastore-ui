@@ -94,9 +94,7 @@
 			
 			this.clickStoreHandler = function(theStore){
 				
-				alert('You clicked on store:\n\n' + JSON.stringify(theStore));
-				
-				//var relPathToLoad = '/docs/' + prot.prot;
+				//alert('You clicked on store:\n\n' + JSON.stringify(theStore));
 				
 				//$log.debug('current state = ' + JSON.stringify($state.current));
 				
@@ -104,7 +102,8 @@
 				
 				$state.go('path', {
 					relPath: '/' + theStore.name,
-					store : theStore
+					store : theStore,
+					dirNodeId : theStore.nodeId
 					});
 				
 			};
@@ -143,15 +142,16 @@
 			
 			this.loadDirectory = function(resource){
 				
-					var docsPrefix = '/docs';
-					var relPathToLoad = resource.relativePath;
-					if(relPathToLoad.startsWith(docsPrefix)){
-						relPathToLoad = relPathToLoad.substring(relPathToLoad.indexOf(docsPrefix) + docsPrefix.length);
-					}
+					//var docsPrefix = '/docs';
+					//var relPathToLoad = resource.relativePath;
+					//if(relPathToLoad.startsWith(docsPrefix)){
+					//	relPathToLoad = relPathToLoad.substring(relPathToLoad.indexOf(docsPrefix) + docsPrefix.length);
+					//}
 					
-					$log.debug('State refresh, new relPath = ' + relPathToLoad);
+					$stateParams.relPath = resource.relativePath;
+					$stateParams.dirNodeId = resource.nodeId;
 					
-					$stateParams.relPath = relPathToLoad;
+					$log.debug('breacrumb click, dirNodeId = ' + $stateParams.dirNodeId + ', relPath = ' + $stateParams.relPath);
 					
 					// similar to $state.reload(), but we want to change one of our stateparams so we use transition to instead
 					$state.transitionTo($state.current, $stateParams, { 
@@ -191,34 +191,29 @@
 					
 					$log.debug(JSON.stringify($stateParams));
 					
-					var docsPrefix = '/docs';
-					var relPathToLoad = resource.relativePath;
-					if(relPathToLoad.startsWith(docsPrefix)){
-						relPathToLoad = relPathToLoad.substring(relPathToLoad.indexOf(docsPrefix) + docsPrefix.length);
-					}
+					//var docsPrefix = '/docs';
+					//var relPathToLoad = resource.relativePath;
+					//if(relPathToLoad.startsWith(docsPrefix)){
+					//	relPathToLoad = relPathToLoad.substring(relPathToLoad.indexOf(docsPrefix) + docsPrefix.length);
+					//}
 					
-					$log.debug('State refresh, new relPath = ' + relPathToLoad);
+					//$log.debug('State refresh, new relPath = ' + relPathToLoad);
 					
-					$stateParams.relPath = relPathToLoad;
+					$stateParams.relPath = resource.relativePath;
+					$stateParams.dirNodeId = resource.nodeId;
+					
+					$log.debug('directory click, dirNodeId = ' + $stateParams.dirNodeId + ', relPath = ' + $stateParams.relPath);
 					
 					// similar to $state.reload(), but we want to change one of our stateparams so we use transition to instead
 					$state.transitionTo($state.current, $stateParams, { 
 					  reload: true, inherit: false, notify: true
-					});					
-					
-					//$state.go('path', {
-					//	relPath: relPathToLoad
-					//	});					
+					});				
 					
 				}else{
 
 					alert('You clicked on a path resource with an unrecognized resource type:\n\n' + JSON.stringify(resource));
 
 				}
-				
-				// TODO - need to somehow reload same state that we are currently in, but after fetching lastest path resource data from server
-				
-				// http://stackoverflow.com/questions/21714655/reloading-current-state-refresh-data
 				
 			};
 			

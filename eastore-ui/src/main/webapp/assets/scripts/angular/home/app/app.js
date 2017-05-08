@@ -100,6 +100,16 @@
 			
 			$urlRouterProvider.otherwise("/stores");
 			
+			var defaultStateParams = {
+				
+				// the current store
+				store : null,
+				
+				// the current directory path resource within the current store
+				dirNodeId : null
+				
+			};
+			
 			//
 			// store listing state - display a list of stores
 			//
@@ -123,9 +133,7 @@
 							component : 'leftMenuComponent' // when 'stores' state is active, render 'leftMenuComponent' into view with name 'uileftmenu'
 						}
 					},
-					params : {
-						store : null
-					},
+					params : defaultStateParams,
 					resolve : {
 						stores : function (homeRestService, $log) {
 							return homeRestService
@@ -175,53 +183,68 @@
 							component : 'leftMenuComponent' // when 'prot' state is active, render 'leftMenuComponent' into view with name 'uileftmenu'
 						}
 					},
-					params : {
-						store : null
-					},					
+					params : defaultStateParams,					
 					resolve : {
 						pathresources : function (homeRestService, $log, $state, $stateParams) {
 							
-							//$log.debug('resolving path resources');
+							$log.debug('-------- resolving path resources ------------ ');
 							
 							//$log.debug(JSON.stringify($stateParams));
 							
 							var storeName = $stateParams.store.name;
-							var rootDirId = $stateParams.store.nodeId;
+							var dirNodeId = $stateParams.dirNodeId;
 							
-							// fetch root dir resource
-							var rootDir =  homeRestService
-								.pathResourceByNodeId(rootDirId)
+							//$log.debug('storeName = ' + storeName);
+							//$log.debug('dirNodeId = ' + dirNodeId);
+							
+							//
+							// first fetch directory path resource for current dirNodeId
+							// then fetch first-level child path resources for that directory, and return them
+							//
+							return  homeRestService
+								.pathResourceByNodeId(dirNodeId)
 								.then( function ( jsonData ){
-									$log.debug('resolved root directory for store ' + storeName);
-									//$log.debug(JSON.stringify(jsonData))
+									
+									//$log.debug('fetched directory path resource with nodeId = ' + dirNodeId);
+									
+									// return data to the next 'then' block below
 									return jsonData;
+									
+									
 								}, function( error ){
-									alert('Error calling loadRelPath(...) service method' + JSON.stringify(error));
-								});
-							
-							var relPathToLoad = rootDir.relPath;
-							
-							//  TODO - change 'stores' state to 'storeList', then create a new state
-							// called 'store'. That state will contain the currently selected store,
-							// and the root directory. From there you can hand off to the 'path' state
-							// where you load the next directory as the user navigates the tree for the store.
-													
-							// fetch child
-							return homeRestService
-								.loadRelPath(storeName, relPathToLoad)
+									
+									alert('Error calling pathResourceByNodeId(...) service method' + JSON.stringify(error));
+									
+								})
+								// second 'then' block uses the returned directory path resources from the first 'then' block
 								.then( function ( jsonData ){
-									//$log.debug('resolved path resources');
-									//$log.debug(JSON.stringify(jsonData))
-									return jsonData;
+									
+									var relPathToLoad = jsonData.relativePath;
+									
+									//$log.debug('fetching child path resources for relPath = ' + relPathToLoad);
+									
+									// fetch child path resources for the directory
+									return homeRestService
+										.loadRelPath(storeName, relPathToLoad)
+										.then( function ( jsonData ){
+											$log.debug('resolved path resources for relPath ' + relPathToLoad);
+											//$log.debug(JSON.stringify(jsonData))
+											return jsonData;
+										}, function( error ){
+											alert('Error calling loadRelPath(...) service method' + JSON.stringify(error));
+										});
+									
+									
 								}, function( error ){
+									
 									alert('Error calling loadRelPath(...) service method' + JSON.stringify(error));
+									
 								});
 								
 						},
 						headerTitle : function ($log, $stateParams){
 							
 							//$log.debug('resolving header title');
-							
 							//$log.debug(JSON.stringify($stateParams));
 							
 							var title = 'Documents for ';
@@ -254,28 +277,58 @@
 						},
 						breadcrumb : function (homeRestService, $log, $stateParams){
 							
-							$log.debug('resolving breadcrumb tree');
-							
-							$log.debug(JSON.stringify($stateParams));
-							
+							//$log.debug('resolving breadcrumb tree');							
+							//$log.debug(JSON.stringify($stateParams));
+						
 							var storeName = $stateParams.store.name;
-							var crumbRelPath = '/docs' + $stateParams.relPath;
+							var dirNodeId = $stateParams.dirNodeId;
+							
+							//$log.debug('storeName = ' + storeName);
+							//$log.debug('dirNodeId = ' + dirNodeId);
 							
 							//
-							// TODO - need to fetch root directory for store!
+							// first fetch directory path resource for current dirNodeId
+							// then fetch parent tree (breadcrumb) path, and return it
 							//
-							
-							$log.debug('Crumb relPath = ' + crumbRelPath);
-							
-							return homeRestService
-								.breadcrumbPath(storeName, crumbRelPath)
+							return  homeRestService
+								.pathResourceByNodeId(dirNodeId)
 								.then( function ( jsonData ){
-									$log.debug('resolved breadcrumb tree');
-									//$log.debug(JSON.stringify(jsonData))
+									
+									//$log.debug('fetched directory path resource with nodeId = ' + dirNodeId);
+									
+									// return data to the next 'then' block below
 									return jsonData;
+									
+									
 								}, function( error ){
+									
+									alert('Error calling pathResourceByNodeId(...) service method' + JSON.stringify(error));
+									
+								})
+								// second 'then' block uses the returned directory path resources from the first 'then' block
+								.then( function ( jsonData ){
+									
+									var relPathToLoad = jsonData.relativePath;
+									
+									//$log.debug('fetching child path resources for relPath = ' + relPathToLoad);
+									
+									// return parent-tree breadcrumb
+									return homeRestService
+										.breadcrumbPath(storeName, relPathToLoad)
+										.then( function ( jsonData ){
+											$log.debug('resolved breadcrumb tree');
+											//$log.debug(JSON.stringify(jsonData))
+											return jsonData;
+										}, function( error ){
+											alert('Error calling breadcrumbPath(...) service method' + JSON.stringify(error));
+										});
+									
+									
+								}, function( error ){
+									
 									alert('Error calling loadRelPath(...) service method' + JSON.stringify(error));
-								});
+									
+								});						
 							
 						}
 					}				
