@@ -95,15 +95,18 @@
 			this.clickStoreHandler = function(theStore){
 				
 				//alert('You clicked on store:\n\n' + JSON.stringify(theStore));
-				
 				//$log.debug('current state = ' + JSON.stringify($state.current));
-				
 				//$log.debug('transitioning to \'path\' state ');
 				
+				var rootDirectory = theStore.rootDir;
+				var newRelPath = rootDirectory.relativePath;
+				var newUrlPath = '/' + theStore.name + newRelPath;
+				
 				$state.go('path', {
-					relPath: '/' + theStore.name,
+					urlPath: newUrlPath,
+					relPath: newRelPath,
 					store : theStore,
-					dirNodeId : theStore.nodeId
+					currDirResource : rootDirectory
 					});
 				
 			};
@@ -121,7 +124,8 @@
 		
 		bindings: {
 				pathresources: '<',
-				breadcrumb: '<'
+				breadcrumb: '<',
+				store: '<'
 		},
 		
 		templateUrl : '@application.context@/assets/scripts/angular/home/modules/home/partials/path_header.jsp',
@@ -130,28 +134,25 @@
 			
 			//$log.debug('pathHeaderComponent controller');
 			
-			this.clickBreadcrumb = function(resource){
+			this.clickBreadcrumb = function(store, resource){
 				
 				// breadcrumb path resources should always be of resourceType DIRECTORY.
 				
 				$log.debug('You clicked on breadcrumb path resource:\n\n' + JSON.stringify(resource));
 				
-				this.loadDirectory(resource);
+				this.loadDirectory(store, resource);
 				
 			};
 			
-			this.loadDirectory = function(resource){
-				
-					//var docsPrefix = '/docs';
-					//var relPathToLoad = resource.relativePath;
-					//if(relPathToLoad.startsWith(docsPrefix)){
-					//	relPathToLoad = relPathToLoad.substring(relPathToLoad.indexOf(docsPrefix) + docsPrefix.length);
-					//}
+			this.loadDirectory = function(store, resource){
 					
-					$stateParams.relPath = resource.relativePath;
-					$stateParams.dirNodeId = resource.nodeId;
+					//$stateParams.relPath = resource.relativePath;
+					$stateParams.currDirResource = resource;
+					//$stateParams.urlPath = $stateParams.urlPath + '/' + resource.pathName;
+					//$stateParams.urlPath = '/' + $stateParams.store.name + resource.relativePath;
+					$stateParams.urlPath = '/' + store.name + resource.relativePath;
 					
-					$log.debug('breacrumb click, dirNodeId = ' + $stateParams.dirNodeId + ', relPath = ' + $stateParams.relPath);
+					$log.debug('breadcrumb click, dirNodeId = ' + $stateParams.currDirResource.nodeId + ', urlPath = ' + $stateParams.urlPath);
 					
 					// similar to $state.reload(), but we want to change one of our stateparams so we use transition to instead
 					$state.transitionTo($state.current, $stateParams, { 
@@ -171,7 +172,10 @@
 	//
 	mainModule.component('pathContentComponent', {
 		
-		bindings: { pathresources: '<' },
+		bindings: {
+			pathresources: '<',
+			store: '<'
+		},
 		
 		templateUrl : '@application.context@/assets/scripts/angular/home/modules/home/partials/path_content.jsp',
 		
@@ -179,7 +183,7 @@
 			
 			//$log.debug('pathContentComponent controller');
 			
-			this.clickResourceHandler = function(resource){
+			this.clickResourceHandler = function(store, resource){
 				
 				if(resource.resourceType === 'FILE'){
 					
@@ -187,22 +191,17 @@
 				
 				}else if(resource.resourceType === 'DIRECTORY'){
 				
-					$log.debug('You clicked on directory path resource:\n\n' + JSON.stringify(resource));
-					
-					$log.debug(JSON.stringify($stateParams));
-					
-					//var docsPrefix = '/docs';
-					//var relPathToLoad = resource.relativePath;
-					//if(relPathToLoad.startsWith(docsPrefix)){
-					//	relPathToLoad = relPathToLoad.substring(relPathToLoad.indexOf(docsPrefix) + docsPrefix.length);
-					//}
-					
-					//$log.debug('State refresh, new relPath = ' + relPathToLoad);
+					//$log.debug('You clicked on directory path resource:\n\n' + JSON.stringify(resource));
+					//$log.debug(JSON.stringify($stateParams));
 					
 					$stateParams.relPath = resource.relativePath;
-					$stateParams.dirNodeId = resource.nodeId;
+					$stateParams.currDirResource = resource;
+					//$stateParams.urlPath = $stateParams.urlPath + '/' + resource.pathName;
+					//$stateParams.urlPath = '/' + $stateParams.store.name + resource.relativePath;
+					$stateParams.urlPath = '/' + store.name + resource.relativePath;
 					
-					$log.debug('directory click, dirNodeId = ' + $stateParams.dirNodeId + ', relPath = ' + $stateParams.relPath);
+					$log.debug('directory click, dirNodeId = ' + $stateParams.currDirResource.nodeId + 
+						', relPath = ' + $stateParams.relPath + ', urlPath = ' + $stateParams.urlPath);
 					
 					// similar to $state.reload(), but we want to change one of our stateparams so we use transition to instead
 					$state.transitionTo($state.current, $stateParams, { 

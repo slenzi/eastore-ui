@@ -10,16 +10,18 @@ Resource store list partial that's loaded for the "state_home" state
 	
 	<span ng-if="pathCtrl.haveDirectoryResource(pathCtrl.pathresources)">
 	<h3>Sub-Directories</h3>
-	<div smart-table-directory-list 
+	<div smart-table-directory-list
+		store="pathCtrl.store"
 		resource-list="pathCtrl.pathresources" 
-		resource-click-handler="pathCtrl.clickResourceHandler(thePathResource)">
+		resource-click-handler="pathCtrl.clickResourceHandler(theStore, thePathResource)">
 	</div>
 	</span>
 
 	<h3>Documents</h3>
 	<div smart-table-file-list
+		store="pathCtrl.store"
 		resource-list="pathCtrl.pathresources" 
-		resource-click-handler="pathCtrl.clickResourceHandler(thePathResource)">
+		resource-click-handler="pathCtrl.clickResourceHandler(theStore, thePathResource)">
 	</div>
 		
 </md-content>

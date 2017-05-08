@@ -42,6 +42,31 @@ public class UIResource extends BaseResourceHandler {
     private UIService uiService;
     
     /**
+     * fetch eastore by name
+     * 
+     * @return
+     * @throws WebServiceException
+     */
+    @GET
+	@Path("/store/name")
+	@Produces(MediaType.APPLICATION_JSON)    
+    public Response getStoreByName(@QueryParam("storeName") String storeName) throws WebServiceException {
+    	
+    	logger.info(UIResource.class.getSimpleName() + " getStoreByName(...) called");
+    	
+    	String jsonReponse = null;
+		try {
+			jsonReponse = uiService.getStoreByName(storeName);
+		} catch (ServiceException e) {
+			logger.error(e.getMessage(), e);
+			throw new WebServiceException(WebExceptionType.CODE_IO_ERROR, e.getMessage(), e);
+		}
+		
+		return Response.ok(jsonReponse, MediaType.APPLICATION_JSON).build();
+    	
+    }    
+    
+    /**
      * fetch all eastores
      * 
      * @return

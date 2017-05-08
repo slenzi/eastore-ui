@@ -73,7 +73,28 @@ public class EAStoreService {
 	}
 	
 	/**
-	 * Calls E-A Store JSON service, getStores
+	 * Calls E-A Store JSON service, /fys/json/store/name/{storeName}
+	 * 
+	 * @return
+	 * @throws ServiceException
+	 */
+	public String getStoreByName(String storeName) throws ServiceException {
+		
+		EAStoreClient client = eaStoreClientProvider.getClient();
+		
+    	String jsonResponse = null;
+    	try {
+    		jsonResponse = client.getStoreByName(storeName);
+		} catch (WebServiceException e) {
+			throw new ServiceException("Error fetching store with name '" + storeName + "', " + e.getMessage(), e);
+		}
+    	
+    	return jsonResponse;
+		
+	}	
+	
+	/**
+	 * Calls E-A Store JSON service, /fys/json/store
 	 * 
 	 * @return
 	 * @throws ServiceException

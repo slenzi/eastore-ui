@@ -124,6 +124,11 @@
 
 			function init() {
 				
+				$scope.storeViewObj = $scope.store;
+				$scope.$watch('store', function(newStore, oldStore){
+					$scope.storeViewObj = newStore;
+				}, true);				
+				
 				$scope.resourceListSafe = $scope.resourceList;
 				// a separate list copy for display. this is needed for smart table
 				$scope.resourceListView = [].concat($scope.resourceList);
@@ -152,8 +157,11 @@
 				}
 			};
 			
-			$scope.viewChildResources = function(pathResObj){
-				$scope.resourceClickHandler( {thePathResource: pathResObj} );
+			$scope.viewChildResources = function(storeObj, pathResObj){
+				$scope.resourceClickHandler({
+						theStore : storeObj,
+						thePathResource: pathResObj
+					});
 			};
 			
 		}];
@@ -180,7 +188,7 @@
 			'	<tr st-select-row="pathResObj" st-select-mode="multiple" ng-repeat="pathResObj in resourceListView" ng-if="pathResObj.resourceType === \'DIRECTORY\' ">' +
 			//'		 <td><md-button class=\"md-raised\" ng-click=\"viewChildResources(pathResObj);  $event.stopPropagation();\">View Documents</md-button></td>' +		
 			//'        <td>{{pathResObj.nodeId}}</td>' +
-			'        <td><a href ng-click=\"viewChildResources(pathResObj);  $event.stopPropagation();\">{{pathResObj.nodeName}}</a></td>' +
+			'        <td><a href ng-click=\"viewChildResources(storeViewObj, pathResObj);  $event.stopPropagation();\">{{pathResObj.nodeName}}</a></td>' +
 			'        <td>{{pathResObj.desc}}</td>' +	
 			'	</tr>' +
 			'	</tbody>' +
@@ -196,6 +204,7 @@
 		return {
 			restrict: 'AE',
 			scope: {
+				store: '=',
 				resourceList: '=',
 				resourceClickHandler: '&'
 			},
@@ -209,6 +218,11 @@
 		var controller = ['$scope', function ($scope) {
 
 			function init() {
+				
+				$scope.storeViewObj = $scope.store;
+				$scope.$watch('store', function(newStore, oldStore){
+					$scope.storeViewObj = newStore;
+				}, true);
 				
 				$scope.resourceListSafe = $scope.resourceList;
 				// a separate list copy for display. this is needed for smart table
@@ -241,8 +255,11 @@
 				}
 			};
 			
-			$scope.viewChildResources = function(pathResObj){
-				$scope.resourceClickHandler( {thePathResource: pathResObj} );
+			$scope.viewChildResources = function(storeObj, pathResObj){
+				$scope.resourceClickHandler({
+						theStore : storeObj,
+						thePathResource: pathResObj
+					});
 			};
 			
 		}];
@@ -271,7 +288,7 @@
 			'	<tr st-select-row="pathResObj" st-select-mode="multiple" ng-repeat="pathResObj in resourceListView" ng-if="pathResObj.resourceType === \'FILE\' ">' +
 			//'		 <td><md-button class=\"md-raised\" ng-click=\"viewChildResources(pathResObj);  $event.stopPropagation();\">Download</md-button></td>' +		
 			//'        <td>{{pathResObj.nodeId}}</td>' +
-			'        <td><a href ng-click=\"viewChildResources(pathResObj);  $event.stopPropagation();\">{{pathResObj.nodeName}}</a></td>' +
+			'        <td><a href ng-click=\"viewChildResources(storeViewObj, pathResObj);  $event.stopPropagation();\">{{pathResObj.nodeName}}</a></td>' +
 			'        <td>{{pathResObj.desc}}</td>' +
 			'        <td>{{pathResObj.mimeType}}</td>' +
 			'	</tr>' +
@@ -288,6 +305,7 @@
 		return {
 			restrict: 'AE',
 			scope: {
+				store: '=',
 				resourceList: '=',
 				resourceClickHandler: '&'
 			},

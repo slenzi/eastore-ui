@@ -7,12 +7,12 @@ Toolbar partial that's loaded for the "state_home" state
 
 <md-toolbar class="md-toolbar-tools md-hue-3"> <!-- md-accent  md-toolbar-tools -->
 	
-	<span ng-repeat="resource in pathCtrl.breadcrumb" ng-if="$index > 0">
-		<span ng-if="$index > 1" class="md-subhead" style="color:white;">
+	<span ng-repeat="resource in pathCtrl.breadcrumb">
+		<span ng-if="$index > 0" class="md-subhead" style="color:white;">
 			>&nbsp;
 		</span>
 		<span class="md-subhead">
-			<a ng-click="pathCtrl.clickBreadcrumb(resource)" style="color:white;">{{resource.nodeName}}</a>&nbsp;
+			<a ng-click="pathCtrl.clickBreadcrumb(pathCtrl.store, resource)" style="color:white;">{{resource.nodeName}}</a>&nbsp;
 		</span>
 	</span>
 	

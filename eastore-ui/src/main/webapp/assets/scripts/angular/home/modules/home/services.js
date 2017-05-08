@@ -46,6 +46,16 @@
 				},
 				
 				// fetch list of all stores
+				storeByName: {
+					url: appConstants.eastoreuiJaxrsService + '/ui/store/name',
+					method: 'GET',
+					isArray: false,
+					params: {
+						storeName : '@storeName'
+					}					
+				},				
+				
+				// fetch list of all stores
 				storelist: {
 					url: appConstants.eastoreuiJaxrsService + '/ui/stores',
 					method: 'GET',
@@ -124,6 +134,15 @@
 			
 			return eastoreuiService.breadcrumbPath({ storeName : storeName, relPath : relativePath }).$promise;					
 			
+		}
+		
+		// fetch store by name
+		function _storeByName(storeName){
+			
+			$log.debug('Calling jax-rs _storeByName service method');
+			
+			return eastoreuiService.storeByName({ storeName : storeName }).$promise;
+			
 		}		
 		
 		// fetch all stores
@@ -167,6 +186,8 @@
 			breadcrumbNode : _breadcrumbNode,
 			
 			breadcrumbPath : _breadcrumbPath,
+			
+			storeByName : _storeByName,
 			
 			storeList : _storeList,
 			

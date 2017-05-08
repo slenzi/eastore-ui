@@ -31,6 +31,18 @@ public class UIService {
     private EAStoreService storeService;
     
     /**
+     * Calls E-A Store JSON service, getStoreByName
+     * 
+     * @return
+     * @throws ServiceException
+     */
+    public String getStoreByName(String storeName) throws ServiceException {
+    	
+    	return storeService.getStoreByName(storeName);
+    	
+    }    
+    
+    /**
      * Calls E-A Store JSON service, getStores
      * 
      * @return
