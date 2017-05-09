@@ -9,6 +9,6 @@
 	 * 
 	 * ngMaterial - angular material UI
 	 */
-	mainModule = angular.module('prodoc-main', [ 'ngMaterial' ]);
+	mainModule = angular.module('eastore-ui-main', [ 'ngMaterial' ]);
 
 })();

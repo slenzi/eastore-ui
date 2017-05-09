@@ -25,7 +25,8 @@ application scripts
 --------------------------------------------- -->
 
 <!-- common -->
-<script type="text/javascript" src="<%=request.getContextPath()%>/assets/scripts/angular/common/modules/util/prodoc-util.js"></script>
+<script type="text/javascript" src="<%=request.getContextPath()%>/assets/scripts/angular/common/modules/util/eastore-ui-util.js"></script>
+<script type="text/javascript" src="<%=request.getContextPath()%>/assets/scripts/angular/common/modules/upload/ea-upload.js"></script>
 
 <!-- specific to report app -->
 <script type="text/javascript" src="<%=request.getContextPath()%>/assets/scripts/angular/home/modules/home/modules.js"></script>

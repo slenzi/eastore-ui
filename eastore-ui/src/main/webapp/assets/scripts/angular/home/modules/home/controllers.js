@@ -1,7 +1,7 @@
 (function(){
 
 	angular
-		.module('prodoc-main')
+		.module('eastore-ui-main')
 		.controller('homeController',[
 			'appConstants', '$scope', '$state', '$stateParams', '$mdSidenav', '$mdUtil', '$log', HomeController
 			]

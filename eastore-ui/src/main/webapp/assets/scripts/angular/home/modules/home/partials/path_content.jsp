@@ -1,8 +1,4 @@
 <%@ page language="java" contentType="text/html; charset=ISO-8859-1" pageEncoding="ISO-8859-1"%>
-
-<!--
-Resource store list partial that's loaded for the "state_home" state
--->
 	
 <md-content layout-padding layout="column" class= id="reportContent" style="padding: 10px;">
 

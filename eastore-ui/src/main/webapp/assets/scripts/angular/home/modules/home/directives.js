@@ -3,7 +3,7 @@
 	'use strict';
 	
 	// fetch main module
-	var mainModule = angular.module('prodoc-main');
+	var mainModule = angular.module('eastore-ui-main');
 	
 	/**
 	 * Handle single click when also using ng-dblclick. Allows for both

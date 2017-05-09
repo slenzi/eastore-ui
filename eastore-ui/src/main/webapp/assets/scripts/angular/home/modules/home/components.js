@@ -2,7 +2,7 @@
 	
 	'use strict';
 	
-	var mainModule = angular.module('prodoc-main');
+	var mainModule = angular.module('eastore-ui-main');
 	
 	//
 	// template for the left-hand navbar menu
@@ -309,15 +309,70 @@
 
 			this.loadStateUploadForm = function(store, directoryResource){
 				
-				alert('Upload coming soon!');
+				//alert('Upload coming soon!');
 				
 				$log.debug('Upload to store = ' + store.name + ', directory relPath = ' + directoryResource.relativePath);
+				
+				$state.go('upload');
 				
 			};
 			
 		},
 		
 		controllerAs : 'pathCtrl' // default is $ctrl
+		
+	});
+	
+	//
+	// header for store list state
+	//
+	mainModule.component('uploadHeaderComponent', {
+		
+		bindings: { },
+		
+		templateUrl : '@application.context@/assets/scripts/angular/home/modules/home/partials/upload_header.jsp',
+		
+		controller : function($log){
+			
+			//$log.debug('uploadHeaderComponent controller');
+			
+		},
+		
+		controllerAs : 'uploadCtrl' // default is $ctrl
+		
+	});	
+	
+	//
+	// content for store list state
+	//
+	mainModule.component('uploadContentComponent', {
+		
+		bindings: { uploader : '<'},
+		
+		templateUrl : '@application.context@/assets/scripts/angular/home/modules/home/partials/upload_content.jsp',
+		
+		controller : function($log, $state, EAFileUploader, appConstants){
+			
+			//$log.debug('uploadContentComponent controller');
+			
+			var eaUploader = new EAFileUploader({
+				url: appConstants.httpUploadHandler
+			});
+			
+			this.getUploader = function(){
+				$log.debug('getUploader called');
+				return eaUploader;
+			};
+
+			this.onCompleteUpload = function(){
+				
+				alert('Upload complete! Thank you!');
+				
+			};
+			
+		},
+		
+		controllerAs : 'uploadCtrl' // default is $ctrl
 		
 	});	
 	

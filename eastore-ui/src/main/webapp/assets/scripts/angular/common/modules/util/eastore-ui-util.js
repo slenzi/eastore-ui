@@ -1,5 +1,5 @@
 
-var reportUtil = angular.module('prodoc-util', []);
+var reportUtil = angular.module('eastore-ui-util', []);
 
 reportUtil.config(function($httpProvider) {
 

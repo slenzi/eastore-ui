@@ -3,7 +3,7 @@
 	
 	'use strict';
 	
-	var mainModule = angular.module('prodoc-main');
+	var mainModule = angular.module('eastore-ui-main');
 	
 	mainModule
 		.service('homeRestService', [

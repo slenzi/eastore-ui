@@ -9,21 +9,22 @@
 	 * 
 	 * ECOG-ACRIN Modules:
 	 * 
-	 * prodoc-main - Our main module
-	 * prodoc-util - Utility module
+	 * eastore-ui-main ---- Our main module
+	 * eastore-ui-util ---- Utility module
+	 * ea-upload-module --- File upload module
 	 * 
 	 * Third Party Modules:
 	 * 
-	 * ui.router - Routing frameworks, essentially more powerful version of built in ngRoute.
-	 * ngMaterial - Material design UI components
-	 * ngResource - Provides interaction support with RESTful services via the $resource service
-	 * smart-table - lightweight table module
+	 * ui.router ----- Routing frameworks, essentially more powerful version of built in ngRoute.
+	 * ngMaterial ---- Material design UI components
+	 * ngResource ---- Provides interaction support with RESTful services via the $resource service
+	 * smart-table --- Lightweight table module
 	 * 
 	 */
 	homeApp = angular
-		.module('prodoc-home-app',
+		.module('eastore-ui-home-app',
 				[
-				 'ui.router', 'ngMaterial', 'ngResource', 'prodoc-main', 'prodoc-util', 'smart-table'
+				 'ui.router', 'ngMaterial', 'ngResource', 'eastore-ui-main', 'eastore-ui-util', 'ea-upload-module', 'smart-table'
 				 ])
 		// @xyz@ values are replaced/filtered by maven during build process
 		.constant('appConstants', {
@@ -31,7 +32,8 @@
 			applicationUrl: '@application.url@',
 			eaStoreName: '@ea.store.name@',
 			eastoreuiJaxrsService: '@eastoreui.jax.rs.service@',
-			leftNavComponentId : 'MyLeftNav'
+			leftNavComponentId : 'MyLeftNav',
+			httpUploadHandler : 'url for upload handler goes here'
 		})
 		// inject our own constants into our config
 		.config(['appConstants', '$locationProvider', '$mdThemingProvider', '$stateProvider', '$urlRouterProvider', '$httpProvider', appConfig]);
@@ -391,6 +393,58 @@
 				}			
 			
 			);
+			
+			//
+			// store listing state - display a list of stores
+			//
+			$stateProvider.state(
+			
+				'upload', {
+					url: '/upload',
+					views : {
+						uicontent : {
+							component : 'uploadContentComponent' // when 'upload' state is active, render 'uploadContentComponent' into view with name 'uicontent'
+						},
+						uiheader : {
+							component : 'uploadHeaderComponent' // when 'upload' state is active, render 'uploadHeaderComponent' into view with name 'uiheader'
+						},
+						uititle : {
+							//template : 'Protocol Listing'
+							component : 'titleHeaderComponent' // when 'upload' state is active, render 'titleHeaderComponent' into view with name 'uititle'
+						},
+						uileftmenu : {
+							//template : 'Protocol Listing'
+							component : 'leftMenuComponent' // when 'upload' state is active, render 'leftMenuComponent' into view with name 'uileftmenu'
+						}
+					},
+					params : defaultStateParams,
+					resolve : {
+						headerTitle : function ($log, $stateParams){
+							
+							$log.debug('resolving headerTitle for upload state');							
+							$log.debug(JSON.stringify($stateParams));							
+							
+							return 'Upload Form';
+							
+						},
+						
+						uploader : function ($log, $stateParams, EAFileUploader, appConstants){
+							
+							$log.debug('resolving eaUploader for upload state');	
+							
+							var eaUploader = new EAFileUploader({
+								url: appConstants.httpUploadHandler
+					        });
+							
+							$log.debug(eaUploader.hello());
+							
+							return eaUploader;
+							
+						}
+					}					
+				}				
+				
+			);			
 		
 
 		};
