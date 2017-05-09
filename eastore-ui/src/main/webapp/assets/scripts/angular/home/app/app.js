@@ -30,7 +30,8 @@
 			contextPath: '@application.context@',
 			applicationUrl: '@application.url@',
 			eaStoreName: '@ea.store.name@',
-			eastoreuiJaxrsService: '@eastoreui.jax.rs.service@'
+			eastoreuiJaxrsService: '@eastoreui.jax.rs.service@',
+			leftNavComponentId : 'MyLeftNav'
 		})
 		// inject our own constants into our config
 		.config(['appConstants', '$locationProvider', '$mdThemingProvider', '$stateProvider', '$urlRouterProvider', '$httpProvider', appConfig]);
@@ -190,6 +191,8 @@
 					},
 					params : defaultStateParams,					
 					resolve : {
+						
+						// the current store
 						store : function(homeRestService, urlParseService, $log, $state, $stateParams) {
 							
 							$log.debug('------------ resolving store ');
@@ -222,6 +225,52 @@
 							}
 							
 						},
+						
+						// current directory
+						directory : function (homeRestService, urlParseService, $log, $state, $stateParams) {
+
+							$log.debug('------------ resolving current directory resource');
+							$log.debug(JSON.stringify($stateParams));
+
+							var storeName;
+							var currDirRes;
+							var relPathToLoad;
+
+							// use current store and current directory path resource if we have that information
+							if($stateParams.store && $stateParams.currDirResource){
+                                
+								storeName = $stateParams.store.name;
+								currDirRes = $stateParams.currDirResource;
+								relPathToLoad = currDirRes.relativePath;								
+							
+							// otherwise parse store name and relative path from urlPath value
+							}else{
+                                
+								$log.debug('parse store name and relpath from urlPath');
+                                
+                                var parseData = urlParseService.parseStoreAndRelpath($stateParams.urlPath);
+                                
+                                $log.debug('storeName = ' + parseData.storeName + ', relPathToLoad = ' + parseData.relPath);
+                                
+								storeName = parseData.storeName;
+								relPathToLoad = parseData.relPath;
+  
+							}	
+
+							// fetch directory patn resource
+							return homeRestService
+								.pathResourceByPath(storeName, relPathToLoad)
+								.then( function ( jsonData ){
+									$log.debug('resolved current directory, storeName = ' + storeName + ', relPathToLoad = ' + relPathToLoad);
+									//$log.debug(JSON.stringify(jsonData))
+									return jsonData;
+								}, function( error ){
+									alert('Error calling pathResourceByPath(...) service method' + JSON.stringify(error));
+								});							
+
+						},
+						
+						// the first-level child resources for the current directory
 						pathresources : function (homeRestService, urlParseService, $log, $state, $stateParams) {
 							
 							$log.debug('------------ resolving path resources');
@@ -259,7 +308,7 @@
 							return homeRestService
 								.loadRelPath(storeName, relPathToLoad)
 								.then( function ( jsonData ){
-									$log.debug('resolved path resources for relPath ' + relPathToLoad);
+									$log.debug('resolved path resources for storeName = ' + storeName + ', relPathToLoad = ' + relPathToLoad);
 									//$log.debug(JSON.stringify(jsonData))
 									return jsonData;
 								}, function( error ){
@@ -267,6 +316,8 @@
 								});
 								
 						},
+						
+						// current header title
 						headerTitle : function (urlParseService, $log, $stateParams){
 							
 							$log.debug('------------  resolving header title');
@@ -292,6 +343,8 @@
 							return title;
 							
 						},
+						
+						// breadcrumb parent tree (bottom-up) for current directory
 						breadcrumb : function (homeRestService, urlParseService, $log, $stateParams){
 							
 							//$log.debug('resolving breadcrumb tree');							
@@ -326,7 +379,7 @@
 							return homeRestService
 								.breadcrumbPath(storeName, relPathToLoad)
 								.then( function ( jsonData ){
-									$log.debug('resolved breadcrumb tree');
+									$log.debug('resolved breadcrumb tree for storeName = ' + storeName + ', relPathToLoad = ' + relPathToLoad);
 									//$log.debug(JSON.stringify(jsonData))
 									return jsonData;
 								}, function( error ){

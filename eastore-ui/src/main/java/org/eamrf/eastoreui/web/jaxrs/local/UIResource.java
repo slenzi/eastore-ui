@@ -120,6 +120,34 @@ public class UIResource extends BaseResourceHandler {
     }
     
     /**
+     * Fetch a path resource by store name, and relative path value of the resource in the store
+     * 
+     * @param storeName
+     * @param relPath
+     * @return
+     * @throws WebServiceException
+     */
+    @GET
+	@Path("/pathresource/path")
+	@Produces(MediaType.APPLICATION_JSON) 
+    public Response getPathResourceByPath(
+    		@QueryParam("storeName") String storeName, @QueryParam("relPath") String relPath) throws WebServiceException {
+    	
+    	logger.info(UIResource.class.getSimpleName() + " stores() called");
+    	
+    	String jsonReponse = null;
+		try {
+			jsonReponse = uiService.getPathResourceByPath(storeName, relPath);
+		} catch (ServiceException e) {
+			logger.error(e.getMessage(), e);
+			throw new WebServiceException(WebExceptionType.CODE_IO_ERROR, e.getMessage(), e);
+		}
+		
+		return Response.ok(jsonReponse, MediaType.APPLICATION_JSON).build();
+    	
+    }    
+    
+    /**
      * Fetch breadcrumb tree by node id
      * 
      * @param nodeId - Id of some child path resource

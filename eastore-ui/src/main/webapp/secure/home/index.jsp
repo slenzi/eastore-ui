@@ -29,7 +29,7 @@
 
 	<body ng-app="prodoc-home-app" layout="row" ng-controller="homeController as home">
 	
-	<md-sidenav class="md-sidenav-left md-hue-1" md-component-id="MyLeftNav" md-is-locked-open="$mdMedia('gt-md')">
+	<md-sidenav class="md-sidenav-left md-hue-1" md-component-id="{{leftNavComponentId}}" md-is-locked-open="$mdMedia('gt-md')">
 
 		<!-- make sidenav header sticky-->
 		<md-content layout="column" style="display: flex; flex-flow: column; height: 100%;">

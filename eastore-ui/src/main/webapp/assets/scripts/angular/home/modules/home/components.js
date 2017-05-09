@@ -13,7 +13,7 @@
 		
 		templateUrl : '@application.context@/assets/scripts/angular/home/modules/home/partials/left_menu.jsp',
 		
-		controller : function($log, $state, homeRestService){
+		controller : function(appConstants, $mdSidenav, $log, $state, homeRestService){
 			
 			//$log.debug('leftMenuComponent controller');
 			
@@ -32,6 +32,10 @@
 			this.clickStoreList = function(){
 				
 				$state.go('stores');
+				
+				if($mdSidenav(appConstants.leftNavComponentId).isOpen()){
+					$mdSidenav(appConstants.leftNavComponentId).close();
+				}				
 				
 			};
 			
@@ -174,7 +178,8 @@
 		
 		bindings: {
 			pathresources: '<',
-			store: '<'
+			store: '<',
+			directory : '<'
 		},
 		
 		templateUrl : '@application.context@/assets/scripts/angular/home/modules/home/partials/path_content.jsp',
@@ -232,7 +237,83 @@
 						return true;
 					}
 				}
+			};
+			
+			// return true if any of the directory resources are 'selected' in the smart table. Rows that are selected
+			// will have class 'st-selected' applied
+			this.haveSelectedDirectoryResource = function(pathResources){
+				for(var i = 0; i<pathResources.length; i++){
+					if(pathResources[i].resourceType === 'DIRECTORY' && pathResources[i].isSelected){
+						return true;
+					}
+				}
+			};
+			
+			// return true if any of the file resources are 'selected' in the smart table. Rows that are selected
+			// will have class 'st-selected' applied
+			this.haveSelectedFileResource = function(pathResources){
+				for(var i = 0; i<pathResources.length; i++){
+					if(pathResources[i].resourceType === 'FILE' && pathResources[i].isSelected){
+						return true;
+					}
+				}
+			};
+
+			// unselect all selected directories in our smart table
+			this.unselectDirectories = function(pathResources){
+				for(var i = 0; i<pathResources.length; i++){
+					if(pathResources[i].resourceType === 'DIRECTORY' && pathResources[i].isSelected){
+						pathResources[i].isSelected = false;
+					}
+				}				
 			};			
+			
+			// unselect all selected files in our smart table
+			this.unselectFiles = function(pathResources){
+				for(var i = 0; i<pathResources.length; i++){
+					if(pathResources[i].resourceType === 'FILE' && pathResources[i].isSelected){
+						pathResources[i].isSelected = false;
+					}
+				}				
+			};
+			
+			// delete all selected directories
+			this.deleteSelectedDirectories = function(pathResources){
+				var itemsToDelete = [];
+				for(var i = 0; i<pathResources.length; i++){
+					if(pathResources[i].resourceType === 'DIRECTORY' && pathResources[i].isSelected){
+						itemsToDelete.push(pathResources[i]);
+					}
+				}
+				alert('Delete directories coming soon!');
+			};			
+			
+			// delete all selected files
+			this.deleteSelectedFiles = function(pathResources){
+				var itemsToDelete = [];
+				for(var i = 0; i<pathResources.length; i++){
+					if(pathResources[i].resourceType === 'FILE' && pathResources[i].isSelected){
+						itemsToDelete.push(pathResources[i]);
+					}
+				}
+				alert('Delete files coming soon!');				
+			};			
+			
+			this.loadStateAddDirectoryForm = function(store, directoryResource){
+
+				alert('Add directory coming soon!');
+				
+				$log.debug('Upload to store = ' + store.name + ', directory relPath = ' + directoryResource.relativePath);				
+
+			};			
+
+			this.loadStateUploadForm = function(store, directoryResource){
+				
+				alert('Upload coming soon!');
+				
+				$log.debug('Upload to store = ' + store.name + ', directory relPath = ' + directoryResource.relativePath);
+				
+			};
 			
 		},
 		

@@ -20,7 +20,9 @@
 		var _sectionTitle = "Not set";	
 		
 		// will be true when data is being loaded from server web service
-		var _isLoadingDataFlag = false;	
+		var _isLoadingDataFlag = false;
+		
+		$scope.leftNavComponentId = appConstants.leftNavComponentId;
 
 		// banner images to cycle through
 		$scope.bannerImages = new Array();
@@ -65,7 +67,7 @@
 		 * Closes our left-hand navigation bar
 		 */
 		function _leftNavClose() {
-			$mdSidenav('MyLeftNav').close()
+			$mdSidenav(appConstants.leftNavComponentId).close()
 			.then(function () {
 				//$log.debug("close MyLeftNav is done");
 			});
@@ -78,7 +80,7 @@
 		 */
 		return {
 			
-			toggleLeftNav : _buildToggler('MyLeftNav'),
+			toggleLeftNav : _buildToggler(appConstants.leftNavComponentId),
 			
 			leftNavClose : _leftNavClose
 			

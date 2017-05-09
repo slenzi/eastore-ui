@@ -69,6 +69,19 @@ public class UIService {
     }
     
     /**
+     * Call E-A Store getPathResourceByPath(...)
+     * 
+     * @param storeName
+     * @param relPath
+     * @return
+     */
+	public String getPathResourceByPath(String storeName, String relPath) throws ServiceException {
+		
+		return storeService.getPathResourceByPath(storeName, relPath);
+		
+	}    
+    
+    /**
      * Calls E-A Store JSON service getBreadcrumbsByNodeId(...) method
      * 
      * @param nodeId - id of the path resource node

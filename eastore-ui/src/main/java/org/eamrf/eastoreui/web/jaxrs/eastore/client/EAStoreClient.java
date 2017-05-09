@@ -122,7 +122,7 @@ public class EAStoreClient {
 	 */
 	public String getPathResourceById(Long nodeId) throws WebServiceException {
 		
-		logger.info("Calling " + EAStoreClient.class.getSimpleName() + " getStores method");
+		logger.info("Calling " + EAStoreClient.class.getSimpleName() + " getPathResourceById method");
 		
 		resetClient();
 		
@@ -140,6 +140,38 @@ public class EAStoreClient {
 		return responseString;
 		
 	}
+	
+	/**
+	 * Call E-A Store /fsys/json/resource/path/{storeName}/{relPath:.+}
+	 * 
+	 * @param storeName
+	 * @param relPath
+	 * @return
+	 */
+	public String getPathResourceByPath(String storeName, String relPath) throws WebServiceException {
+
+		logger.info("Calling " + EAStoreClient.class.getSimpleName() + " getPathResourceByPath method");
+		
+		resetClient();
+		
+		if(!relPath.startsWith("/")){
+			relPath = "/" + relPath;
+		}
+		
+		String path = "/fsys/json/resource/path/" + storeName + relPath;
+		client.path(path);
+		Response resp = client.get();
+		
+		if(resp.getStatus() != Response.Status.OK.getStatusCode()){
+			throw new WebServiceException(WebExceptionType.CODE_IO_ERROR, 
+					"Response error from " + client.getCurrentURI().toString() + ", response code = " + resp.getStatus());
+		}
+		
+		String responseString = resp.readEntity(String.class);
+		
+		return responseString;		
+		
+	}	
 	
 	/**
 	 * Call E-A Store /fsys/json/store

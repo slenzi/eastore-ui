@@ -73,6 +73,27 @@ public class EAStoreService {
 	}
 	
 	/**
+	 * Call E-A Store /fsys/json/resource/path/{storeName}/{relPath:.+}
+	 * 
+	 * @param storeName
+	 * @param relPath
+	 * @return
+	 */
+	public String getPathResourceByPath(String storeName, String relPath) throws ServiceException {
+
+		logger.info(EAStoreService.class.getSimpleName() + " getPathResourceByPath(...) called");
+		
+		EAStoreClient client = eaStoreClientProvider.getClient();
+		
+		try {
+			return client.getPathResourceByPath(storeName, relPath);
+		} catch (WebServiceException e) {
+			throw new ServiceException("Error calling eastore getPathResourceByPath(...), " + e.getMessage(), e);
+		}		
+		
+	}	
+	
+	/**
 	 * Calls E-A Store JSON service, /fys/json/store/name/{storeName}
 	 * 
 	 * @return

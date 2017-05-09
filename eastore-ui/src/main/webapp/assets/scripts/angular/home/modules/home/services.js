@@ -45,6 +45,17 @@
 					}	
 				},
 				
+				// fetch a path resource by store name and relative path
+				pathResourceByPath: {
+					url: appConstants.eastoreuiJaxrsService + '/ui/pathresource/path',
+					method: 'GET',
+					isArray: false,
+					params: {
+						storeName: '@storeName',
+						relPath : '@relPath'
+					}		
+				},				
+				
 				// fetch list of all stores
 				storeByName: {
 					url: appConstants.eastoreuiJaxrsService + '/ui/store/name',
@@ -118,6 +129,15 @@
 			
 		}
 		
+		// fetch a specific path resource by store name and relative path
+		function _pathResourceByPath(storeName, relativePath){
+			
+			$log.debug('Calling jax-rs _pathResourceByPath service method');
+			
+			return eastoreuiService.pathResourceByPath({ storeName : storeName, relPath : relativePath }).$promise;					
+			
+		}		
+		
 		// fetch parent tree path for some child resource
 		function _breadcrumbNode(theNodeId){
 			
@@ -183,6 +203,8 @@
 			
 			pathResourceByNodeId : _pathResourceByNodeId,
 			
+			pathResourceByPath : _pathResourceByPath,
+			
 			breadcrumbNode : _breadcrumbNode,
 			
 			breadcrumbPath : _breadcrumbPath,
@@ -210,6 +232,7 @@
 		
         //
         // Parse the storeName and relPath values from the urlPath
+		// the urlPath should be /{storeName}/{relPath}
         //
 		function _parseStoreAndRelpath(urlPath){
 			
