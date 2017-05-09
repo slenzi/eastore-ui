@@ -190,31 +190,29 @@
 					},
 					params : defaultStateParams,					
 					resolve : {
-						store : function(homeRestService, $log, $state, $stateParams) {
+						store : function(homeRestService, urlParseService, $log, $state, $stateParams) {
 							
 							$log.debug('------------ resolving store ');
 							$log.debug(JSON.stringify($stateParams));
 							
 							// use existing store if we have one
 							if($stateParams.store){
+                                
 								return $stateParams.store;
 							
 							// otherwise parse store name from urlPath, then fetch from server
 							}else{
-								$log.debug('parse store name and relpath from urlPath');
-								var urlPath = $stateParams.urlPath;
-								if(urlPath.startsWith('/')){
-									urlPath = urlPath.slice(1); // remove '/' from front
-								}
-								var slashIndex = urlPath.indexOf('/');
-								var storeName = urlPath.substring(0, slashIndex);
-								var relPathToLoad = urlPath.substring(slashIndex);
-								$log.debug('storeName = ' + storeName + ', relPathToLoad = ' + relPathToLoad);
+								
+                                $log.debug('parse store name and relpath from urlPath');
+                                
+                                var parseData = urlParseService.parseStoreAndRelpath($stateParams.urlPath);
+                                
+								$log.debug('storeName = ' + parseData.storeName + ', relPathToLoad = ' + parseData.relPath);
 
 								return homeRestService
-									.storeByName(storeName, relPathToLoad)
+									.storeByName(parseData.storeName, parseData.relPath)
 									.then( function ( jsonData ){
-										$log.debug('resolved store with name ' + storeName);
+										$log.debug('resolved store with name ' + parseData.storeName);
 										//$log.debug(JSON.stringify(jsonData))
 										return jsonData;
 									}, function( error ){
@@ -224,7 +222,7 @@
 							}
 							
 						},
-						pathresources : function (homeRestService, $log, $state, $stateParams) {
+						pathresources : function (homeRestService, urlParseService, $log, $state, $stateParams) {
 							
 							$log.debug('------------ resolving path resources');
 							$log.debug(JSON.stringify($stateParams));
@@ -235,21 +233,23 @@
 							
 							// use current store and current directory path resource if we have that information
 							if($stateParams.store && $stateParams.currDirResource){
+                                
 								storeName = $stateParams.store.name;
 								currDirRes = $stateParams.currDirResource;
 								relPathToLoad = currDirRes.relativePath;								
 							
 							// otherwise parse store name and relative path from urlPath value
 							}else{
+                                
 								$log.debug('parse store name and relpath from urlPath');
-								var urlPath = $stateParams.urlPath;
-								if(urlPath.startsWith('/')){
-									urlPath = urlPath.slice(1); // remove '/' from front
-								}
-								var slashIndex = urlPath.indexOf('/');
-								storeName = urlPath.substring(0, slashIndex);
-								relPathToLoad = urlPath.substring(slashIndex);
-								$log.debug('storeName = ' + storeName + ', relPathToLoad = ' + relPathToLoad);
+                                
+                                var parseData = urlParseService.parseStoreAndRelpath($stateParams.urlPath);
+                                
+                                $log.debug('storeName = ' + parseData.storeName + ', relPathToLoad = ' + parseData.relPath);
+                                
+								storeName = parseData.storeName;
+								relPathToLoad = parseData.relPath;
+  
 							}
 							
 							//$log.debug('storeName = ' + storeName);
@@ -267,7 +267,7 @@
 								});
 								
 						},
-						headerTitle : function ($log, $stateParams){
+						headerTitle : function (urlParseService, $log, $stateParams){
 							
 							$log.debug('------------  resolving header title');
 							$log.debug(JSON.stringify($stateParams));
@@ -280,23 +280,19 @@
 								title = title + $stateParams.store.name;
 							
 							}else{
-								
-								// parse the store name value from the relPath
-								var urlPath = $stateParams.urlPath;
-								if(urlPath.startsWith('/')){
-									urlPath = urlPath.slice(1); // remove '/' from front
-								}
-								var slashIndex = urlPath.indexOf('/');
-								var storeName = urlPath.substring(0, slashIndex);
-								var relPathToLoad = urlPath.substring(slashIndex);	
-								title = title + storeName;
+                                
+                                var parseData = urlParseService.parseStoreAndRelpath($stateParams.urlPath);
+                                
+                                $log.debug('storeName = ' + parseData.storeName + ', relPathToLoad = ' + parseData.relPath);
+                                
+                                title = title + parseData.storeName;
 								
 							}
 							
 							return title;
 							
 						},
-						breadcrumb : function (homeRestService, $log, $stateParams){
+						breadcrumb : function (homeRestService, urlParseService, $log, $stateParams){
 							
 							//$log.debug('resolving breadcrumb tree');							
 							//$log.debug(JSON.stringify($stateParams));
@@ -307,21 +303,23 @@
 							
 							// use current store and current directory path resource if we have that information
 							if($stateParams.store && $stateParams.currDirResource){
+                                
 								storeName = $stateParams.store.name;
 								currDirRes = $stateParams.currDirResource;
 								relPathToLoad = currDirRes.relativePath;								
 							
 							// otherwise parse store name and relative path from urlPath value
 							}else{
+
 								$log.debug('parse store name and relpath from urlPath');
-								var urlPath = $stateParams.urlPath;
-								if(urlPath.startsWith('/')){
-									urlPath = urlPath.slice(1); // remove '/' from front
-								}
-								var slashIndex = urlPath.indexOf('/');
-								storeName = urlPath.substring(0, slashIndex);
-								relPathToLoad = urlPath.substring(slashIndex);
-								$log.debug('storeName = ' + storeName + ', relPathToLoad = ' + relPathToLoad);
+                                
+                                var parseData = urlParseService.parseStoreAndRelpath($stateParams.urlPath);
+                                
+                                $log.debug('storeName = ' + parseData.storeName + ', relPathToLoad = ' + parseData.relPath);
+                                
+								storeName = parseData.storeName;
+								relPathToLoad = parseData.relPath;
+                                
 							}						
 						
 							// return parent-tree breadcrumb

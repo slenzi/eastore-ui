@@ -12,8 +12,8 @@
 		);
 		
 	mainModule
-		.service('homeDataService', [
-			'appConstants', HomeDataService
+		.service('urlParseService', [
+			'appConstants', UrlParseService
 			]
 		);		
 	
@@ -200,66 +200,32 @@
 	}
 	
 	/**
-	 * RESTful services provider
+	 * Service for parsing the 'urlPath' value from our angular-ui 'path' state.
 	 */
-	function HomeDataService(appConstants, Base64, $log, $q, $location, $http, $resource){		
+	function UrlParseService($log){		
 		
 		// *********************************
 		// Internal methods and data
 		// *********************************
 		
-		var _currentProtocol;
-		
-		// data element bound to smart table which shows list of protocols		
-		var _rawProtListData = [{
-			prot : 'Loading...',
-			nciProt : 'Loading...',
-			title : 'Loading...',
-			shortName : 'Loading...'
-		}];
-		
-		var _childPathResources = [{
-			nodeId : 'Loading...',
-			parentNodeId : 'Loading...',
-			childNodeId : 'Loading...',
-			nodeName : 'Loading...',
-			dateCreated : 'Loading...',
-			dateUpdated : 'Loading...',
-			storeId : 'Loading...',
-			resourceType : 'Loading...',
-			relativePath : 'Loading...'
-		}];
-		
-		function _getCurrentProtocol(){
-			return _currentProtocol;
-		}
-		
-		function _setCurrentProtocol(prot){
-			_currentProtocol = prot;
-		}
-
-		function _getRawProtList(){
-			//$log.debug('getting raw prot list');
-			return _rawProtListData;
-		}
-
-		function _setRawProtList(list){
-			//$log.debug('setting raw prot list');
-			//$log.debug(JSON.stringify(list));
-			_rawProtListData = list;
-		}
-
-		function _getChildPathResources(){
-			return _childPathResources;
-		}
-		
-		function _setChildPathResources(childPathResources){
-			_childPathResources = childPathResources;
-		}
-				
-		function _echo(message){
+        //
+        // Parse the storeName and relPath values from the urlPath
+        //
+		function _parseStoreAndRelpath(urlPath){
 			
-			alert('You said => ' + message)
+            if(urlPath.startsWith('/')){
+                urlPath = urlPath.slice(1); // remove '/' from front
+            }
+            var _slashIndex = urlPath.indexOf('/');
+            var _storeName = urlPath.substring(0, _slashIndex);
+            var _relPath = urlPath.substring(_slashIndex);
+            
+            var data = {
+                storeName : _storeName,
+                relPath : _relPath
+            };
+            
+            return data;
 			
 		}
 		
@@ -268,16 +234,7 @@
 		// *********************************
 	    return {
 	    	
-			echo : _echo,
-			
-			getCurrentProtocol : _getCurrentProtocol,
-			setCurrentProtocol : _setCurrentProtocol,
-			
-			getRawProtList : _getRawProtList,
-			setRawProtList : _setRawProtList,
-			
-			getChildPathResources : _getChildPathResources,
-			setChildPathResources : _setChildPathResources
+			parseStoreAndRelpath : _parseStoreAndRelpath
 	    	
 	    };
 		
