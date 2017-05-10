@@ -63,6 +63,8 @@ public class UIActionResource extends BaseResourceHandler {
     @Consumes(MediaType.MULTIPART_FORM_DATA)
     public Response addFile(MultipartBody body) throws WebServiceException {
     	
+    	logger.info("Processing incoming upload");
+    	
     	List<Attachment> attachments = body.getAllAttachments();
     	Attachment rootAttachement = body.getRootAttachment();
     	
