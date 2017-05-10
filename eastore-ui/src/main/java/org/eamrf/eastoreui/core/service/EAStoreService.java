@@ -3,10 +3,13 @@
  */
 package org.eamrf.eastoreui.core.service;
 
+import javax.activation.DataHandler;
+
 import org.eamrf.core.logging.stereotype.InjectLogger;
 import org.eamrf.eastoreui.core.exception.ServiceException;
 import org.eamrf.eastoreui.core.model.file.FileResponse;
-import org.eamrf.eastoreui.web.jaxrs.eastore.client.EAStoreClient;
+import org.eamrf.eastoreui.web.jaxrs.eastore.client.EAStoreJsonClient;
+import org.eamrf.eastoreui.web.jaxrs.eastore.client.EAStoreActionClient;
 import org.eamrf.eastoreui.web.jaxrs.eastore.client.EAStoreClientProvider;
 import org.eamrf.web.rs.exception.WebServiceException;
 import org.slf4j.Logger;
@@ -40,13 +43,38 @@ public class EAStoreService {
 		
 		logger.info(EAStoreService.class.getSimpleName() + " echo() called");
 		
-		EAStoreClient client = eaStoreClientProvider.getClient();
+		EAStoreJsonClient client = eaStoreClientProvider.getJsonClient();
 		
 		try {
 			return client.echo(message);
 		} catch (WebServiceException e) {
 			throw new ServiceException("Error calling eastore echo, " + e.getMessage(), e);
 		}
+		
+	}
+	
+	/**
+	 * Call E-A Store /fsys/action/uploadFile
+	 * 
+	 * Uploads a file to eastore, to the specified directory
+	 * 
+	 * @param dirNodeId - id of the directory node
+	 * @param fileName - file name
+	 * @param dataHandler - interface to the binary data for the file
+	 * @return
+	 * @throws ServiceException
+	 */
+	public String uploadFile(Long dirNodeId, String fileName, DataHandler dataHandler) throws ServiceException {
+		
+		logger.info(EAStoreService.class.getSimpleName() + " uploadFile(...) called");
+		
+		EAStoreActionClient client = eaStoreClientProvider.getActionClient();
+		
+		try {
+			return client.uploadFile(dirNodeId, fileName, dataHandler);
+		} catch (WebServiceException e) {
+			throw new ServiceException("Error calling eastore echo, " + e.getMessage(), e);
+		}		
 		
 	}
 	
@@ -62,7 +90,7 @@ public class EAStoreService {
 		
 		logger.info(EAStoreService.class.getSimpleName() + " getPathResourceById() called");
 		
-		EAStoreClient client = eaStoreClientProvider.getClient();
+		EAStoreJsonClient client = eaStoreClientProvider.getJsonClient();
 		
 		try {
 			return client.getPathResourceById(nodeId);
@@ -83,7 +111,7 @@ public class EAStoreService {
 
 		logger.info(EAStoreService.class.getSimpleName() + " getPathResourceByPath(...) called");
 		
-		EAStoreClient client = eaStoreClientProvider.getClient();
+		EAStoreJsonClient client = eaStoreClientProvider.getJsonClient();
 		
 		try {
 			return client.getPathResourceByPath(storeName, relPath);
@@ -101,7 +129,7 @@ public class EAStoreService {
 	 */
 	public String getStoreByName(String storeName) throws ServiceException {
 		
-		EAStoreClient client = eaStoreClientProvider.getClient();
+		EAStoreJsonClient client = eaStoreClientProvider.getJsonClient();
 		
     	String jsonResponse = null;
     	try {
@@ -122,7 +150,7 @@ public class EAStoreService {
 	 */
 	public String getStores() throws ServiceException {
 		
-		EAStoreClient client = eaStoreClientProvider.getClient();
+		EAStoreJsonClient client = eaStoreClientProvider.getJsonClient();
 		
     	String jsonResponse = null;
     	try {
@@ -144,7 +172,7 @@ public class EAStoreService {
 	 */
 	public String getBreadcrumbsByNodeId(Long nodeId) throws ServiceException {
 		
-		EAStoreClient client = eaStoreClientProvider.getClient();
+		EAStoreJsonClient client = eaStoreClientProvider.getJsonClient();
 		
     	String jsonResponse = null;
     	try {
@@ -168,7 +196,7 @@ public class EAStoreService {
 	 */
 	public String getBreadcrumbsByPath(String storeName, String relPath) throws ServiceException {
 		
-		EAStoreClient client = eaStoreClientProvider.getClient();
+		EAStoreJsonClient client = eaStoreClientProvider.getJsonClient();
 		
     	String jsonResponse = null;
     	try {
@@ -192,7 +220,7 @@ public class EAStoreService {
 	 */
 	public String getChildPathResourceByPath(String storeName, String relPath) throws ServiceException {
 		
-		EAStoreClient client = eaStoreClientProvider.getClient();
+		EAStoreJsonClient client = eaStoreClientProvider.getJsonClient();
 		
     	String jsonResponse = null;
     	try {
@@ -215,7 +243,7 @@ public class EAStoreService {
 	 */
     public FileResponse getFileReponse(Long fileNodeId) throws ServiceException {
     	
-    	EAStoreClient client = eaStoreClientProvider.getClient();
+    	EAStoreJsonClient client = eaStoreClientProvider.getJsonClient();
     	
     	FileResponse fresp = null;
     	try {

@@ -25,16 +25,20 @@ public class EAStoreClientProvider {
     @Value( "${eastore.jax.rs.service.pass}" )    
     private String servicePass;
     
-    //private EAStoreClient client = null;
-	
 	public EAStoreClientProvider() {
 		
 	}
 	
-	public EAStoreClient getClient(){
+	public EAStoreJsonClient getJsonClient(){
 		
-		return new EAStoreClient(serviceUrl, serviceUser, servicePass);
+		return new EAStoreJsonClient(serviceUrl, serviceUser, servicePass);
 		
 	}
+	
+	public EAStoreActionClient getActionClient(){
+		
+		return new EAStoreActionClient(serviceUrl, serviceUser, servicePass);
+		
+	}	
 
 }

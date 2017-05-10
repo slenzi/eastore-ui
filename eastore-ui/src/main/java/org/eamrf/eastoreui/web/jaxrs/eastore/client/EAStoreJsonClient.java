@@ -24,9 +24,9 @@ import com.fasterxml.jackson.jaxrs.json.JacksonJsonProvider;
  * 
  * @author slenzi
  */
-public class EAStoreClient {
+public class EAStoreJsonClient {
 
-    private Logger logger = LoggerFactory.getLogger(EAStoreClient.class);
+    private Logger logger = LoggerFactory.getLogger(EAStoreJsonClient.class);
     
     private WebClient client = null;
     
@@ -36,7 +36,7 @@ public class EAStoreClient {
     
     private final String SERVICE_PATH_PREFIX = "/easapi/v1";
 	
-	public EAStoreClient(String url, String username, String password) {
+	public EAStoreJsonClient(String url, String username, String password) {
 		initializeClient(url, username, password);
 	}
 	
@@ -49,7 +49,7 @@ public class EAStoreClient {
 	 */
 	private void initializeClient(String url, String username, String password) {
 		
-		logger.info("Initializing " + EAStoreClient.class.getSimpleName());
+		logger.info("Initializing " + EAStoreJsonClient.class.getSimpleName());
 		
 		serviceUrl = url;
 		serviceUsr = username;
@@ -93,7 +93,7 @@ public class EAStoreClient {
 	 */
 	public String echo(String message) throws WebServiceException {
 		
-		logger.info("Calling " + EAStoreClient.class.getSimpleName() + " echo method");
+		logger.info("Calling " + EAStoreJsonClient.class.getSimpleName() + " echo method");
 		
 		resetClient();
 		
@@ -122,7 +122,7 @@ public class EAStoreClient {
 	 */
 	public String getPathResourceById(Long nodeId) throws WebServiceException {
 		
-		logger.info("Calling " + EAStoreClient.class.getSimpleName() + " getPathResourceById method");
+		logger.info("Calling " + EAStoreJsonClient.class.getSimpleName() + " getPathResourceById method");
 		
 		resetClient();
 		
@@ -150,7 +150,7 @@ public class EAStoreClient {
 	 */
 	public String getPathResourceByPath(String storeName, String relPath) throws WebServiceException {
 
-		logger.info("Calling " + EAStoreClient.class.getSimpleName() + " getPathResourceByPath method");
+		logger.info("Calling " + EAStoreJsonClient.class.getSimpleName() + " getPathResourceByPath method");
 		
 		resetClient();
 		
@@ -181,7 +181,7 @@ public class EAStoreClient {
 	 */
 	public String getStores() throws WebServiceException {
 		
-		logger.info("Calling " + EAStoreClient.class.getSimpleName() + " getStores method");
+		logger.info("Calling " + EAStoreJsonClient.class.getSimpleName() + " getStores method");
 		
 		resetClient();
 		
@@ -208,7 +208,7 @@ public class EAStoreClient {
 	 */
 	public String getStoreByName(String storeName) throws WebServiceException {
 		
-		logger.info("Calling " + EAStoreClient.class.getSimpleName() + " getStoreByName method");
+		logger.info("Calling " + EAStoreJsonClient.class.getSimpleName() + " getStoreByName method");
 		
 		resetClient();
 		
@@ -236,7 +236,7 @@ public class EAStoreClient {
 	 */
 	public String getBreadcrumbsByNodeId(Long nodeId) throws WebServiceException {
 		
-		logger.info("Calling " + EAStoreClient.class.getSimpleName() + " getBreadcrumbsByNodeId method");
+		logger.info("Calling " + EAStoreJsonClient.class.getSimpleName() + " getBreadcrumbsByNodeId method");
 		
 		resetClient();
 		
@@ -265,7 +265,7 @@ public class EAStoreClient {
 	 */
 	public String getBreadcrumbsByPath(String storeName, String relPath) throws WebServiceException {
 		
-		logger.info("Calling " + EAStoreClient.class.getSimpleName() + " getBreadcrumbsByPath method");
+		logger.info("Calling " + EAStoreJsonClient.class.getSimpleName() + " getBreadcrumbsByPath method");
 		
 		resetClient();
 		
@@ -294,7 +294,7 @@ public class EAStoreClient {
 	 */
 	public String getChildPathResourceByPath(String storeName, String relPath) throws WebServiceException {
 		
-		logger.info("Calling " + EAStoreClient.class.getSimpleName() + " getChildPathResourceByPath method");
+		logger.info("Calling " + EAStoreJsonClient.class.getSimpleName() + " getChildPathResourceByPath method");
 		
 		resetClient();
 		
@@ -319,9 +319,9 @@ public class EAStoreClient {
 	 * @param fileId
 	 * @throws WebServiceException
 	 */
-	public FileResponse getFileReponse(Long fileId) throws WebServiceException{
+	public FileResponse getFileReponse(Long fileId) throws WebServiceException {
 		
-		logger.info("Calling " + EAStoreClient.class.getSimpleName() + " getFile method");
+		logger.info("Calling " + EAStoreJsonClient.class.getSimpleName() + " getFile method");
 		
 		resetClient();
 		

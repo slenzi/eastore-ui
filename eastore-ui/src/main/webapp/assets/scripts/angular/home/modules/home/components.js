@@ -141,7 +141,8 @@
 		bindings: {
 				pathresources: '<',
 				breadcrumb: '<',
-				store: '<'
+				store: '<',
+				directory : '<'
 		},
 		
 		//templateUrl : '/eastore-ui/assets/scripts/angular/home/modules/home/partials/path_header.jsp',
@@ -178,7 +179,21 @@
 					  reload: true, inherit: false, notify: true
 					});
 				
-			};		
+			};	
+
+			this.refreshPath = function(store, directoryResource){
+				
+				$log.debug('refreshing current view');
+				
+				var newUrlPath = '/' + store.name + directoryResource.relativePath;
+				
+				$state.go('path', {
+					urlPath: newUrlPath,
+					store : store,
+					currDirResource : directoryResource
+					});				
+				
+			};
 			
 		},
 		
@@ -364,16 +379,31 @@
 	//
 	mainModule.component('uploadHeaderComponent', {
 		
-		bindings: { },
+		bindings: { 
+			store : '<',
+			directory : '<'		
+		},
 		
 		//templateUrl : '/eastore-ui/assets/scripts/angular/home/modules/home/partials/upload_header.jsp',
 		templateUrl : function (appConstants){
 			return appConstants.contextPath +  '/assets/scripts/angular/home/modules/home/partials/upload_header.jsp';
 		},		
 		
-		controller : function($log){
+		controller : function($log, $state){
 			
 			//$log.debug('uploadHeaderComponent controller');
+			
+			this.cancelUpload = function(store, directoryResource){
+				
+				var newUrlPath = '/' + store.name + directoryResource.relativePath;
+				
+				$state.go('path', {
+					urlPath: newUrlPath,
+					store : store,
+					currDirResource : directoryResource
+					});				
+				
+			}
 			
 		},
 		
@@ -444,7 +474,17 @@
 						},
 						// callback for handling completion of all uploads event from eaUploader
 						function(event){
-							alert('Upload complete! Thank you!');
+							
+							$log.debug('Upload complete');
+							
+							var newUrlPath = '/' + store.name + directoryResource.relativePath;
+							
+							$state.go('path', {
+								urlPath: newUrlPath,
+								store : store,
+								currDirResource : directoryResource
+								});							
+							
 						}
 					);
 						

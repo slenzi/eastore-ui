@@ -35,14 +35,14 @@ public class UIService {
     /**
      * Forwards the incoming upload to ea-store
      * 
-     * @param storeId - ID of the store where the file is being added
      * @param dirNodeId - ID of the directory path resource within the store, where the file is being added
      * @param fileName - file name of the incoming/uploaded file
      * @param dataHandler - interface to the binary data for the file
      * @throws ServiceException
      */
-    public void forwardUpload(Long storeId, Long dirNodeId, String fileName, DataHandler dataHandler) throws ServiceException {
+    public String forwardUpload(Long storeId, Long dirNodeId, String fileName, DataHandler dataHandler) throws ServiceException {
     	
+    	return storeService.uploadFile(dirNodeId, fileName, dataHandler);
     	
     }
     

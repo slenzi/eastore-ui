@@ -29,10 +29,12 @@
 	
 	<div ea-upload-queue-table uploader="uploadCtrl.uploader"></div>
 	
+	<!--
 	<p>
 		Debug:<br>
 		<div ea-upload-debug uploader="uploadCtrl.uploader"></div>
 	</p>
+	-->
 	
 	<!-- hide input field. users use 'Select Files' button above -->
 	<input id="file-input" style="display: none;" type="file" ea-upload-file-select uploader="uploadCtrl.uploader" multiple />
