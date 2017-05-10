@@ -4,12 +4,13 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.activation.DataHandler;
+
 import org.eamrf.core.logging.stereotype.InjectLogger;
 import org.eamrf.eastoreui.core.exception.ServiceException;
 import org.eamrf.eastoreui.core.model.file.FileResponse;
 import org.slf4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
@@ -17,7 +18,8 @@ import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 /**
- * main service class for feeding data back to our front-end (javascript/angular UI)
+ * Main service class for feeding data back to our front-end (javascript/angular UI),
+ * or handling other actions triggered by the UI layer such has uploading files.
  * 
  * @author slenzi
  */
@@ -29,6 +31,20 @@ public class UIService {
     
     @Autowired
     private EAStoreService storeService;
+    
+    /**
+     * Forwards the incoming upload to ea-store
+     * 
+     * @param storeId - ID of the store where the file is being added
+     * @param dirNodeId - ID of the directory path resource within the store, where the file is being added
+     * @param fileName - file name of the incoming/uploaded file
+     * @param dataHandler - interface to the binary data for the file
+     * @throws ServiceException
+     */
+    public void forwardUpload(Long storeId, Long dirNodeId, String fileName, DataHandler dataHandler) throws ServiceException {
+    	
+    	
+    }
     
     /**
      * Calls E-A Store JSON service, getStoreByName

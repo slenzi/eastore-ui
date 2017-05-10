@@ -30,10 +30,11 @@
 		.constant('appConstants', {
 			contextPath: '@application.context@',
 			applicationUrl: '@application.url@',
-			eaStoreName: '@ea.store.name@',
-			eastoreuiJaxrsService: '@eastoreui.jax.rs.service@',
-			leftNavComponentId : 'MyLeftNav',
-			httpUploadHandler : 'url for upload handler goes here'
+			eastoreTestJaxrsService: '@eastore.test.jax.rs.service@',
+			eastoreUiJsonJaxrsService: '@eastore.ui.json.jax.rs.service@',
+			eastoreUiActionJaxrsService: '@eastore.ui.action.jax.rs.service@',
+			httpUploadHandler : '@eastore.ui.action.jax.rs.service@/uploadFile',
+			leftNavComponentId : 'MyLeftNav'
 		})
 		// inject our own constants into our config
 		.config(['appConstants', '$locationProvider', '$mdThemingProvider', '$stateProvider', '$urlRouterProvider', '$httpProvider', appConfig]);

@@ -1,22 +1,14 @@
 package org.eamrf.eastoreui.web.jaxrs.local;
 
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.OutputStream;
-
 import javax.ws.rs.GET;
 import javax.ws.rs.Path;
-import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 import javax.ws.rs.QueryParam;
-import javax.ws.rs.WebApplicationException;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
-import javax.ws.rs.core.StreamingOutput;
 
 import org.eamrf.core.logging.stereotype.InjectLogger;
 import org.eamrf.eastoreui.core.exception.ServiceException;
-import org.eamrf.eastoreui.core.model.file.FileResponse;
 import org.eamrf.eastoreui.core.service.UIService;
 import org.eamrf.eastoreui.web.jaxrs.BaseResourceHandler;
 import org.eamrf.web.rs.exception.WebServiceException;
@@ -31,9 +23,9 @@ import org.springframework.stereotype.Service;
  * @author slenzi
  *
  */
-@Path("/ui")
-@Service("uiResource")
-public class UIResource extends BaseResourceHandler {
+@Path("/ui/json")
+@Service("uiJsonResource")
+public class UIJsonResource extends BaseResourceHandler {
 
     @InjectLogger
     private Logger logger;
@@ -52,7 +44,7 @@ public class UIResource extends BaseResourceHandler {
 	@Produces(MediaType.APPLICATION_JSON)    
     public Response getStoreByName(@QueryParam("storeName") String storeName) throws WebServiceException {
     	
-    	logger.info(UIResource.class.getSimpleName() + " getStoreByName(...) called");
+    	logger.info(UIJsonResource.class.getSimpleName() + " getStoreByName(...) called");
     	
     	String jsonReponse = null;
 		try {
@@ -77,7 +69,7 @@ public class UIResource extends BaseResourceHandler {
 	@Produces(MediaType.APPLICATION_JSON)    
     public Response stores() throws WebServiceException {
     	
-    	logger.info(UIResource.class.getSimpleName() + " stores() called");
+    	logger.info(UIJsonResource.class.getSimpleName() + " stores() called");
     	
     	String jsonReponse = null;
 		try {
@@ -105,7 +97,7 @@ public class UIResource extends BaseResourceHandler {
 	@Produces(MediaType.APPLICATION_JSON) 
     public Response getPathResourceById(@QueryParam("nodeId") Long nodeId) throws WebServiceException {
     	
-    	logger.info(UIResource.class.getSimpleName() + " stores() called");
+    	logger.info(UIJsonResource.class.getSimpleName() + " stores() called");
     	
     	String jsonReponse = null;
 		try {
@@ -133,7 +125,7 @@ public class UIResource extends BaseResourceHandler {
     public Response getPathResourceByPath(
     		@QueryParam("storeName") String storeName, @QueryParam("relPath") String relPath) throws WebServiceException {
     	
-    	logger.info(UIResource.class.getSimpleName() + " stores() called");
+    	logger.info(UIJsonResource.class.getSimpleName() + " stores() called");
     	
     	String jsonReponse = null;
 		try {
@@ -159,7 +151,7 @@ public class UIResource extends BaseResourceHandler {
 	@Produces(MediaType.APPLICATION_JSON)    
     public Response breadcrumb(@QueryParam("nodeId") Long nodeId) throws WebServiceException {
     	
-    	logger.info(UIResource.class.getSimpleName() + " breadcrumb() called");
+    	logger.info(UIJsonResource.class.getSimpleName() + " breadcrumb() called");
     	
     	String jsonReponse = null;
 		try {
@@ -187,7 +179,7 @@ public class UIResource extends BaseResourceHandler {
     public Response breadcrumb(
     		@QueryParam("storeName") String storeName, @QueryParam("relPath") String relPath) throws WebServiceException {
     	
-    	logger.info(UIResource.class.getSimpleName() + " breadcrumb() called");
+    	logger.info(UIJsonResource.class.getSimpleName() + " breadcrumb() called");
     	
     	logger.info("relPath = " + relPath);
     	
@@ -217,7 +209,7 @@ public class UIResource extends BaseResourceHandler {
     public Response loadRelativePath(
     		@QueryParam("storeName") String storeName, @QueryParam("relPath") String relPath) throws WebServiceException {
     	
-    	logger.info(UIResource.class.getSimpleName() + " loadRelativePath() called");
+    	logger.info(UIJsonResource.class.getSimpleName() + " loadRelativePath() called");
     	
     	logger.info("relPath = " + relPath);
     	
@@ -231,66 +223,7 @@ public class UIResource extends BaseResourceHandler {
 		
 		return Response.ok(jsonReponse, MediaType.APPLICATION_JSON).build();
     	
-    }
-    
-	@GET
-	@Path("/download/id/{fileId}")
-	@Produces(MediaType.APPLICATION_OCTET_STREAM)
-	public Response downloadFileById(@PathParam("fileId") Long fileId) throws WebServiceException {
-		
-		logger.info(UIResource.class.getSimpleName() + " downloadFileById() called");
-		
-		FileResponse fresp = null;
-		try {
-			fresp = uiService.getFile(fileId);
-		} catch (ServiceException e) {
-			if(fresp != null && fresp.hasInputStream()){
-				fresp.close();
-			}
-			logger.error(e.getMessage(), e);
-			throw new WebServiceException(WebExceptionType.CODE_IO_ERROR, e.getMessage(), e);
-		}
-		
-		return writeFileToResponse(fresp.getInput(), fresp.getName());
-		
-	}
-	
-	/**
-	 * Writes the file data to the response
-	 * 
-	 * @param input
-	 * @param fileName
-	 * @return
-	 */
-	private Response writeFileToResponse(InputStream input, String fileName) {
-		
-		//
-		// Write data to output/response
-		//
-		//ByteArrayInputStream bis = new ByteArrayInputStream(fileMeta.getBinaryResource().getFileData());
-		
-		//ContentDisposition contentDisposition = ContentDisposition.type("attachment")
-		//	    .fileName("filename.csv").creationDate(new Date()).build();
-		//ContentDisposition contentDisposition = new ContentDisposition("attachment; filename=image.jpg");
-		
-		return Response.ok(
-			new StreamingOutput() {
-				@Override
-				public void write(OutputStream out) throws IOException, WebApplicationException {
-					byte[] buffer = new byte[4 * 1024];
-					int bytesRead;
-					while ((bytesRead = input.read(buffer)) != -1) {
-					//while ((bytesRead = bis.read(buffer)) != -1) {
-						out.write(buffer, 0, bytesRead);
-					}
-					out.flush();
-					out.close();
-					input.close();
-				}
-			}
-		).header("Content-Disposition", "attachment; filename=" + fileName).build();		
-		
-	}	
+    }	
 
 	@Override
 	public Logger getLogger() {

@@ -27,7 +27,7 @@
 	    
 	</head>
 
-	<body ng-app="prodoc-home-app" layout="row" ng-controller="homeController as home">
+	<body ng-app="eastore-ui-home-app" layout="row" ng-controller="homeController as home">
 	
 	<md-sidenav class="md-sidenav-left md-hue-1" md-component-id="{{leftNavComponentId}}" md-is-locked-open="$mdMedia('gt-md')">
 

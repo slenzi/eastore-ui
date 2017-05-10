@@ -22,22 +22,27 @@
 	 */
 	function HomeRestService(appConstants, Base64, $log, $q, $location, $http, $resource){
 
-		var eastoreuiService = $resource(
-			appConstants.eastoreuiJaxrsService, { }, {
+		var eastoreTestService = $resource(
+				appConstants.eastoreTestJaxrsService, { }, {
+					
+					// call echo service which relays to eastore echo service
+					echo: {
+						url: appConstants.eastoreTestJaxrsService + '/echo',
+						method: 'GET',
+						isArray: false,
+						params: {
+							message : '@message'
+						}					
+					}
 				
-				// call echo service which relays to eastore echo service
-				echo: {
-					url: appConstants.eastoreuiJaxrsService + '/test/echo',
-					method: 'GET',
-					isArray: false,
-					params: {
-						message : '@message'
-					}					
-				},
+				});
+		
+		var eastoreUiJsonService = $resource(
+			appConstants.eastoreUiJsonJaxrsService, { }, {
 				
 				// fetch a path resource by its node id
 				pathResourceByNodeId: {
-					url: appConstants.eastoreuiJaxrsService + '/ui/pathresource/node',
+					url: appConstants.eastoreUiJsonJaxrsService + '/pathresource/node',
 					method: 'GET',
 					isArray: false,
 					params: {
@@ -47,7 +52,7 @@
 				
 				// fetch a path resource by store name and relative path
 				pathResourceByPath: {
-					url: appConstants.eastoreuiJaxrsService + '/ui/pathresource/path',
+					url: appConstants.eastoreUiJsonJaxrsService + '/pathresource/path',
 					method: 'GET',
 					isArray: false,
 					params: {
@@ -58,7 +63,7 @@
 				
 				// fetch list of all stores
 				storeByName: {
-					url: appConstants.eastoreuiJaxrsService + '/ui/store/name',
+					url: appConstants.eastoreUiJsonJaxrsService + '/store/name',
 					method: 'GET',
 					isArray: false,
 					params: {
@@ -68,7 +73,7 @@
 				
 				// fetch list of all stores
 				storelist: {
-					url: appConstants.eastoreuiJaxrsService + '/ui/stores',
+					url: appConstants.eastoreUiJsonJaxrsService + '/stores',
 					method: 'GET',
 					isArray: true,
 					params: {}					
@@ -76,7 +81,7 @@
 				
 				// fetch list of first-level child resource under the resource with the relPath
 				loadRelPath: {
-					url: appConstants.eastoreuiJaxrsService + '/ui/loadRelPath',
+					url: appConstants.eastoreUiJsonJaxrsService + '/loadRelPath',
 					method: 'GET',
 					isArray: true,
 					params: {
@@ -87,7 +92,7 @@
 				
 				// fetch breadcrumb tree for some path resource by node id
 				breadcrumbNode: {
-					url: appConstants.eastoreuiJaxrsService + '/ui/breadcrumb/node',
+					url: appConstants.eastoreUiJsonJaxrsService + '/breadcrumb/node',
 					method: 'GET',
 					isArray: true,
 					params: {
@@ -97,7 +102,7 @@
 				
 				// fetch breadcrumb tree for some path resource by relPath
 				breadcrumbPath: {
-					url: appConstants.eastoreuiJaxrsService + '/ui/breadcrumb/path',
+					url: appConstants.eastoreUiJsonJaxrsService + '/breadcrumb/path',
 					method: 'GET',
 					isArray: true,
 					params: {
@@ -106,7 +111,8 @@
 					}	
 				}				
 			
-			});		
+			});
+		
 		
 		// *********************************
 		// Internal RESTful methods
@@ -116,7 +122,7 @@
 			
 			$log.debug('Calling jax-rs test echo service method');
 			
-			return eastoreuiService.echo({ message : msg }).$promise;		
+			return eastoreTestService.echo({ message : msg }).$promise;		
 			
 		}
 		
@@ -125,7 +131,7 @@
 			
 			$log.debug('Calling jax-rs _pathResourceByNodeId service method');
 			
-			return eastoreuiService.pathResourceByNodeId({ nodeId : theNodeId }).$promise;					
+			return eastoreUiJsonService.pathResourceByNodeId({ nodeId : theNodeId }).$promise;					
 			
 		}
 		
@@ -134,7 +140,7 @@
 			
 			$log.debug('Calling jax-rs _pathResourceByPath service method');
 			
-			return eastoreuiService.pathResourceByPath({ storeName : storeName, relPath : relativePath }).$promise;					
+			return eastoreUiJsonService.pathResourceByPath({ storeName : storeName, relPath : relativePath }).$promise;					
 			
 		}		
 		
@@ -143,7 +149,7 @@
 			
 			$log.debug('Calling jax-rs _breadcrumbNode service method');
 			
-			return eastoreuiService.breadcrumbNode({ nodeId : theNodeId }).$promise;					
+			return eastoreUiJsonService.breadcrumbNode({ nodeId : theNodeId }).$promise;					
 			
 		}
 		
@@ -152,7 +158,7 @@
 			
 			$log.debug('Calling jax-rs _breadcrumbPath service method');
 			
-			return eastoreuiService.breadcrumbPath({ storeName : storeName, relPath : relativePath }).$promise;					
+			return eastoreUiJsonService.breadcrumbPath({ storeName : storeName, relPath : relativePath }).$promise;					
 			
 		}
 		
@@ -161,7 +167,7 @@
 			
 			$log.debug('Calling jax-rs _storeByName service method');
 			
-			return eastoreuiService.storeByName({ storeName : storeName }).$promise;
+			return eastoreUiJsonService.storeByName({ storeName : storeName }).$promise;
 			
 		}		
 		
@@ -170,7 +176,7 @@
 			
 			$log.debug('Calling jax-rs _storeList service method');
 			
-			return eastoreuiService.storelist().$promise;
+			return eastoreUiJsonService.storelist().$promise;
 			
 		}
 		
@@ -179,7 +185,7 @@
 			
 			$log.debug('Calling jax-rs loadRelPath service method');
 			
-			return eastoreuiService.loadRelPath({ storeName : storeName, relPath : relativePath }).$promise;		
+			return eastoreUiJsonService.loadRelPath({ storeName : storeName, relPath : relativePath }).$promise;		
 			
 		}
 		
@@ -188,7 +194,7 @@
 			
 			$log.debug('Downloading file with nodeId = ' + fileId);
 			
-			var downloadUrl = appConstants.eastoreuiJaxrsService + '/ui/download/id/' + fileId;
+			var downloadUrl = appConstants.eastoreUiActionJaxrsService + '/download/id/' + fileId;
 			
 			window.location.href = downloadUrl;
 			

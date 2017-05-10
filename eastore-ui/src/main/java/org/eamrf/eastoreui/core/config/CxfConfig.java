@@ -9,7 +9,8 @@ import org.apache.cxf.endpoint.Server;
 import org.apache.cxf.jaxrs.JAXRSServerFactoryBean;
 import org.eamrf.eastoreui.web.jaxrs.local.StoreUIApplication;
 import org.eamrf.eastoreui.web.jaxrs.local.TestResource;
-import org.eamrf.eastoreui.web.jaxrs.local.UIResource;
+import org.eamrf.eastoreui.web.jaxrs.local.UIActionResource;
+import org.eamrf.eastoreui.web.jaxrs.local.UIJsonResource;
 import org.eamrf.web.rs.exception.WebServiceExceptionMapper;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -62,7 +63,7 @@ public class CxfConfig {
 			// Add service beans
 			factory.setServiceBeans(
 				Arrays.<Object>asList(
-					getTestResource(), getUIResource()
+					getTestResource(), getUIJsonResource(), getUIActionResource()
 				)
 			);
 			
@@ -98,8 +99,13 @@ public class CxfConfig {
 		}
 		
 		@Bean
-		public UIResource getUIResource(){
-			return new UIResource();
+		public UIJsonResource getUIJsonResource(){
+			return new UIJsonResource();
+		}
+		
+		@Bean
+		public UIActionResource getUIActionResource(){
+			return new UIActionResource();
 		}
 		
 		/**
