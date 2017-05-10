@@ -144,6 +144,9 @@
 					params : defaultStateParams,
 					resolve : {
 						stores : function (homeRestService, $log) {
+							
+							$log.debug('------------ [stores state] resolving stores ');
+							
 							return homeRestService
 								.storeList()
 								.then( function ( jsonData ){
@@ -156,7 +159,7 @@
 						},
 						headerTitle : function ($log, $stateParams){
 							
-							//$log.debug('resolving header title');
+							$log.debug('------------ [stores state] resolving header title ');
 							
 							//$log.debug(JSON.stringify($stateParams));
 							
@@ -197,8 +200,8 @@
 						// the current store
 						store : function(homeRestService, urlParseService, $log, $state, $stateParams) {
 							
-							$log.debug('------------ resolving store ');
-							$log.debug(JSON.stringify($stateParams));
+							$log.debug('------------ [path state] resolving store ');
+							//$log.debug(JSON.stringify($stateParams));
 							
 							// use existing store if we have one
 							if($stateParams.store){
@@ -231,8 +234,8 @@
 						// current directory
 						directory : function (homeRestService, urlParseService, $log, $state, $stateParams) {
 
-							$log.debug('------------ resolving current directory resource');
-							$log.debug(JSON.stringify($stateParams));
+							$log.debug('------------ [path state] resolving directory resource');
+							//$log.debug(JSON.stringify($stateParams));
 
 							var storeName;
 							var currDirRes;
@@ -275,8 +278,8 @@
 						// the first-level child resources for the current directory
 						pathresources : function (homeRestService, urlParseService, $log, $state, $stateParams) {
 							
-							$log.debug('------------ resolving path resources');
-							$log.debug(JSON.stringify($stateParams));
+							$log.debug('------------ [path state] resolving path resources');
+							//$log.debug(JSON.stringify($stateParams));
 							
 							var storeName;
 							var currDirRes;
@@ -322,8 +325,8 @@
 						// current header title
 						headerTitle : function (urlParseService, $log, $stateParams){
 							
-							$log.debug('------------  resolving header title');
-							$log.debug(JSON.stringify($stateParams));
+							$log.debug('------------ [path state] resolving header title');
+							//$log.debug(JSON.stringify($stateParams));
 							
 							var title = 'Documents for ';
 							
@@ -349,7 +352,8 @@
 						// breadcrumb parent tree (bottom-up) for current directory
 						breadcrumb : function (homeRestService, urlParseService, $log, $stateParams){
 							
-							//$log.debug('resolving breadcrumb tree');							
+							$log.debug('------------ [path state] resolving breadcrumb parent tree');
+							
 							//$log.debug(JSON.stringify($stateParams));
 							
 							var storeName;
@@ -400,7 +404,7 @@
 			$stateProvider.state(
 			
 				'upload', {
-					url: '/upload',
+					url: '/upload{urlPath:any}',
 					views : {
 						uicontent : {
 							component : 'uploadContentComponent' // when 'upload' state is active, render 'uploadContentComponent' into view with name 'uicontent'
@@ -421,8 +425,8 @@
 					resolve : {
 						headerTitle : function ($log, $stateParams){
 							
-							$log.debug('resolving headerTitle for upload state');							
-							$log.debug(JSON.stringify($stateParams));							
+							$log.debug('------------ [upload state] resolving headerTitle');							
+							//$log.debug(JSON.stringify($stateParams));							
 							
 							return 'Upload Form';
 							
@@ -430,7 +434,7 @@
 						
 						uploader : function ($log, $stateParams, EAFileUploader, appConstants){
 							
-							$log.debug('resolving eaUploader for upload state');	
+							$log.debug('------------ [upload state] resolving eaUploader');	
 							
 							var eaUploader = new EAFileUploader({
 								url: appConstants.httpUploadHandler
@@ -440,7 +444,86 @@
 							
 							return eaUploader;
 							
-						}
+						},
+						
+						// the current store
+						store : function(homeRestService, urlParseService, $log, $state, $stateParams) {
+							
+							$log.debug('------------ [upload state] resolving store');
+							//$log.debug(JSON.stringify($stateParams));
+							
+							// use existing store if we have one
+							if($stateParams.store){
+                                
+								return $stateParams.store;
+							
+							// otherwise parse store name from urlPath, then fetch from server
+							}else{
+								
+                                $log.debug('parse store name and relpath from urlPath');
+                                
+                                var parseData = urlParseService.parseStoreAndRelpath($stateParams.urlPath);
+                                
+								$log.debug('storeName = ' + parseData.storeName + ', relPathToLoad = ' + parseData.relPath);
+
+								return homeRestService
+									.storeByName(parseData.storeName, parseData.relPath)
+									.then( function ( jsonData ){
+										$log.debug('resolved store with name ' + parseData.storeName);
+										//$log.debug(JSON.stringify(jsonData))
+										return jsonData;
+									}, function( error ){
+										alert('Error calling storeByName(...) service method' + JSON.stringify(error));
+									});
+								
+							}
+							
+						},
+						
+						// current directory
+						directory : function (homeRestService, urlParseService, $log, $state, $stateParams) {
+
+							$log.debug('------------ [upload state] resolving directory resource');
+							//$log.debug(JSON.stringify($stateParams));
+
+							var storeName;
+							var currDirRes;
+							var relPathToLoad;
+
+							// use current store and current directory path resource if we have that information
+							if($stateParams.store && $stateParams.currDirResource){
+                                
+								storeName = $stateParams.store.name;
+								currDirRes = $stateParams.currDirResource;
+								relPathToLoad = currDirRes.relativePath;								
+							
+							// otherwise parse store name and relative path from urlPath value
+							}else{
+                                
+								$log.debug('parse store name and relpath from urlPath');
+                                
+                                var parseData = urlParseService.parseStoreAndRelpath($stateParams.urlPath);
+                                
+                                $log.debug('storeName = ' + parseData.storeName + ', relPathToLoad = ' + parseData.relPath);
+                                
+								storeName = parseData.storeName;
+								relPathToLoad = parseData.relPath;
+  
+							}	
+
+							// fetch directory patn resource
+							return homeRestService
+								.pathResourceByPath(storeName, relPathToLoad)
+								.then( function ( jsonData ){
+									$log.debug('resolved current directory, storeName = ' + storeName + ', relPathToLoad = ' + relPathToLoad);
+									//$log.debug(JSON.stringify(jsonData))
+									return jsonData;
+								}, function( error ){
+									alert('Error calling pathResourceByPath(...) service method' + JSON.stringify(error));
+								});							
+
+						}						
+						
 					}					
 				}				
 				

@@ -11,7 +11,10 @@
 		
 		bindings: { headerTitle: '<' },
 		
-		templateUrl : '@application.context@/assets/scripts/angular/home/modules/home/partials/left_menu.jsp',
+		//templateUrl : '/eastore-ui/assets/scripts/angular/home/modules/home/partials/left_menu.jsp',
+		templateUrl : function (appConstants){
+			return appConstants.contextPath +  '/assets/scripts/angular/home/modules/home/partials/left_menu.jsp';
+		},			
 		
 		controller : function(appConstants, $mdSidenav, $log, $state, homeRestService){
 			
@@ -52,7 +55,10 @@
 		
 		bindings: { headerTitle: '<' },
 		
-		templateUrl : '@application.context@/assets/scripts/angular/home/modules/home/partials/title_header.jsp',
+		//templateUrl : '/eastore-ui/assets/scripts/angular/home/modules/home/partials/title_header.jsp',
+		templateUrl : function (appConstants){
+			return appConstants.contextPath +  '/assets/scripts/angular/home/modules/home/partials/title_header.jsp';
+		},				
 		
 		controller : function($log){
 			//$log.debug('titleHeaderComponent controller');
@@ -73,7 +79,10 @@
 		//	'Protocol List'
 		//,
 		
-		templateUrl : '@application.context@/assets/scripts/angular/home/modules/home/partials/store_list_header.jsp',
+		//templateUrl : '/eastore-ui/assets/scripts/angular/home/modules/home/partials/store_list_header.jsp',
+		templateUrl : function (appConstants){
+			return appConstants.contextPath +  '/assets/scripts/angular/home/modules/home/partials/store_list_header.jsp';
+		},			
 		
 		controller : function($log){
 			//$log.debug('storesHeaderComponent controller');
@@ -90,7 +99,10 @@
 		
 		bindings: { stores: '<' },
 		
-		templateUrl : '@application.context@/assets/scripts/angular/home/modules/home/partials/store_list_content.jsp',
+		//templateUrl : '/eastore-ui/assets/scripts/angular/home/modules/home/partials/store_list_content.jsp',
+		templateUrl : function (appConstants){
+			return appConstants.contextPath +  '/assets/scripts/angular/home/modules/home/partials/store_list_content.jsp';
+		},				
 		
 		controller : function($log, $state){
 			
@@ -108,7 +120,7 @@
 				
 				$state.go('path', {
 					urlPath: newUrlPath,
-					relPath: newRelPath,
+					//relPath: newRelPath,
 					store : theStore,
 					currDirResource : rootDirectory
 					});
@@ -132,7 +144,10 @@
 				store: '<'
 		},
 		
-		templateUrl : '@application.context@/assets/scripts/angular/home/modules/home/partials/path_header.jsp',
+		//templateUrl : '/eastore-ui/assets/scripts/angular/home/modules/home/partials/path_header.jsp',
+		templateUrl : function (appConstants){
+			return appConstants.contextPath +  '/assets/scripts/angular/home/modules/home/partials/path_header.jsp';
+		},			
 		
 		controller : function($log, $state, $stateParams){
 			
@@ -142,7 +157,7 @@
 				
 				// breadcrumb path resources should always be of resourceType DIRECTORY.
 				
-				$log.debug('You clicked on breadcrumb path resource:\n\n' + JSON.stringify(resource));
+				//$log.debug('You clicked on breadcrumb path resource:\n\n' + JSON.stringify(resource));
 				
 				this.loadDirectory(store, resource);
 				
@@ -156,7 +171,7 @@
 					//$stateParams.urlPath = '/' + $stateParams.store.name + resource.relativePath;
 					$stateParams.urlPath = '/' + store.name + resource.relativePath;
 					
-					$log.debug('breadcrumb click, dirNodeId = ' + $stateParams.currDirResource.nodeId + ', urlPath = ' + $stateParams.urlPath);
+					//$log.debug('breadcrumb click, dirNodeId = ' + $stateParams.currDirResource.nodeId + ', urlPath = ' + $stateParams.urlPath);
 					
 					// similar to $state.reload(), but we want to change one of our stateparams so we use transition to instead
 					$state.transitionTo($state.current, $stateParams, { 
@@ -182,7 +197,10 @@
 			directory : '<'
 		},
 		
-		templateUrl : '@application.context@/assets/scripts/angular/home/modules/home/partials/path_content.jsp',
+		//templateUrl : '/eastore-ui/assets/scripts/angular/home/modules/home/partials/path_content.jsp',
+		templateUrl : function (appConstants){
+			return appConstants.contextPath +  '/assets/scripts/angular/home/modules/home/partials/path_content.jsp';
+		},			
 		
 		controller : function($log, $state, $stateParams, homeRestService){
 			
@@ -205,8 +223,8 @@
 					//$stateParams.urlPath = '/' + $stateParams.store.name + resource.relativePath;
 					$stateParams.urlPath = '/' + store.name + resource.relativePath;
 					
-					$log.debug('directory click, dirNodeId = ' + $stateParams.currDirResource.nodeId + 
-						', relPath = ' + $stateParams.relPath + ', urlPath = ' + $stateParams.urlPath);
+					//$log.debug('directory click, dirNodeId = ' + $stateParams.currDirResource.nodeId + 
+					//	', relPath = ' + $stateParams.relPath + ', urlPath = ' + $stateParams.urlPath);
 					
 					// similar to $state.reload(), but we want to change one of our stateparams so we use transition to instead
 					$state.transitionTo($state.current, $stateParams, { 
@@ -313,7 +331,25 @@
 				
 				$log.debug('Upload to store = ' + store.name + ', directory relPath = ' + directoryResource.relativePath);
 				
-				$state.go('upload');
+				
+				//$stateParams.store = store;
+				//$stateParams.currDirResource = directoryResource;
+				var newUrlPath = '/' + store.name + directoryResource.relativePath;
+				
+				$state.go('upload', {
+					urlPath: newUrlPath,
+					store : store,
+					currDirResource : directoryResource
+					});				
+				
+				//$state.transitionTo('upload', $stateParams, { 
+				//	reload: true, inherit: false, notify: true
+				//});				
+				
+				//$state.go('upload', {
+				//	store : store,
+				//	currDirResource : directoryResource
+				//});
 				
 			};
 			
@@ -330,7 +366,10 @@
 		
 		bindings: { },
 		
-		templateUrl : '@application.context@/assets/scripts/angular/home/modules/home/partials/upload_header.jsp',
+		//templateUrl : '/eastore-ui/assets/scripts/angular/home/modules/home/partials/upload_header.jsp',
+		templateUrl : function (appConstants){
+			return appConstants.contextPath +  '/assets/scripts/angular/home/modules/home/partials/upload_header.jsp';
+		},		
 		
 		controller : function($log){
 			
@@ -347,21 +386,29 @@
 	//
 	mainModule.component('uploadContentComponent', {
 		
-		bindings: { uploader : '<'},
+		bindings: {
+			uploader : '<',
+			store : '<',
+			directory : '<'
+		},
 		
-		templateUrl : '@application.context@/assets/scripts/angular/home/modules/home/partials/upload_content.jsp',
+		//templateUrl : '/eastore-ui/assets/scripts/angular/home/modules/home/partials/upload_content.jsp',
+		templateUrl : function (appConstants){
+			return appConstants.contextPath +  '/assets/scripts/angular/home/modules/home/partials/upload_content.jsp';
+		},
 		
-		controller : function($log, $state, EAFileUploader, appConstants){
+		controller : function($log, $state, $stateParams, EAFileUploader, appConstants){
 			
-			//$log.debug('uploadContentComponent controller');
+			$log.debug('uploadContentComponent controller');
 			
-			var eaUploader = new EAFileUploader({
-				url: appConstants.httpUploadHandler
-			});
+			//$log.debug(JSON.stringify($stateParams));
 			
-			this.getUploader = function(){
-				$log.debug('getUploader called');
-				return eaUploader;
+			this.startUpload = function(uploader, store, directoryResource){
+				
+				alert('Starting upload (coming soon)');
+				
+				$log.debug('store = ' + store.name + ', directory = ' + directoryResource.relativePath);
+				
 			};
 
 			this.onCompleteUpload = function(){
