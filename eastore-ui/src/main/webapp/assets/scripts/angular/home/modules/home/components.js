@@ -336,9 +336,17 @@
 			
 			this.loadStateAddDirectoryForm = function(store, directoryResource){
 
-				alert('Add directory coming soon!');
+				//alert('Add directory coming soon!');
 				
-				$log.debug('Upload to store = ' + store.name + ', directory relPath = ' + directoryResource.relativePath);				
+				$log.debug('Add directory to store = ' + store.name + ', under directory relPath = ' + directoryResource.relativePath);
+
+				var newUrlPath = '/' + store.name + directoryResource.relativePath;
+				
+				$state.go('createdir', {
+					urlPath: newUrlPath,
+					store : store,
+					currDirResource : directoryResource
+					});				
 
 			};			
 
@@ -501,6 +509,88 @@
 		},
 		
 		controllerAs : 'uploadCtrl' // default is $ctrl
+		
+	});
+
+	//
+	// header for create directory state
+	//
+	mainModule.component('createDirHeaderComponent', {
+		
+		bindings: {
+			store : '<',
+			directory : '<'
+		},
+		
+		templateUrl : function (appConstants){
+			return appConstants.contextPath +  '/assets/scripts/angular/home/modules/home/partials/create_directory_header.jsp';
+		},			
+		
+		controller : function($log, $state){
+			
+			//$log.debug('storesHeaderComponent controller');
+			
+			this.cancelCreate = function(store, directoryResource){
+				
+				$log.debug('cancel create directory');
+				
+				var newUrlPath = '/' + store.name + directoryResource.relativePath;
+				
+				$state.go('path', {
+					urlPath: newUrlPath,
+					store : store,
+					currDirResource : directoryResource
+					});				
+				
+			};				
+			
+		},
+		
+		controllerAs : 'dirCtrl' // default is $ctrl
+		
+	});
+
+	//
+	// content for create directory state
+	//
+	mainModule.component('createDirContentComponent', {
+		
+		bindings: {
+			store : '<',
+			directory : '<'
+		},
+		
+		templateUrl : function (appConstants){
+			return appConstants.contextPath +  '/assets/scripts/angular/home/modules/home/partials/create_directory_content.jsp';
+		},				
+		
+		controller : function($log, $state){
+			
+			//$log.debug('storesContentComponent controller');
+			
+			this.doCreateDirectory = function(store, directoryResource){
+				
+				alert('create directory coming soon!');
+				
+			};
+
+			this.cancelCreate = function(store, directoryResource){
+				
+				$log.debug('cancel create directory');
+				
+				var newUrlPath = '/' + store.name + directoryResource.relativePath;
+				
+				$state.go('path', {
+					urlPath: newUrlPath,
+					store : store,
+					currDirResource : directoryResource
+					});				
+				
+			};				
+			
+		},
+		
+		controllerAs : 'dirCtrl' // default is $ctrl
 		
 	});	
 	

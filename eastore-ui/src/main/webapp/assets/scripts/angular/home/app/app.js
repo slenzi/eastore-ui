@@ -93,7 +93,12 @@
 
 			$mdThemingProvider.theme('default')
 				.primaryPalette('indigo')
-				.accentPalette('grey');					
+				.accentPalette('grey');
+
+			//$mdThemingProvider.theme('docs-dark', 'default')
+			//	.primaryPalette('pink')
+			//	.accentPalette('orange')
+			//	.dark();				
 			
 		};
 		
@@ -400,7 +405,7 @@
 			);
 			
 			//
-			// store listing state - display a list of stores
+			// upload state - display upload form
 			//
 			$stateProvider.state(
 			
@@ -485,6 +490,123 @@
 						directory : function (homeRestService, urlParseService, $log, $state, $stateParams) {
 
 							$log.debug('------------ [upload state] resolving directory resource');
+							//$log.debug(JSON.stringify($stateParams));
+
+							var storeName;
+							var currDirRes;
+							var relPathToLoad;
+
+							// use current store and current directory path resource if we have that information
+							if($stateParams.store && $stateParams.currDirResource){
+                                
+								storeName = $stateParams.store.name;
+								currDirRes = $stateParams.currDirResource;
+								relPathToLoad = currDirRes.relativePath;								
+							
+							// otherwise parse store name and relative path from urlPath value
+							}else{
+                                
+								$log.debug('parse store name and relpath from urlPath');
+                                
+                                var parseData = urlParseService.parseStoreAndRelpath($stateParams.urlPath);
+                                
+                                $log.debug('storeName = ' + parseData.storeName + ', relPathToLoad = ' + parseData.relPath);
+                                
+								storeName = parseData.storeName;
+								relPathToLoad = parseData.relPath;
+  
+							}	
+
+							// fetch directory patn resource
+							return homeRestService
+								.pathResourceByPath(storeName, relPathToLoad)
+								.then( function ( jsonData ){
+									$log.debug('resolved current directory, storeName = ' + storeName + ', relPathToLoad = ' + relPathToLoad);
+									//$log.debug(JSON.stringify(jsonData))
+									return jsonData;
+								}, function( error ){
+									alert('Error calling pathResourceByPath(...) service method' + JSON.stringify(error));
+								});							
+
+						}						
+						
+					}					
+				}				
+				
+			);
+
+			//
+			// create directory state - show create directory form
+			//
+			$stateProvider.state(
+			
+				'createdir', {
+					url: '/createdir{urlPath:any}',
+					views : {
+						uicontent : {
+							component : 'createDirContentComponent' // when 'createdir' state is active, render 'uploadContentComponent' into view with name 'uicontent'
+						},
+						uiheader : {
+							component : 'createDirHeaderComponent' // when 'createdir' state is active, render 'uploadHeaderComponent' into view with name 'uiheader'
+						},
+						uititle : {
+							//template : 'Protocol Listing'
+							component : 'titleHeaderComponent' // when 'createdir' state is active, render 'titleHeaderComponent' into view with name 'uititle'
+						},
+						uileftmenu : {
+							//template : 'Protocol Listing'
+							component : 'leftMenuComponent' // when 'createdir' state is active, render 'leftMenuComponent' into view with name 'uileftmenu'
+						}
+					},
+					params : defaultStateParams,
+					resolve : {
+						headerTitle : function ($log, $stateParams){
+							
+							$log.debug('------------ [createdir state] resolving headerTitle');							
+							//$log.debug(JSON.stringify($stateParams));							
+							
+							return 'Create Directory Form';
+							
+						},
+						
+						// the current store
+						store : function(homeRestService, urlParseService, $log, $state, $stateParams) {
+							
+							$log.debug('------------ [createdir state] resolving store');
+							//$log.debug(JSON.stringify($stateParams));
+							
+							// use existing store if we have one
+							if($stateParams.store){
+                                
+								return $stateParams.store;
+							
+							// otherwise parse store name from urlPath, then fetch from server
+							}else{
+								
+                                $log.debug('parse store name and relpath from urlPath');
+                                
+                                var parseData = urlParseService.parseStoreAndRelpath($stateParams.urlPath);
+                                
+								$log.debug('storeName = ' + parseData.storeName + ', relPathToLoad = ' + parseData.relPath);
+
+								return homeRestService
+									.storeByName(parseData.storeName, parseData.relPath)
+									.then( function ( jsonData ){
+										$log.debug('resolved store with name ' + parseData.storeName);
+										//$log.debug(JSON.stringify(jsonData))
+										return jsonData;
+									}, function( error ){
+										alert('Error calling storeByName(...) service method' + JSON.stringify(error));
+									});
+								
+							}
+							
+						},
+						
+						// current directory
+						directory : function (homeRestService, urlParseService, $log, $state, $stateParams) {
+
+							$log.debug('------------ [createdir state] resolving directory resource');
 							//$log.debug(JSON.stringify($stateParams));
 
 							var storeName;

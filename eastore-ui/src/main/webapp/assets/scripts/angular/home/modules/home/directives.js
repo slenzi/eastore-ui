@@ -251,7 +251,10 @@
 					},
 					getMimeType: function (pathResObj) {
 						return pathResObj.mimeType;
-					}					
+					},
+					getSize: function (pathResObj) {
+						return pathResObj.fileSize;
+					}
 				}
 			};
 			
@@ -261,6 +264,22 @@
 						thePathResource: pathResObj
 					});
 			};
+			
+			$scope.humanFileSize = function(bytes, si){
+				var thresh = si ? 1000 : 1024;
+				if(Math.abs(bytes) < thresh) {
+					return bytes + ' B';
+				}
+				var units = si
+					? ['kB','MB','GB','TB','PB','EB','ZB','YB']
+					: ['KiB','MiB','GiB','TiB','PiB','EiB','ZiB','YiB'];
+				var u = -1;
+				do {
+					bytes /= thresh;
+					++u;
+				} while(Math.abs(bytes) >= thresh && u < units.length - 1);
+				return bytes.toFixed(1)+' '+units[u];				
+			};			
 			
 		}];
 		
@@ -275,6 +294,7 @@
 			'        <th st-sort="tableGetters().getNodeName">Name</th>' +
 			'        <th st-sort="tableGetters().getDescription">Description</th>' +
 			'        <th st-sort="tableGetters().getMimeType">Type</th>' +
+			'        <th st-sort="tableGetters().getSize">Size</th>' +
 			'	</tr>' +
 			'	<tr>' +
 			//'		<th></th>' +
@@ -282,6 +302,7 @@
 			'		<th><input st-search="nodeName" placeholder="search by name" class="input-sm form-control" type="search"/></th>' +	
 			'		<th><input st-search="desc" placeholder="search by description" class="input-sm form-control" type="search"/></th>' +
 			'		<th><input st-search="mimeType" placeholder="search by type" class="input-sm form-control" type="search"/></th>' +
+			'		<th><input st-search="fileSize" placeholder="search by size" class="input-sm form-control" type="search"/></th>' +
 			'	</tr>' +			
 			'	</thead>' +
 			'	<tbody>' +
@@ -291,11 +312,12 @@
 			'        <td><a href ng-click=\"viewChildResources(storeViewObj, pathResObj);  $event.stopPropagation();\">{{pathResObj.nodeName}}</a></td>' +
 			'        <td>{{pathResObj.desc}}</td>' +
 			'        <td>{{pathResObj.mimeType}}</td>' +
+			'        <td>{{humanFileSize(pathResObj.fileSize, true)}}</td>' +
 			'	</tr>' +
 			'	</tbody>' +
 			'	<tfoot>' +
 			'		<tr>' +		
-			'			<td colspan="3" class="text-center">' +
+			'			<td colspan="4" class="text-center">' +
 			'				<div st-pagination="" st-items-by-page="20" st-displayed-pages="15"></div>' +
 			'			</td>' +
 			'		</tr>' +
