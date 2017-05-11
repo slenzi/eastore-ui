@@ -154,23 +154,23 @@
 			
 			//$log.debug('pathHeaderComponent controller');
 			
-			this.clickBreadcrumb = function(store, resource){
+			this.clickBreadcrumb = function(store, directoryResource){
 				
 				// breadcrumb path resources should always be of resourceType DIRECTORY.
 				
 				//$log.debug('You clicked on breadcrumb path resource:\n\n' + JSON.stringify(resource));
 				
-				this.loadDirectory(store, resource);
+				this.loadDirectory(store, directoryResource);
 				
 			};
 			
-			this.loadDirectory = function(store, resource){
+			this.loadDirectory = function(store, directoryResource){
 					
-					//$stateParams.relPath = resource.relativePath;
-					$stateParams.currDirResource = resource;
-					//$stateParams.urlPath = $stateParams.urlPath + '/' + resource.pathName;
-					//$stateParams.urlPath = '/' + $stateParams.store.name + resource.relativePath;
-					$stateParams.urlPath = '/' + store.name + resource.relativePath;
+					//$stateParams.relPath = directoryResource.relativePath;
+					$stateParams.currDirResource = directoryResource;
+					//$stateParams.urlPath = $stateParams.urlPath + '/' + directoryResource.pathName;
+					//$stateParams.urlPath = '/' + $stateParams.store.name + directoryResource.relativePath;
+					$stateParams.urlPath = '/' + store.name + directoryResource.relativePath;
 					
 					//$log.debug('breadcrumb click, dirNodeId = ' + $stateParams.currDirResource.nodeId + ', urlPath = ' + $stateParams.urlPath);
 					
@@ -185,13 +185,15 @@
 				
 				$log.debug('refreshing current view');
 				
-				var newUrlPath = '/' + store.name + directoryResource.relativePath;
+				this.loadDirectory(store, directoryResource);
 				
-				$state.go('path', {
-					urlPath: newUrlPath,
-					store : store,
-					currDirResource : directoryResource
-					});				
+				//var newUrlPath = '/' + store.name + directoryResource.relativePath;
+				
+				//$state.go('path', {
+				//	urlPath: newUrlPath,
+				//	store : store,
+				//	currDirResource : directoryResource
+				//	});				
 				
 			};
 			
