@@ -258,81 +258,134 @@
 			
 			// iterate over the array of pathResource and return true if any of them are resourceType DIRECTORY
 			this.haveDirectoryResource = function(pathResources){
-				for(var i = 0; i<pathResources.length; i++){
-					if(pathResources[i].resourceType === 'DIRECTORY'){
-						return true;
-					}
-				}
+
+				return this.havePathResourceType(pathResources, 'DIRECTORY');
+				
 			};
 			
 			// iterate over the array of pathResource and return true if any of them are resourceType FILE
 			this.haveFileResource = function(pathResources){
-				for(var i = 0; i<pathResources.length; i++){
-					if(pathResources[i].resourceType === 'FILE'){
-						return true;
-					}
-				}
+				
+				return this.havePathResourceType(pathResources, 'FILE');
+				
 			};
 			
 			// return true if any of the directory resources are 'selected' in the smart table. Rows that are selected
 			// will have class 'st-selected' applied
 			this.haveSelectedDirectoryResource = function(pathResources){
-				for(var i = 0; i<pathResources.length; i++){
-					if(pathResources[i].resourceType === 'DIRECTORY' && pathResources[i].isSelected){
-						return true;
-					}
-				}
+
+				return this.haveSelectedPathResources(pathResources, 'DIRECTORY');
+			
 			};
 			
 			// return true if any of the file resources are 'selected' in the smart table. Rows that are selected
 			// will have class 'st-selected' applied
 			this.haveSelectedFileResource = function(pathResources){
-				for(var i = 0; i<pathResources.length; i++){
-					if(pathResources[i].resourceType === 'FILE' && pathResources[i].isSelected){
-						return true;
-					}
-				}
+				
+				return this.haveSelectedPathResources(pathResources, 'FILE');
+				
 			};
 
 			// unselect all selected directories in our smart table
 			this.unselectDirectories = function(pathResources){
-				for(var i = 0; i<pathResources.length; i++){
-					if(pathResources[i].resourceType === 'DIRECTORY' && pathResources[i].isSelected){
-						pathResources[i].isSelected = false;
-					}
-				}				
+				
+				this.unselectPathResources(pathResources, 'DIRECTORY');
+				
 			};			
 			
 			// unselect all selected files in our smart table
 			this.unselectFiles = function(pathResources){
-				for(var i = 0; i<pathResources.length; i++){
-					if(pathResources[i].resourceType === 'FILE' && pathResources[i].isSelected){
-						pathResources[i].isSelected = false;
-					}
-				}				
+				
+				this.unselectPathResources(pathResources, 'FILE');
+							
 			};
 			
 			// delete all selected directories
 			this.deleteSelectedDirectories = function(pathResources){
-				var itemsToDelete = [];
-				for(var i = 0; i<pathResources.length; i++){
-					if(pathResources[i].resourceType === 'DIRECTORY' && pathResources[i].isSelected){
-						itemsToDelete.push(pathResources[i]);
-					}
-				}
+				
+				var items = this.getSelectedPathResources(pathResources, 'DIRECTORY');
 				alert('Delete directories coming soon!');
+				
 			};			
 			
 			// delete all selected files
 			this.deleteSelectedFiles = function(pathResources){
-				var itemsToDelete = [];
+				
+				var items = this.getSelectedPathResources(pathResources, 'FILE');
+				alert('Delete files coming soon!');
+				
+			};
+
+			// copy all selected directories (copy to clipboard)
+			this.copySelectedDirectories = function(pathResources){
+				
+				var items = this.getSelectedPathResources(pathResources, 'DIRECTORY');
+				alert('Copying directories coming soon!');
+				
+			};
+
+			// copy all selected files (copy to clipboard)
+			this.copySelectedFiles = function(pathResources){
+				
+				var items = this.getSelectedPathResources(pathResources, 'FILE');
+				alert('Copying files coming soon!');
+				
+			};
+
+			// cut all selected directories (cut to clipboard in preparation for moving)
+			this.cutSelectedDirectories = function(pathResources){
+				
+				var items = this.getSelectedPathResources(pathResources, 'DIRECTORY');
+				alert('Cut/move directories coming soon!');
+				
+			};
+
+			// cut all selected files (cut to clipboard in preparation for moving)
+			this.cutSelectedFiles = function(pathResources){
+				
+				var items = this.getSelectedPathResources(pathResources, 'FILE');
+				alert('Cut/move files coming soon!');
+							
+			};
+
+			// get all selected items, of the specified type, in the collection of pathResources
+			this.getSelectedPathResources = function(pathResources, type){
+				var items = [];
 				for(var i = 0; i<pathResources.length; i++){
-					if(pathResources[i].resourceType === 'FILE' && pathResources[i].isSelected){
-						itemsToDelete.push(pathResources[i]);
+					if(pathResources[i].resourceType === type && pathResources[i].isSelected){
+						items.push(pathResources[i]);
 					}
 				}
-				alert('Delete files coming soon!');				
-			};			
+				return items;
+			};
+			
+			// return true if any of the resources, of the specified type, are selected in collection of path resources
+			this.haveSelectedPathResources = function(pathResources, type){
+				for(var i = 0; i<pathResources.length; i++){
+					if(pathResources[i].resourceType === type && pathResources[i].isSelected){
+						return true;
+					}
+				}
+				return false;
+			};
+
+			// unselect and selected resources, of the specified type, in the collection of path resources
+			this.unselectPathResources = function(pathResources, type){
+				for(var i = 0; i<pathResources.length; i++){
+					if(pathResources[i].resourceType === type && pathResources[i].isSelected){
+						pathResources[i].isSelected = false;
+					}
+				}	
+			};
+			
+			// iterate over the collection of path resources an return true if any of them are of the specified type
+			this.havePathResourceType = function(pathResources, type){
+				for(var i = 0; i<pathResources.length; i++){
+					if(pathResources[i].resourceType === type){
+						return true;
+					}
+				}
+			};
 			
 			this.loadStateAddDirectoryForm = function(store, directoryResource){
 
