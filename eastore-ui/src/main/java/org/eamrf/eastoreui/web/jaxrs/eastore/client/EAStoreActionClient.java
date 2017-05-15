@@ -135,6 +135,42 @@ public class EAStoreActionClient {
 	
 		return "";
 		
-	}	
+	}
+	
+	/**
+	 * Call E-A Store /fsys/action/addDirectory
+	 * 
+	 * @param dirNodeId - id of parent directory. the new directory will be created under this directory
+	 * @param dirName - name of new directory
+	 * @param dirDesc - description for new directory
+	 * @return
+	 * @throws WebServiceException
+	 */
+	public String addDirectory(Long dirNodeId, String dirName, String dirDesc) throws WebServiceException {
+		
+		logger.info("Calling " + EAStoreActionClient.class.getSimpleName() + " addDirectory method");
+		
+		resetClient();
+		
+		String path = "/fsys/action/addDirectory";
+		client
+			.path(path)
+			.query("dirNodeId", dirNodeId)
+			.query("name", dirName)
+			.query("desc", dirDesc);
+		
+		// TODO - service method should be changed to POST
+		Response resp = client.get();
+		
+		if(resp.getStatus() != Response.Status.OK.getStatusCode()){
+			throw new WebServiceException(WebExceptionType.CODE_IO_ERROR, 
+					"Response error from " + client.getCurrentURI().toString() + ", response code = " + resp.getStatus());
+		}
+		
+		String responseString = resp.readEntity(String.class);
+		
+		return responseString;			
+		
+	}
 
 }

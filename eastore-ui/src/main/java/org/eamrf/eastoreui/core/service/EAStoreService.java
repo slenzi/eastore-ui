@@ -48,10 +48,33 @@ public class EAStoreService {
 		try {
 			return client.echo(message);
 		} catch (WebServiceException e) {
-			throw new ServiceException("Error calling eastore echo, " + e.getMessage(), e);
+			throw new ServiceException("Error calling eastore echo(), " + e.getMessage(), e);
 		}
 		
 	}
+	
+	/**
+	 * Call E-A Store /fsys/action/addDirectory
+	 * 
+	 * @param dirNodeId - id of parent directory. the new directory will be created under this directory
+	 * @param dirName - name of new directory
+	 * @param dirDesc - description for new directory
+	 * @return
+	 * @throws ServiceException
+	 */
+    public String addDirectory(Long dirNodeId, String dirName, String dirDesc) throws ServiceException {
+    	
+    	logger.info(EAStoreService.class.getSimpleName() + " addDirectory(...) called");
+    	
+		EAStoreActionClient client = eaStoreClientProvider.getActionClient();
+		
+		try {
+			return client.addDirectory(dirNodeId, dirName, dirDesc);
+		} catch (WebServiceException e) {
+			throw new ServiceException("Error calling eastore addDirectory(...), " + e.getMessage(), e);
+		}    	
+    	
+    }	
 	
 	/**
 	 * Call E-A Store /fsys/action/uploadFile
@@ -73,7 +96,7 @@ public class EAStoreService {
 		try {
 			return client.uploadFile(dirNodeId, fileName, dataHandler);
 		} catch (WebServiceException e) {
-			throw new ServiceException("Error calling eastore echo, " + e.getMessage(), e);
+			throw new ServiceException("Error calling eastore uploadFile(...), " + e.getMessage(), e);
 		}		
 		
 	}
@@ -88,14 +111,14 @@ public class EAStoreService {
 	 */
 	public String getPathResourceById(Long nodeId) throws ServiceException {
 		
-		logger.info(EAStoreService.class.getSimpleName() + " getPathResourceById() called");
+		logger.info(EAStoreService.class.getSimpleName() + " getPathResourceById(...) called");
 		
 		EAStoreJsonClient client = eaStoreClientProvider.getJsonClient();
 		
 		try {
 			return client.getPathResourceById(nodeId);
 		} catch (WebServiceException e) {
-			throw new ServiceException("Error calling eastore getPathResourceById(), " + e.getMessage(), e);
+			throw new ServiceException("Error calling eastore getPathResourceById(...), " + e.getMessage(), e);
 		}
 		
 	}

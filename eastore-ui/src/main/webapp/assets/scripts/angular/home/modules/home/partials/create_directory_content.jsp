@@ -9,13 +9,13 @@
 				<div layout-gt-sm="row">
 					<md-input-container class="md-block" flex-gt-sm>
 					<label>Directory Name (250 character max)</label>
-					<input ng-model="user.firstName" md-maxlength="250">
+					<input ng-model="dirCtrl._newDir.dirName" md-maxlength="250" value="{{dirCtrl._newDir.dirName}}" required>
 					</md-input-container>
 				</div>
 				
 				<md-input-container class="md-block">
 					<label>Directory Description (4,000 character max)</label>
-					<textarea ng-model="user.biography" md-maxlength="4000" rows="5" md-select-on-focus></textarea>
+					<textarea ng-model="dirCtrl._newDir.dirDescription" md-maxlength="4000" rows="5" md-select-on-focus required></textarea>
 				</md-input-container>				
 			
 				<md-input-container class="md-block">
@@ -29,7 +29,7 @@
 			
 			</form>		
 			
-		</div>			
+		</div>	
 		
 	</md-content>	
 	

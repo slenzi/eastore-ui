@@ -33,6 +33,21 @@ public class UIService {
     private EAStoreService storeService;
     
     /**
+     * Calls E-A Store action service, addDirectory
+     * 
+     * @param dirNodeId
+     * @param dirName
+     * @param dirDesc
+     * @return
+     * @throws ServiceException
+     */
+    public String addDirectory(Long dirNodeId, String dirName, String dirDesc) throws ServiceException {
+    	
+    	return storeService.addDirectory(dirNodeId, dirName, dirDesc);
+    	
+    }
+    
+    /**
      * Forwards the incoming upload to ea-store
      * 
      * @param dirNodeId - ID of the directory path resource within the store, where the file is being added

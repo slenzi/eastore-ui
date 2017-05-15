@@ -564,13 +564,46 @@
 			return appConstants.contextPath +  '/assets/scripts/angular/home/modules/home/partials/create_directory_content.jsp';
 		},				
 		
-		controller : function($log, $state){
+		controller : function($log, $state, $scope){
 			
 			//$log.debug('storesContentComponent controller');
 			
+			// data for the new directory
+			this._newDir = {
+				dirName : '',
+				dirDescription: ''
+			};
+			
 			this.doCreateDirectory = function(store, directoryResource){
 				
-				alert('create directory coming soon!');
+				//alert('create directory coming soon!');
+				
+				// we put 'required' attribute on each of the input fields in the markup
+				// the form will only be valid if values are entered into all field flag as required
+				if($scope.dirForm.$valid){
+					
+					// call service to create directory, then reload path state
+					// addDirectory
+					homeRestService
+						.addDirectory(directoryResource.nodeId, this._newDir.dirName, this._newDir.dirDescription)
+						.then( function ( jsonData ){
+							
+							$log.debug('completed addDirectory service call');
+							
+							//$log.debug(JSON.stringify(jsonData))
+							//return jsonData;
+							
+							this.loadPathState(store, directoryResource);
+							
+						}, function( error ){
+							alert('Error calling addDirectory(...) service method' + JSON.stringify(error));
+						});					
+					
+				}else{
+					alert('Please fill out all fields. Thank you.');
+				}
+				
+				$log.debug('New dir name = ' + this._newDir.dirName);
 				
 			};
 
@@ -578,15 +611,21 @@
 				
 				$log.debug('cancel create directory');
 				
+				this.loadPathState(store, directoryResource);			
+				
+			};
+
+			this.loadPathState = function(store, directoryResource){
+				
 				var newUrlPath = '/' + store.name + directoryResource.relativePath;
 				
 				$state.go('path', {
 					urlPath: newUrlPath,
 					store : store,
 					currDirResource : directoryResource
-					});				
+					});
 				
-			};				
+			};
 			
 		},
 		

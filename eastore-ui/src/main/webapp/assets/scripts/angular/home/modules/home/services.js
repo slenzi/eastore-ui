@@ -37,6 +37,23 @@
 				
 				});
 		
+		var eastoreUiActionService = $resource(
+				appConstants.eastoreUiActionJaxrsService, { }, {
+					
+					// call add directory service method
+					addDir: {
+						url: appConstants.eastoreUiActionJaxrsService + '/addDirectory',
+						method: 'GET',
+						isArray: false,
+						params: {
+							dirNodeId : '@dirNodeId',
+							name : '@name',
+							desc : '@desc'
+						}					
+					}
+				
+				});		
+		
 		var eastoreUiJsonService = $resource(
 			appConstants.eastoreUiJsonJaxrsService, { }, {
 				
@@ -126,6 +143,20 @@
 			
 		}
 		
+		// add a new directory
+		function _addDirectory(parentDirId, dirName, dirDesc){
+			
+			$log.debug('Calling jax-rs _addDirectory service method');
+			
+			return eastoreUiActionService.addDir(
+					{
+						dirNodeId : parentDirId,
+						name : dirName,
+						desc : dirDesc
+					}).$promise;
+			
+		}
+		
 		// fetch a specific path resource by node id.
 		function _pathResourceByNodeId(theNodeId){
 			
@@ -206,6 +237,8 @@
 	    return {
 	    	
 			echo : _echo,
+			
+			addDirectory : _addDirectory,
 			
 			pathResourceByNodeId : _pathResourceByNodeId,
 			

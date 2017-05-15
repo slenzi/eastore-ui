@@ -12,6 +12,7 @@ import javax.ws.rs.POST;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
+import javax.ws.rs.QueryParam;
 import javax.ws.rs.WebApplicationException;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
@@ -193,7 +194,38 @@ public class UIActionResource extends BaseResourceHandler {
 			}
 		).header("Content-Disposition", "attachment; filename=" + fileName).build();		
 		
-	}	
+	}
+	
+	/**
+	 * adds a new directory (via eastore)
+	 * 
+	 * @param dirNodeId
+	 * @param name
+	 * @param desc
+	 * @return
+	 * @throws WebServiceException
+	 */
+    @GET
+    @Path("/addDirectory")
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response addDirectory(
+    		@QueryParam("dirNodeId") Long dirNodeId,
+    		@QueryParam("name") String name,
+    		@QueryParam("desc") String desc) throws WebServiceException {
+    	
+    	logger.info(UIActionResource.class.getSimpleName() + " addDirectory() called");
+    	
+    	String jsonReponse = null;
+		try {
+			jsonReponse = uiService.addDirectory(dirNodeId, name, desc);
+		} catch (ServiceException e) {
+			logger.error(e.getMessage(), e);
+			throw new WebServiceException(WebExceptionType.CODE_IO_ERROR, e.getMessage(), e);
+		}
+		
+		return Response.ok(jsonReponse, MediaType.APPLICATION_JSON).build();    	
+   
+    }
 
 	@Override
 	public Logger getLogger() {
