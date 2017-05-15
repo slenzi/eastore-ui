@@ -378,6 +378,14 @@
 				
 			};
 			
+			this.openMenu = function ($mdMenu, event){
+				
+				var originatorEv = event;
+				
+				$mdMenu.open(event);
+				
+			};
+			
 		},
 		
 		controllerAs : 'pathCtrl' // default is $ctrl

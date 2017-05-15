@@ -84,16 +84,18 @@
 		function materialConfig($mdThemingProvider){
 			
 			// Extend the gray theme with a few different shades
-			var lightGrey = $mdThemingProvider.extendPalette('grey', {
-				'50':  'EFEFEF',
-				'200': 'C6C6C6',
-				'400': '8C8C8C',
-				'800': '323232'
+			var spaceGrey = $mdThemingProvider.extendPalette('grey', {
+				'A100': '#f0f0f0', // md-hue-1
+				//'A200': '#84ffff',	 // md-hue-1
+				'A400': '#b3b3b3', // md-hue-2
+				'A700': '#333333', // md-hue-3
 			});
+			
+			$mdThemingProvider.definePalette('spaceGrey', spaceGrey);
 
 			$mdThemingProvider.theme('default')
 				.primaryPalette('indigo')
-				.accentPalette('grey');
+				.accentPalette('spaceGrey');
 
 			//$mdThemingProvider.theme('docs-dark', 'default')
 			//	.primaryPalette('pink')
@@ -149,26 +151,16 @@
 					},
 					params : defaultStateParams,
 					resolve : {
-						stores : function (homeRestService, $log) {
+						stores : function ($log, $stateParams, resolveService) {
 							
 							$log.debug('------------ [stores state] resolving stores ');
+							return resolveService.resolveStores($stateParams);
 							
-							return homeRestService
-								.storeList()
-								.then( function ( jsonData ){
-									//$log.debug('resolved prots');
-									//$log.debug(JSON.stringify(jsonData));
-									return jsonData;
-								}, function( error ){
-									alert('Error calling storeList() service method' + JSON.stringify(error));
-								});
 						},
 						headerTitle : function ($log, $stateParams){
 							
 							$log.debug('------------ [stores state] resolving header title ');
-							
 							//$log.debug(JSON.stringify($stateParams));
-							
 							return 'Store List';
 							
 						}
@@ -204,127 +196,29 @@
 					resolve : {
 						
 						// the current store
-						store : function(homeRestService, urlParseService, $log, $state, $stateParams) {
+						//store : function(homeRestService, urlParseService, $log, $state, $stateParams) {
+						store : function($log, $stateParams, resolveService) {
 							
-							$log.debug('------------ [path state] resolving store ');
-							//$log.debug(JSON.stringify($stateParams));
-							
-							// use existing store if we have one
-							if($stateParams.store){
-                                
-								return $stateParams.store;
-							
-							// otherwise parse store name from urlPath, then fetch from server
-							}else{
-								
-                                $log.debug('parse store name and relpath from urlPath');
-                                
-                                var parseData = urlParseService.parseStoreAndRelpath($stateParams.urlPath);
-                                
-								$log.debug('storeName = ' + parseData.storeName + ', relPathToLoad = ' + parseData.relPath);
-
-								return homeRestService
-									.storeByName(parseData.storeName, parseData.relPath)
-									.then( function ( jsonData ){
-										$log.debug('resolved store with name ' + parseData.storeName);
-										//$log.debug(JSON.stringify(jsonData))
-										return jsonData;
-									}, function( error ){
-										alert('Error calling storeByName(...) service method' + JSON.stringify(error));
-									});
-								
-							}
+							$log.debug('------------ [path state] resolving store');
+							return resolveService.resolveCurrentStore($stateParams);
 							
 						},
 						
 						// current directory
-						directory : function (homeRestService, urlParseService, $log, $state, $stateParams) {
+						//directory : function (homeRestService, urlParseService, $log, $state, $stateParams) {
+						directory : function ($log, $stateParams, resolveService) {
 
 							$log.debug('------------ [path state] resolving directory resource');
-							//$log.debug(JSON.stringify($stateParams));
+							return resolveService.resolveCurrentDirectory($stateParams);
 
-							var storeName;
-							var currDirRes;
-							var relPathToLoad;
-
-							// use current store and current directory path resource if we have that information
-							if($stateParams.store && $stateParams.currDirResource){
-                                
-								storeName = $stateParams.store.name;
-								currDirRes = $stateParams.currDirResource;
-								relPathToLoad = currDirRes.relativePath;								
-							
-							// otherwise parse store name and relative path from urlPath value
-							}else{
-                                
-								$log.debug('parse store name and relpath from urlPath');
-                                
-                                var parseData = urlParseService.parseStoreAndRelpath($stateParams.urlPath);
-                                
-                                $log.debug('storeName = ' + parseData.storeName + ', relPathToLoad = ' + parseData.relPath);
-                                
-								storeName = parseData.storeName;
-								relPathToLoad = parseData.relPath;
-  
-							}	
-
-							// fetch directory patn resource
-							return homeRestService
-								.pathResourceByPath(storeName, relPathToLoad)
-								.then( function ( jsonData ){
-									$log.debug('resolved current directory, storeName = ' + storeName + ', relPathToLoad = ' + relPathToLoad);
-									//$log.debug(JSON.stringify(jsonData))
-									return jsonData;
-								}, function( error ){
-									alert('Error calling pathResourceByPath(...) service method' + JSON.stringify(error));
-								});							
-
-						},
+						},	
 						
 						// the first-level child resources for the current directory
-						pathresources : function (homeRestService, urlParseService, $log, $state, $stateParams) {
+						//pathresources : function (homeRestService, urlParseService, $log, $state, $stateParams) {
+						pathresources : function ($log, $stateParams, resolveService) {
 							
 							$log.debug('------------ [path state] resolving path resources');
-							//$log.debug(JSON.stringify($stateParams));
-							
-							var storeName;
-							var currDirRes;
-							var relPathToLoad;
-							
-							// use current store and current directory path resource if we have that information
-							if($stateParams.store && $stateParams.currDirResource){
-                                
-								storeName = $stateParams.store.name;
-								currDirRes = $stateParams.currDirResource;
-								relPathToLoad = currDirRes.relativePath;								
-							
-							// otherwise parse store name and relative path from urlPath value
-							}else{
-                                
-								$log.debug('parse store name and relpath from urlPath');
-                                
-                                var parseData = urlParseService.parseStoreAndRelpath($stateParams.urlPath);
-                                
-                                $log.debug('storeName = ' + parseData.storeName + ', relPathToLoad = ' + parseData.relPath);
-                                
-								storeName = parseData.storeName;
-								relPathToLoad = parseData.relPath;
-  
-							}
-							
-							//$log.debug('storeName = ' + storeName);
-							//$log.debug('dirNodeId = ' + currDirRes.nodeId);
-							
-							// fetch child path resources for the current directory
-							return homeRestService
-								.loadRelPath(storeName, relPathToLoad)
-								.then( function ( jsonData ){
-									$log.debug('resolved path resources for storeName = ' + storeName + ', relPathToLoad = ' + relPathToLoad);
-									//$log.debug(JSON.stringify(jsonData))
-									return jsonData;
-								}, function( error ){
-									alert('Error calling loadRelPath(...) service method' + JSON.stringify(error));
-								});
+							return resolveService.resolvePathResources($stateParams);
 								
 						},
 						
@@ -332,7 +226,6 @@
 						headerTitle : function (urlParseService, $log, $stateParams){
 							
 							$log.debug('------------ [path state] resolving header title');
-							//$log.debug(JSON.stringify($stateParams));
 							
 							var title = 'Documents for ';
 							
@@ -356,47 +249,11 @@
 						},
 						
 						// breadcrumb parent tree (bottom-up) for current directory
-						breadcrumb : function (homeRestService, urlParseService, $log, $stateParams){
+						//breadcrumb : function (homeRestService, urlParseService, $log, $stateParams){
+						breadcrumb : function ($log, $stateParams, resolveService){
 							
 							$log.debug('------------ [path state] resolving breadcrumb parent tree');
-							
-							//$log.debug(JSON.stringify($stateParams));
-							
-							var storeName;
-							var currDirRes;
-							var relPathToLoad;
-							
-							// use current store and current directory path resource if we have that information
-							if($stateParams.store && $stateParams.currDirResource){
-                                
-								storeName = $stateParams.store.name;
-								currDirRes = $stateParams.currDirResource;
-								relPathToLoad = currDirRes.relativePath;								
-							
-							// otherwise parse store name and relative path from urlPath value
-							}else{
-
-								$log.debug('parse store name and relpath from urlPath');
-                                
-                                var parseData = urlParseService.parseStoreAndRelpath($stateParams.urlPath);
-                                
-                                $log.debug('storeName = ' + parseData.storeName + ', relPathToLoad = ' + parseData.relPath);
-                                
-								storeName = parseData.storeName;
-								relPathToLoad = parseData.relPath;
-                                
-							}						
-						
-							// return parent-tree breadcrumb
-							return homeRestService
-								.breadcrumbPath(storeName, relPathToLoad)
-								.then( function ( jsonData ){
-									$log.debug('resolved breadcrumb tree for storeName = ' + storeName + ', relPathToLoad = ' + relPathToLoad);
-									//$log.debug(JSON.stringify(jsonData))
-									return jsonData;
-								}, function( error ){
-									alert('Error calling breadcrumbPath(...) service method' + JSON.stringify(error));
-								});
+							return resolveService.resolveBreadcrumb($stateParams);
 							
 						}
 					}				
@@ -431,102 +288,33 @@
 					resolve : {
 						headerTitle : function ($log, $stateParams){
 							
-							$log.debug('------------ [upload state] resolving headerTitle');							
-							//$log.debug(JSON.stringify($stateParams));							
-							
+							$log.debug('------------ [upload state] resolving headerTitle');
 							return 'Upload Form';
 							
 						},
 						
-						uploader : function ($log, $stateParams, EAFileUploader, appConstants){
+						uploader : function ($log, $stateParams, resolveService){
 							
 							$log.debug('------------ [upload state] resolving eaUploader');	
-							
-							var eaUploader = new EAFileUploader({
-								url: appConstants.httpUploadHandler
-					        });
-							
-							$log.debug(eaUploader.hello());
-							
-							return eaUploader;
+							return resolveService.resolveEAUploader();
 							
 						},
 						
 						// the current store
-						store : function(homeRestService, urlParseService, $log, $state, $stateParams) {
+						//store : function(homeRestService, urlParseService, $log, $state, $stateParams) {
+						store : function($log, $stateParams, resolveService) {
 							
 							$log.debug('------------ [upload state] resolving store');
-							//$log.debug(JSON.stringify($stateParams));
-							
-							// use existing store if we have one
-							if($stateParams.store){
-                                
-								return $stateParams.store;
-							
-							// otherwise parse store name from urlPath, then fetch from server
-							}else{
-								
-                                $log.debug('parse store name and relpath from urlPath');
-                                
-                                var parseData = urlParseService.parseStoreAndRelpath($stateParams.urlPath);
-                                
-								$log.debug('storeName = ' + parseData.storeName + ', relPathToLoad = ' + parseData.relPath);
-
-								return homeRestService
-									.storeByName(parseData.storeName, parseData.relPath)
-									.then( function ( jsonData ){
-										$log.debug('resolved store with name ' + parseData.storeName);
-										//$log.debug(JSON.stringify(jsonData))
-										return jsonData;
-									}, function( error ){
-										alert('Error calling storeByName(...) service method' + JSON.stringify(error));
-									});
-								
-							}
+							return resolveService.resolveCurrentStore($stateParams);
 							
 						},
 						
 						// current directory
-						directory : function (homeRestService, urlParseService, $log, $state, $stateParams) {
+						//directory : function (homeRestService, urlParseService, $log, $state, $stateParams) {
+						directory : function ($log, $stateParams, resolveService) {
 
 							$log.debug('------------ [upload state] resolving directory resource');
-							//$log.debug(JSON.stringify($stateParams));
-
-							var storeName;
-							var currDirRes;
-							var relPathToLoad;
-
-							// use current store and current directory path resource if we have that information
-							if($stateParams.store && $stateParams.currDirResource){
-                                
-								storeName = $stateParams.store.name;
-								currDirRes = $stateParams.currDirResource;
-								relPathToLoad = currDirRes.relativePath;								
-							
-							// otherwise parse store name and relative path from urlPath value
-							}else{
-                                
-								$log.debug('parse store name and relpath from urlPath');
-                                
-                                var parseData = urlParseService.parseStoreAndRelpath($stateParams.urlPath);
-                                
-                                $log.debug('storeName = ' + parseData.storeName + ', relPathToLoad = ' + parseData.relPath);
-                                
-								storeName = parseData.storeName;
-								relPathToLoad = parseData.relPath;
-  
-							}	
-
-							// fetch directory patn resource
-							return homeRestService
-								.pathResourceByPath(storeName, relPathToLoad)
-								.then( function ( jsonData ){
-									$log.debug('resolved current directory, storeName = ' + storeName + ', relPathToLoad = ' + relPathToLoad);
-									//$log.debug(JSON.stringify(jsonData))
-									return jsonData;
-								}, function( error ){
-									alert('Error calling pathResourceByPath(...) service method' + JSON.stringify(error));
-								});							
+							return resolveService.resolveCurrentDirectory($stateParams);
 
 						}						
 						
@@ -570,80 +358,22 @@
 						},
 						
 						// the current store
-						store : function(homeRestService, urlParseService, $log, $state, $stateParams) {
+						//store : function(homeRestService, urlParseService, $log, $state, $stateParams) {
+						store : function($log, $stateParams, resolveService) {
 							
 							$log.debug('------------ [createdir state] resolving store');
-							//$log.debug(JSON.stringify($stateParams));
-							
-							// use existing store if we have one
-							if($stateParams.store){
-                                
-								return $stateParams.store;
-							
-							// otherwise parse store name from urlPath, then fetch from server
-							}else{
-								
-                                $log.debug('parse store name and relpath from urlPath');
-                                
-                                var parseData = urlParseService.parseStoreAndRelpath($stateParams.urlPath);
-                                
-								$log.debug('storeName = ' + parseData.storeName + ', relPathToLoad = ' + parseData.relPath);
 
-								return homeRestService
-									.storeByName(parseData.storeName, parseData.relPath)
-									.then( function ( jsonData ){
-										$log.debug('resolved store with name ' + parseData.storeName);
-										//$log.debug(JSON.stringify(jsonData))
-										return jsonData;
-									}, function( error ){
-										alert('Error calling storeByName(...) service method' + JSON.stringify(error));
-									});
-								
-							}
+							return resolveService.resolveCurrentStore($stateParams);
 							
 						},
 						
 						// current directory
-						directory : function (homeRestService, urlParseService, $log, $state, $stateParams) {
+						//directory : function (homeRestService, urlParseService, $log, $state, $stateParams) {
+						directory : function ($log, $stateParams, resolveService) {
 
 							$log.debug('------------ [createdir state] resolving directory resource');
-							//$log.debug(JSON.stringify($stateParams));
-
-							var storeName;
-							var currDirRes;
-							var relPathToLoad;
-
-							// use current store and current directory path resource if we have that information
-							if($stateParams.store && $stateParams.currDirResource){
-                                
-								storeName = $stateParams.store.name;
-								currDirRes = $stateParams.currDirResource;
-								relPathToLoad = currDirRes.relativePath;								
 							
-							// otherwise parse store name and relative path from urlPath value
-							}else{
-                                
-								$log.debug('parse store name and relpath from urlPath');
-                                
-                                var parseData = urlParseService.parseStoreAndRelpath($stateParams.urlPath);
-                                
-                                $log.debug('storeName = ' + parseData.storeName + ', relPathToLoad = ' + parseData.relPath);
-                                
-								storeName = parseData.storeName;
-								relPathToLoad = parseData.relPath;
-  
-							}	
-
-							// fetch directory patn resource
-							return homeRestService
-								.pathResourceByPath(storeName, relPathToLoad)
-								.then( function ( jsonData ){
-									$log.debug('resolved current directory, storeName = ' + storeName + ', relPathToLoad = ' + relPathToLoad);
-									//$log.debug(JSON.stringify(jsonData))
-									return jsonData;
-								}, function( error ){
-									alert('Error calling pathResourceByPath(...) service method' + JSON.stringify(error));
-								});							
+							return resolveService.resolveCurrentDirectory($stateParams);
 
 						}						
 						
