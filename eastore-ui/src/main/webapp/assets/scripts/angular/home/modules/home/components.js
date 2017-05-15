@@ -564,7 +564,7 @@
 			return appConstants.contextPath +  '/assets/scripts/angular/home/modules/home/partials/create_directory_content.jsp';
 		},				
 		
-		controller : function($log, $state, $scope){
+		controller : function($log, $state, $scope, homeRestService){
 			
 			//$log.debug('storesContentComponent controller');
 			
@@ -578,6 +578,8 @@
 				
 				//alert('create directory coming soon!');
 				
+				var thisCtrl = this;
+				
 				// we put 'required' attribute on each of the input fields in the markup
 				// the form will only be valid if values are entered into all field flag as required
 				if($scope.dirForm.$valid){
@@ -590,14 +592,15 @@
 							
 							$log.debug('completed addDirectory service call');
 							
-							//$log.debug(JSON.stringify(jsonData))
+							$log.debug(JSON.stringify(jsonData))
 							//return jsonData;
-							
-							this.loadPathState(store, directoryResource);
+							thisCtrl.loadPathState(store, directoryResource);
 							
 						}, function( error ){
 							alert('Error calling addDirectory(...) service method' + JSON.stringify(error));
-						});					
+						});
+
+					//this.loadPathState(store, directoryResource);
 					
 				}else{
 					alert('Please fill out all fields. Thank you.');
