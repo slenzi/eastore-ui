@@ -62,7 +62,55 @@
 							name : '@name',
 							desc : '@desc'
 						}					
-					}
+					},
+					
+					// call copy file service method
+					copyFile: {
+						url: appConstants.eastoreUiActionJaxrsService + '/copyFile',
+						method: 'POST',
+						isArray: false,
+						params: {
+							fileNodeId : '@fileNodeId',
+							dirNodeId : '@dirNodeId',
+							replaceExisting : '@replaceExisting'
+						}					
+					},
+					
+					// call copy directory service method
+					copyDirectory: {
+						url: appConstants.eastoreUiActionJaxrsService + '/copyDirectory',
+						method: 'POST',
+						isArray: false,
+						params: {
+							copyDirNodeId : '@copyDirNodeId',
+							destDirNodeId : '@destDirNodeId',
+							replaceExisting : '@replaceExisting'
+						}					
+					},
+					
+					// call move file service method
+					moveFile: {
+						url: appConstants.eastoreUiActionJaxrsService + '/moveFile',
+						method: 'POST',
+						isArray: false,
+						params: {
+							fileNodeId : '@fileNodeId',
+							dirNodeId : '@dirNodeId',
+							replaceExisting : '@replaceExisting'
+						}					
+					},
+					
+					// call move directory service method
+					moveDirectory: {
+						url: appConstants.eastoreUiActionJaxrsService + '/moveDirectory',
+						method: 'POST',
+						isArray: false,
+						params: {
+							moveDirNodeId : '@moveDirNodeId',
+							destDirNodeId : '@destDirNodeId',
+							replaceExisting : '@replaceExisting'
+						}					
+					}					
 				
 				});		
 		
@@ -169,6 +217,62 @@
 			
 		}
 		
+		// copy a file
+		function _copyFile(fileNodeId, dirNodeId, replaceExisting){
+			
+			$log.debug('Calling jax-rs _copyFile service method');
+			
+			return eastoreUiActionService.copyFile(
+					{
+						fileNodeId : fileNodeId,
+						dirNodeId : dirNodeId,
+						replaceExisting : replaceExisting
+					}).$promise;			
+			
+		}
+		
+		// copy a directory
+		function _copyDirectory(copyDirNodeId, destDirNodeId, replaceExisting){
+			
+			$log.debug('Calling jax-rs _copyDirectory service method');
+			
+			return eastoreUiActionService.copyDirectory(
+					{
+						copyDirNodeId : copyDirNodeId,
+						destDirNodeId : destDirNodeId,
+						replaceExisting : replaceExisting
+					}).$promise;			
+			
+		}
+		
+		// move a file
+		function _moveFile(fileNodeId, dirNodeId, replaceExisting){
+			
+			$log.debug('Calling jax-rs _moveFile service method');
+			
+			return eastoreUiActionService.moveFile(
+					{
+						fileNodeId : fileNodeId,
+						dirNodeId : dirNodeId,
+						replaceExisting : replaceExisting
+					}).$promise;			
+			
+		}
+		
+		// move a directory
+		function _moveDirectory(moveDirNodeId, destDirNodeId, replaceExisting){
+			
+			$log.debug('Calling jax-rs _moveDirectory service method');
+			
+			return eastoreUiActionService.copyDirectory(
+					{
+						moveDirNodeId : moveDirNodeId,
+						destDirNodeId : destDirNodeId,
+						replaceExisting : replaceExisting
+					}).$promise;			
+			
+		}		
+		
 		// fetch a specific path resource by node id.
 		function _pathResourceByNodeId(theNodeId){
 			
@@ -252,16 +356,18 @@
 			
 			addDirectory : _addDirectory,
 			
-			pathResourceByNodeId : _pathResourceByNodeId,
+			copyFile : _copyFile,
+			moveFile : _moveFile,
+			copyDirectory : _copyDirectory,
+			moveDirectory : _moveDirectory,
 			
+			pathResourceByNodeId : _pathResourceByNodeId,
 			pathResourceByPath : _pathResourceByPath,
 			
 			breadcrumbNode : _breadcrumbNode,
-			
 			breadcrumbPath : _breadcrumbPath,
 			
 			storeByName : _storeByName,
-			
 			storeList : _storeList,
 			
 			loadRelPath : _loadRelPath,
@@ -583,15 +689,16 @@
 		}
 
 		function _getSourceStore(){
-			return store;
+			return sourceStore;
 		}
 		
 		// add path resources to the clipboard
-		function _addResources(resources){
+		function _setResources(resources){
 			$log.debug('adding resources to clipboard');
-			for(var i = 0; i<resources.length; i++){
-				clipboard.push(resources[i]);
-			}
+			//for(var i = 0; i<resources.length; i++){
+			//	clipboard.push(resources[i]);
+			//}
+			clipboard = [].concat(resources);
 		}
 		
 		// get resources from clipboard
@@ -623,7 +730,7 @@
 			setSourceStore : _setSourceStore,
 			getSourceStore : _getSourceStore,
 			
-			addResources : _addResources,
+			setResources : _setResources,
 			getResources : _getResources,
 			haveResources : _haveResources,
 			clear : _clear

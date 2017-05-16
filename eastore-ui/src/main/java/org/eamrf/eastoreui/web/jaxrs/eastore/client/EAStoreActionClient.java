@@ -172,5 +172,149 @@ public class EAStoreActionClient {
 		return responseString;			
 		
 	}
+	
+	/**
+	 * Call E-A Store /fsys/action/copyFile
+	 * 
+	 * @param fileNodeId
+	 * @param dirNodeId
+	 * @param replaceExisting
+	 * @return
+	 * @throws WebServiceException
+	 */
+	public String copyFile(Long fileNodeId, Long dirNodeId, Boolean replaceExisting) throws WebServiceException {
+		
+		logger.info("Calling " + EAStoreActionClient.class.getSimpleName() + " copyFile(...) method");
+		
+		resetClient();
+		
+		String path = "/fsys/action/copyFile";
+		
+		client
+			.path(path)
+			.query("fileNodeId", fileNodeId)
+			.query("dirNodeId", dirNodeId)
+			.query("replaceExisting", replaceExisting);
+		
+		Response resp = client.post(null);
+		
+		if(resp.getStatus() != Response.Status.OK.getStatusCode()){
+			throw new WebServiceException(WebExceptionType.CODE_IO_ERROR, 
+					"Response error from " + client.getCurrentURI().toString() + ", response code = " + resp.getStatus());
+		}
+		
+		String responseString = resp.readEntity(String.class);
+		
+		return responseString;		
+		
+	}
+	
+	/**
+	 * Call E-A Store /fsys/action/copyDirectory
+	 * 
+	 * @param copyDirNodeId
+	 * @param destDirNodeId
+	 * @param replaceExisting
+	 * @return
+	 * @throws WebServiceException
+	 */
+	public String copyDirectory(Long copyDirNodeId, Long destDirNodeId, Boolean replaceExisting) throws WebServiceException {
+		
+		logger.info("Calling " + EAStoreActionClient.class.getSimpleName() + " copyDirectory(...) method");
+		
+		resetClient();
+		
+		String path = "/fsys/action/copyDirectory";
+		
+		client
+			.path(path)
+			.query("copyDirNodeId", copyDirNodeId)
+			.query("destDirNodeId", destDirNodeId)
+			.query("replaceExisting", replaceExisting);
+		
+		Response resp = client.post(null);
+		
+		if(resp.getStatus() != Response.Status.OK.getStatusCode()){
+			throw new WebServiceException(WebExceptionType.CODE_IO_ERROR, 
+					"Response error from " + client.getCurrentURI().toString() + ", response code = " + resp.getStatus());
+		}
+		
+		String responseString = resp.readEntity(String.class);
+		
+		return responseString;		
+		
+	}
+	
+	/**
+	 * Call E-A Store /fsys/action/moveFile
+	 * 
+	 * @param fileNodeId
+	 * @param dirNodeId
+	 * @param replaceExisting
+	 * @return
+	 * @throws WebServiceException
+	 */
+	public String moveFile(Long fileNodeId, Long dirNodeId, Boolean replaceExisting) throws WebServiceException {
+		
+		logger.info("Calling " + EAStoreActionClient.class.getSimpleName() + " moveFile(...) method");
+		
+		resetClient();
+		
+		String path = "/fsys/action/moveFile";
+		
+		client
+			.path(path)
+			.query("fileNodeId", fileNodeId)
+			.query("dirNodeId", dirNodeId)
+			.query("replaceExisting", replaceExisting);
+		
+		Response resp = client.post(null);
+		
+		if(resp.getStatus() != Response.Status.OK.getStatusCode()){
+			throw new WebServiceException(WebExceptionType.CODE_IO_ERROR, 
+					"Response error from " + client.getCurrentURI().toString() + ", response code = " + resp.getStatus());
+		}
+		
+		String responseString = resp.readEntity(String.class);
+		
+		return responseString;		
+		
+	}
+	
+	/**
+	 * Call E-A Store /fsys/action/moveDirectory
+	 * 
+	 * @param moveDirNodeId
+	 * @param destDirNodeId
+	 * @param replaceExisting
+	 * @return
+	 * @throws WebServiceException
+	 */
+	public String moveDirectory(Long moveDirNodeId, Long destDirNodeId, Boolean replaceExisting) throws WebServiceException {
+		
+		logger.info("Calling " + EAStoreActionClient.class.getSimpleName() + " moveDirectory(...) method");
+		
+		resetClient();
+		
+		String path = "/fsys/action/moveDirectory";
+		
+		client
+			.path(path)
+			.query("moveDirNodeId", moveDirNodeId)
+			.query("destDirNodeId", destDirNodeId)
+			.query("replaceExisting", replaceExisting);
+		
+		Response resp = client.post(null);
+		
+		if(resp.getStatus() != Response.Status.OK.getStatusCode()){
+			throw new WebServiceException(WebExceptionType.CODE_IO_ERROR, 
+					"Response error from " + client.getCurrentURI().toString() + ", response code = " + resp.getStatus());
+		}
+		
+		String responseString = resp.readEntity(String.class);
+		
+		return responseString;		
+		
+	}	
 
 }

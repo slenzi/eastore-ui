@@ -9,6 +9,8 @@ import javax.activation.DataHandler;
 import org.eamrf.core.logging.stereotype.InjectLogger;
 import org.eamrf.eastoreui.core.exception.ServiceException;
 import org.eamrf.eastoreui.core.model.file.FileResponse;
+import org.eamrf.eastoreui.web.jaxrs.eastore.client.EAStoreActionClient;
+import org.eamrf.web.rs.exception.WebServiceException;
 import org.slf4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -192,5 +194,65 @@ public class UIService {
     	return prots;
     	
     }
+    
+    /**
+     * Call E-A Store /fsys/action/copyFile
+     * 
+     * @param fileNodeId
+     * @param dirNodeId
+     * @param replaceExisting
+     * @return
+     * @throws ServiceException
+     */
+    public String copyFile(Long fileNodeId, Long dirNodeId, Boolean replaceExisting) throws ServiceException {
+    	
+    	return storeService.copyFile(fileNodeId, dirNodeId, replaceExisting);    	
+    	
+    }
+    
+    /**
+     * Call E-A Store /fsys/action/copyDirectory
+     * 
+     * @param copyDirNodeId
+     * @param destDirNodeId
+     * @param replaceExisting
+     * @return
+     * @throws ServiceException
+     */
+    public String copyDirectory(Long copyDirNodeId, Long destDirNodeId, Boolean replaceExisting) throws ServiceException {
+    	
+    	return storeService.copyDirectory(copyDirNodeId, destDirNodeId, replaceExisting);     	
+    	
+    }
+    
+    /**
+     * Call E-A Store /fsys/action/moveFile
+     * 
+     * @param fileNodeId
+     * @param dirNodeId
+     * @param replaceExisting
+     * @return
+     * @throws ServiceException
+     */
+    public String moveFile(Long fileNodeId, Long dirNodeId, Boolean replaceExisting) throws ServiceException {
+    	
+    	return storeService.moveFile(fileNodeId, dirNodeId, replaceExisting);    	
+    	
+    }
+    
+    /**
+     * Call E-A Store /fsys/action/moveDirectory
+     * 
+     * @param moveDirNodeId
+     * @param destDirNodeId
+     * @param replaceExisting
+     * @return
+     * @throws ServiceException
+     */
+    public String moveDirectory(Long moveDirNodeId, Long destDirNodeId, Boolean replaceExisting) throws ServiceException {
+    	
+    	return storeService.moveDirectory(moveDirNodeId, destDirNodeId, replaceExisting);     	
+    	
+    }    
 
 }

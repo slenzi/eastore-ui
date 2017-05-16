@@ -280,7 +280,91 @@ public class EAStoreService {
 		}
     	return fresp;
     	
-    }	
+    }
+    
+    /**
+     * Call E-A Store /fsys/action/copyFile
+     * 
+     * @param fileNodeId
+     * @param dirNodeId
+     * @param replaceExisting
+     * @return
+     * @throws ServiceException
+     */
+    public String copyFile(Long fileNodeId, Long dirNodeId, Boolean replaceExisting) throws ServiceException {
+    	
+    	EAStoreActionClient client = eaStoreClientProvider.getActionClient();
+    	
+		try {
+			return client.copyFile(fileNodeId, dirNodeId, replaceExisting);
+		} catch (WebServiceException e) {
+			throw new ServiceException("Error calling eastore copyFile(...), " + e.getMessage(), e);
+		}    	
+    	
+    }
+    
+    /**
+     * Call E-A Store /fsys/action/copyDirectory
+     * 
+     * @param copyDirNodeId
+     * @param destDirNodeId
+     * @param replaceExisting
+     * @return
+     * @throws ServiceException
+     */
+    public String copyDirectory(Long copyDirNodeId, Long destDirNodeId, Boolean replaceExisting) throws ServiceException {
+    	
+    	EAStoreActionClient client = eaStoreClientProvider.getActionClient();
+    	
+		try {
+			return client.copyDirectory(copyDirNodeId, destDirNodeId, replaceExisting);
+		} catch (WebServiceException e) {
+			throw new ServiceException("Error calling eastore copyDirectory(...), " + e.getMessage(), e);
+		}     	
+    	
+    }
+    
+    /**
+     * Call E-A Store /fsys/action/moveFile
+     * 
+     * @param fileNodeId
+     * @param dirNodeId
+     * @param replaceExisting
+     * @return
+     * @throws ServiceException
+     */
+    public String moveFile(Long fileNodeId, Long dirNodeId, Boolean replaceExisting) throws ServiceException {
+    	
+    	EAStoreActionClient client = eaStoreClientProvider.getActionClient();
+    	
+		try {
+			return client.moveFile(fileNodeId, dirNodeId, replaceExisting);
+		} catch (WebServiceException e) {
+			throw new ServiceException("Error calling eastore moveFile(...), " + e.getMessage(), e);
+		}    	
+    	
+    }
+    
+    /**
+     * Call E-A Store /fsys/action/moveDirectory
+     * 
+     * @param moveDirNodeId
+     * @param destDirNodeId
+     * @param replaceExisting
+     * @return
+     * @throws ServiceException
+     */
+    public String moveDirectory(Long moveDirNodeId, Long destDirNodeId, Boolean replaceExisting) throws ServiceException {
+    	
+    	EAStoreActionClient client = eaStoreClientProvider.getActionClient();
+    	
+		try {
+			return client.moveDirectory(moveDirNodeId, destDirNodeId, replaceExisting);
+		} catch (WebServiceException e) {
+			throw new ServiceException("Error calling eastore moveDirectory(...), " + e.getMessage(), e);
+		}     	
+    	
+    }
 
 
 }

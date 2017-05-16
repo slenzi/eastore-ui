@@ -142,7 +142,7 @@ public class UIActionResource extends BaseResourceHandler {
 	@Produces(MediaType.APPLICATION_OCTET_STREAM)
 	public Response downloadFileById(@PathParam("fileId") Long fileId) throws WebServiceException {
 		
-		logger.info(UIJsonResource.class.getSimpleName() + " downloadFileById() called");
+		logger.info(UIJsonResource.class.getSimpleName() + " downloadFileById(...) called");
 		
 		FileResponse fresp = null;
 		try {
@@ -213,7 +213,7 @@ public class UIActionResource extends BaseResourceHandler {
     		@QueryParam("name") String name,
     		@QueryParam("desc") String desc) throws WebServiceException {
     	
-    	logger.info(UIActionResource.class.getSimpleName() + " addDirectory() called");
+    	logger.info(UIActionResource.class.getSimpleName() + " addDirectory(...) called");
     	
     	String jsonReponse = null;
 		try {
@@ -226,6 +226,152 @@ public class UIActionResource extends BaseResourceHandler {
 		return Response.ok(jsonReponse, MediaType.APPLICATION_JSON).build();    	
    
     }
+    
+    /**
+     * Copy a file
+     * 
+     * @param fileNodeId - id of file to copy
+     * @param dirNodeId - id of directory where file will be copied to
+     * @param replaceExisting - pass true to replace any existing file with the same name (case insensitive match) in
+     * the target directory. Pass false not to replace. If you pass false and a file does already exist, then
+     * an exception will be thrown.
+     * @return
+     * @throws WebServiceException
+     */
+    @POST
+    @Path("/copyFile")
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response copyFile(
+    		@QueryParam("fileNodeId") Long fileNodeId,
+    		@QueryParam("dirNodeId") Long dirNodeId,
+    		@QueryParam("replaceExisting") Boolean replaceExisting) throws WebServiceException {
+    	
+    	logger.info(UIActionResource.class.getSimpleName() + " copyFile(...) called");
+    	
+    	if(fileNodeId == null || dirNodeId == null || replaceExisting == null){
+    		handleError("Cannot copy file, missing fileNodeId, dirNodeId, and/or replaceExisting params.", 
+    				WebExceptionType.CODE_IO_ERROR);
+    	}
+    	
+    	String jsonReponse = null;
+		try {
+			jsonReponse = uiService.copyFile(fileNodeId, dirNodeId, replaceExisting);
+		} catch (ServiceException e) {
+			logger.error(e.getMessage(), e);
+			throw new WebServiceException(WebExceptionType.CODE_IO_ERROR, e.getMessage(), e);
+		}
+		
+		return Response.ok(jsonReponse, MediaType.APPLICATION_JSON).build();
+    	
+    }
+
+    /**
+     * Copy a directory
+     * 
+     * @param copyDirNodeId
+     * @param destDirNodeId
+     * @param replaceExisting
+     * @return
+     * @throws WebServiceException
+     */
+    @POST
+    @Path("/copyDirectory")
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response copyDirectory(
+    		@QueryParam("copyDirNodeId") Long copyDirNodeId,
+    		@QueryParam("destDirNodeId") Long destDirNodeId,
+    		@QueryParam("replaceExisting") Boolean replaceExisting) throws WebServiceException {
+    	
+    	logger.info(UIActionResource.class.getSimpleName() + " copyDirectory(...) called");
+    	
+    	if(copyDirNodeId == null || destDirNodeId == null || replaceExisting == null){
+    		handleError("Missing copyDirNodeId, destDirNodeId, and/or replaceExisting params.", WebExceptionType.CODE_IO_ERROR);
+    	}
+    	
+    	String jsonReponse = null;
+		try {
+			jsonReponse = uiService.copyDirectory(copyDirNodeId, destDirNodeId, replaceExisting);
+		} catch (ServiceException e) {
+			logger.error(e.getMessage(), e);
+			throw new WebServiceException(WebExceptionType.CODE_IO_ERROR, e.getMessage(), e);
+		}
+		
+		return Response.ok(jsonReponse, MediaType.APPLICATION_JSON).build();
+    	
+    }
+    
+    /**
+     * Move a file
+     * 
+     * @param fileNodeId - id of file to move
+     * @param dirNodeId - id of directory where file will be moved to
+     * @param replaceExisting - pass true to replace any existing file with the same name (case insensitive match) in
+     * the target directory. Pass false not to replace. If you pass false and a file does already exist, then
+     * an exception will be thrown.
+     * @return
+     * @throws WebServiceException
+     */
+    @POST
+    @Path("/moveFile")
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response moveFile(
+    		@QueryParam("fileNodeId") Long fileNodeId,
+    		@QueryParam("dirNodeId") Long dirNodeId,
+    		@QueryParam("replaceExisting") Boolean replaceExisting) throws WebServiceException {
+    	
+    	logger.info(UIActionResource.class.getSimpleName() + " moveFile(...) called");
+    	
+    	if(fileNodeId == null || dirNodeId == null || replaceExisting == null){
+    		handleError("Cannot move file, missing fileNodeId, dirNodeId, and/or replaceExisting params.", 
+    				WebExceptionType.CODE_IO_ERROR);
+    	}
+    	
+    	String jsonReponse = null;
+		try {
+			jsonReponse = uiService.moveFile(fileNodeId, dirNodeId, replaceExisting);
+		} catch (ServiceException e) {
+			logger.error(e.getMessage(), e);
+			throw new WebServiceException(WebExceptionType.CODE_IO_ERROR, e.getMessage(), e);
+		}
+		
+		return Response.ok(jsonReponse, MediaType.APPLICATION_JSON).build();
+    	
+    }
+    
+    /**
+     * Move a directory
+     * 
+     * @param copyDirNodeId
+     * @param destDirNodeId
+     * @param replaceExisting
+     * @return
+     * @throws WebServiceException
+     */
+    @POST
+    @Path("/moveDirectory")
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response moveDirectory(
+    		@QueryParam("moveDirNodeId") Long moveDirNodeId,
+    		@QueryParam("destDirNodeId") Long destDirNodeId,
+    		@QueryParam("replaceExisting") Boolean replaceExisting) throws WebServiceException {
+    	
+    	logger.info(UIActionResource.class.getSimpleName() + " moveFile(...) called");
+    	
+    	if(moveDirNodeId == null || destDirNodeId == null || replaceExisting == null){
+    		handleError("Missing moveDirNodeId, destDirNodeId, and/or replaceExisting params.", WebExceptionType.CODE_IO_ERROR);
+    	}
+    	
+    	String jsonReponse = null;
+		try {
+			jsonReponse = uiService.moveDirectory(moveDirNodeId, destDirNodeId, replaceExisting);
+		} catch (ServiceException e) {
+			logger.error(e.getMessage(), e);
+			throw new WebServiceException(WebExceptionType.CODE_IO_ERROR, e.getMessage(), e);
+		}
+		
+		return Response.ok(jsonReponse, MediaType.APPLICATION_JSON).build();
+    	
+    }    
 
 	@Override
 	public Logger getLogger() {

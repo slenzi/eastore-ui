@@ -219,7 +219,7 @@
 			return appConstants.contextPath +  '/assets/scripts/angular/home/modules/home/partials/path_content.jsp';
 		},			
 		
-		controller : function($log, $state, $stateParams, homeRestService, resourceClipboardService){
+		controller : function($log, $mdDialog, $state, $stateParams, homeRestService, resourceClipboardService){
 			
 			//$log.debug('pathContentComponent controller');
 			
@@ -321,7 +321,7 @@
 				resourceClipboardService.setOperation('cut');
 				resourceClipboardService.setSourceStore(sourceStore);
 				resourceClipboardService.setSourceDirectory(sourceDirectory);
-				resourceClipboardService.addResources(items);
+				resourceClipboardService.setResources(items);
 			};	
 
 			// copy selected resources
@@ -330,7 +330,7 @@
 				resourceClipboardService.setOperation('copy');
 				resourceClipboardService.setSourceStore(sourceStore);
 				resourceClipboardService.setSourceDirectory(sourceDirectory);
-				resourceClipboardService.addResources(items);
+				resourceClipboardService.setResources(items);
 			};
 			
 			// delete selected resources
@@ -352,21 +352,187 @@
 					return;
 				}
 				var operation = resourceClipboardService.getOperation();
+				var sourceStore = resourceClipboardService.getSourceStore();
 				var sourceDirectory = resourceClipboardService.getSourceDirectory();
-				var operationText = '[unknown operation]';
+				var resources = resourceClipboardService.getResources();
 				switch(operation){
 					case 'copy':
-						operationText = 'copy';
+						this.doCopy(sourceStore, sourceDirectory, destStore, destDirectory, resources);
 						break;
 					case 'cut':
-						operationText = 'move';
+						this.doMove(sourceStore, sourceDirectory, destStore, destDirectory, resources);
 						break;
-				}
-				if(sourceDirectory.nodeId === destDirectory.nodeId){
-					alert('Cannot ' + operationText + ' resources. The source and destination directories are the same.');
 				}
 				
 			};
+			
+			this.doCopy = function(sourceStore, sourceDirectory, destinationStore, destinationDirectory, pathResources){
+				
+				if(sourceDirectory.nodeId === destinationDirectory.nodeId){
+					alert('Cannot copy resources. The source and destination directories are the same.');
+					return;
+				}
+				
+				var thisCtrl = this;
+				
+				var confirm = $mdDialog.confirm()
+					.parent(angular.element(document.body))
+					.title('Copy Confirmation')
+					.content("Please confirm that you want to copy the resources to this directory.")
+					.ariaLabel('Continue Copy')
+					.ok('Continue')
+					.cancel('Cancel')
+					.targetEvent(event);
+
+				$mdDialog.show(confirm).then(
+					function() {
+
+					for(var i=0; i<pathResources.length; i++){
+						if(pathResources[i].resourceType === 'FILE'){
+							
+							var theFileResource = pathResources[i];
+							
+							homeRestService
+								.copyFile(theFileResource.nodeId, destinationDirectory.nodeId, true)
+								.then( function ( jsonData ){
+									
+									$log.debug('completed copy of file ' + theFileResource.nodeId);									
+									
+								}, function( error ){
+									alert('Error calling copyFile(...) service method' + JSON.stringify(error));
+								})
+								.then( function ( jsonData ){
+									
+										$log.debug('file resource copied, reload path state to update view');
+										
+										thisCtrl.reloadCurrentState();
+										
+										//thisCtrl.loadPathState(destinationStore, destinationDirectory);
+									
+								});
+							
+						}else if(pathResources[i].resourceType === 'DIRECTORY'){
+							
+							var theDirectoryResource = pathResources[i];
+							
+							homeRestService
+								.copyDirectory(theDirectoryResource.nodeId, destinationDirectory.nodeId, true)
+								.then( function ( jsonData ){
+									
+									$log.debug('completed copy of directory ' + theDirectoryResource.nodeId);									
+									
+								}, function( error ){
+									alert('Error calling copyDirectory(...) service method' + JSON.stringify(error));
+								})
+								.then( function ( jsonData ){
+	
+										$log.debug('directory resource copied, reload path state to update view');
+										
+										thisCtrl.reloadCurrentState();
+										
+										//thisCtrl.loadPathState(destinationStore, destinationDirectory);
+
+									
+								});							
+							
+						}else{
+							$log.error('Cannot copy resource, unknown resource type. Node ID = ' + pathResources[i].nodeId + 
+								', Resource Type + ' + pathResources[i].resourceType);
+						}
+						
+					}
+					
+				}, function() {
+					
+					$log.debug('Copy operation canceled.');
+					
+				});				
+				
+			};
+			
+			this.doMove = function (sourceStore, sourceDirectory, destinationStore, destinationDirectory, pathResources){
+
+				if(sourceDirectory.nodeId === destinationDirectory.nodeId){
+					alert('Cannot move resources. The source and destination directories are the same.');
+					return;
+				}
+				
+				var thisCtrl = this;
+				
+				var confirm = $mdDialog.confirm()
+					.parent(angular.element(document.body))
+					.title('Move Confirmation')
+					.content("Please confirm that you want to move the resources to this directory.")
+					.ariaLabel('Continue Move')
+					.ok('Continue')
+					.cancel('Cancel')
+					.targetEvent(event);
+
+				$mdDialog.show(confirm).then(
+					function() {
+
+					for(var i=0; i<pathResources.length; i++){
+						if(pathResources[i].resourceType === 'FILE'){
+							
+							var theFileResource = pathResources[i];
+							
+							homeRestService
+								.moveFile(theFileResource.nodeId, destinationDirectory.nodeId, true)
+								.then( function ( jsonData ){
+									
+									$log.debug('completed move of file ' + theFileResource.nodeId);									
+									
+								}, function( error ){
+									alert('Error calling moveFile(...) service method' + JSON.stringify(error));
+								})
+								.then( function ( jsonData ){
+									
+										$log.debug('file resource moved, reload path state to update view');
+										
+										thisCtrl.reloadCurrentState();
+										
+										//thisCtrl.loadPathState(destinationStore, destinationDirectory);
+									
+								});
+							
+						}else if(pathResources[i].resourceType === 'DIRECTORY'){
+							
+							var theDirectoryResource = pathResources[i];
+							
+							homeRestService
+								.moveDirectory(theDirectoryResource.nodeId, destinationDirectory.nodeId, true)
+								.then( function ( jsonData ){
+									
+									$log.debug('completed move of directory ' + theDirectoryResource.nodeId);									
+									
+								}, function( error ){
+									alert('Error calling moveDirectory(...) service method' + JSON.stringify(error));
+								})
+								.then( function ( jsonData ){
+	
+										$log.debug('directory resource moved, reload path state to update view');
+										
+										thisCtrl.reloadCurrentState();
+										
+										//thisCtrl.loadPathState(destinationStore, destinationDirectory);
+
+									
+								});							
+							
+						}else{
+							$log.error('Cannot move resource, unknown resource type. Node ID = ' + pathResources[i].nodeId + 
+								', Resource Type + ' + pathResources[i].resourceType);
+						}
+						
+					}
+					
+				}, function() {
+					
+					$log.debug('Move operation canceled.');
+					
+				});
+			
+			};		
 			
 			// get all selected items n the collection of pathResources
 			this.getSelectedPathResources = function(pathResources, type){
@@ -479,6 +645,24 @@
 				//	currDirResource : directoryResource
 				//});
 				
+			};
+			
+			this.loadPathState = function(store, directoryResource){
+				
+				var newUrlPath = '/' + store.name + directoryResource.relativePath;
+				
+				$state.go('path', {
+					urlPath: newUrlPath,
+					store : store,
+					currDirResource : directoryResource
+					});
+				
+			};
+
+			this.reloadCurrentState = function(){
+				
+				$state.reload();
+			
 			};
 			
 			this.openMenu = function ($mdMenu, event){
@@ -747,4 +931,4 @@
 		
 	});	
 	
-})();
+})();;
