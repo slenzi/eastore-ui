@@ -35,6 +35,9 @@
 			}
 		};
 	}])
+	//
+	// directive for displaying a list of stores in a smart table 
+	//
 	.directive('smartTableStoreList', ['$log', function($log) {
 		
 		var controller = ['$scope', function ($scope) {
@@ -118,6 +121,11 @@
 		};
 		
 	}])
+	//
+	// directive for display directory path resources in a smart table
+	// currently we aren't using this directive. We use smartTableResourceList.
+	//
+	/*
 	.directive('smartTableDirectoryList', ['$log', function($log) {
 		
 		var controller = ['$scope', function ($scope) {
@@ -213,6 +221,10 @@
 		};
 		
 	}])
+	//
+	// directive for display file meta path resources in a smart table
+	// currently we aren't using this directive. We use smartTableResourceList.
+	//
 	.directive('smartTableFileList', ['$log', function($log) {
 		
 		var controller = ['$scope', function ($scope) {
@@ -313,6 +325,133 @@
 			'        <td>{{pathResObj.desc}}</td>' +
 			'        <td>{{pathResObj.mimeType}}</td>' +
 			'        <td>{{humanFileSize(pathResObj.fileSize, true)}}</td>' +
+			'	</tr>' +
+			'	</tbody>' +
+			'	<tfoot>' +
+			'		<tr>' +		
+			'			<td colspan="4" class="text-center">' +
+			'				<div st-pagination="" st-items-by-page="20" st-displayed-pages="15"></div>' +
+			'			</td>' +
+			'		</tr>' +
+			'	</tfoot>' +		
+			'</table>';
+
+		return {
+			restrict: 'AE',
+			scope: {
+				store: '=',
+				resourceList: '=',
+				resourceClickHandler: '&'
+			},
+			controller: controller,
+			template: template
+		};
+		
+	}])
+	*/
+	//
+	// directive for displaying path resources (both file meta and directory) in a smart table
+	//
+	.directive('smartTableResourceList', ['$log', function($log) {
+		
+		var controller = ['$scope', function ($scope) {
+
+			function init() {
+				
+				$scope.storeViewObj = $scope.store;
+				$scope.$watch('store', function(newStore, oldStore){
+					$scope.storeViewObj = newStore;
+				}, true);
+				
+				$scope.resourceListSafe = $scope.resourceList;
+				// a separate list copy for display. this is needed for smart table
+				$scope.resourceListView = [].concat($scope.resourceList);
+				
+				// update shipment list when resourceList array changes
+				$scope.$watch('resourceList', function(newResourceList, oldResourceList){
+					$scope.resourceListSafe = newResourceList;
+					$scope.resourceListView = [].concat(newResourceList);
+				}, true);				
+				
+			}
+
+			init();
+
+			$scope.tableGetters = function(){
+				return {
+					getNodeId: function (pathResObj) {
+						return pathResObj.nodeId;
+					},
+					getNodeName: function (pathResObj) {
+						return pathResObj.nodeName;
+					},
+					getDescription: function (pathResObj) {
+						return pathResObj.desc;
+					},
+					getMimeType: function (pathResObj) {
+						return pathResObj.mimeType;
+					},
+					getSize: function (pathResObj) {
+						return pathResObj.fileSize;
+					}
+				}
+			};
+			
+			$scope.viewChildResources = function(storeObj, pathResObj){
+				$scope.resourceClickHandler({
+						theStore : storeObj,
+						thePathResource: pathResObj
+					});
+			};
+			
+			$scope.humanFileSize = function(bytes, si){
+				var thresh = si ? 1000 : 1024;
+				if(Math.abs(bytes) < thresh) {
+					return bytes + ' B';
+				}
+				var units = si
+					? ['kB','MB','GB','TB','PB','EB','ZB','YB']
+					: ['KiB','MiB','GiB','TiB','PiB','EiB','ZiB','YiB'];
+				var u = -1;
+				do {
+					bytes /= thresh;
+					++u;
+				} while(Math.abs(bytes) >= thresh && u < units.length - 1);
+				return bytes.toFixed(1)+' '+units[u];				
+			};			
+			
+		}];
+		
+		// track by $index
+
+		var template = 
+			'<table st-table="resourceListView" st-safe-src="resourceListSafe" class="table mySmartTable">' +
+			'	<thead>' +
+			'	<tr>' +
+			//'     <th>&nbsp;</th>' +
+			//'     <th st-sort="tableGetters().getNodeId">ID</th>' +
+			'        <th st-sort="tableGetters().getNodeName">Name</th>' +
+			'        <th st-sort="tableGetters().getDescription">Description</th>' +
+			'        <th st-sort="tableGetters().getMimeType">Type</th>' +
+			'        <th st-sort="tableGetters().getSize">Size</th>' +
+			'	</tr>' +
+			'	<tr>' +
+			//'		<th></th>' +
+			//'		<th><input st-search="nodeId" placeholder="search by node id" class="input-sm form-control" type="search"/></th>' +
+			'		<th><input st-search="nodeName" placeholder="search by name" class="input-sm form-control" type="search"/></th>' +	
+			'		<th><input st-search="desc" placeholder="search by description" class="input-sm form-control" type="search"/></th>' +
+			'		<th><input st-search="mimeType" placeholder="search by type" class="input-sm form-control" type="search"/></th>' +
+			'		<th><input st-search="fileSize" placeholder="search by size" class="input-sm form-control" type="search"/></th>' +
+			'	</tr>' +			
+			'	</thead>' +
+			'	<tbody>' +
+			'	<tr st-select-row="pathResObj" st-select-mode="multiple" ng-repeat="pathResObj in resourceListView" >' +
+			//'		 <td><md-button class=\"md-raised\" ng-click=\"viewChildResources(pathResObj);  $event.stopPropagation();\">Download</md-button></td>' +		
+			//'      <td>{{ pathResObj.nodeId }}</td>' +
+			'        <td><a href ng-click=\"viewChildResources(storeViewObj, pathResObj);  $event.stopPropagation();\">{{ pathResObj.nodeName }}</a></td>' +
+			'        <td>{{ pathResObj.desc }}</td>' +
+			'        <td>{{ pathResObj.resourceType === \'FILE\' ? pathResObj.mimeType : \'directory\' }}</td>' +
+			'        <td>{{ pathResObj.resourceType === \'FILE\' ? humanFileSize(pathResObj.fileSize, true) : \'\' }}</td>' +
 			'	</tr>' +
 			'	</tbody>' +
 			'	<tfoot>' +

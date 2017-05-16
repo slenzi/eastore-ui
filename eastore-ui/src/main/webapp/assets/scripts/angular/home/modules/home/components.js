@@ -219,7 +219,7 @@
 			return appConstants.contextPath +  '/assets/scripts/angular/home/modules/home/partials/path_content.jsp';
 		},			
 		
-		controller : function($log, $state, $stateParams, homeRestService){
+		controller : function($log, $state, $stateParams, homeRestService, resourceClipboardService){
 			
 			//$log.debug('pathContentComponent controller');
 			
@@ -256,100 +256,131 @@
 				
 			};
 			
+			/*
 			// iterate over the array of pathResource and return true if any of them are resourceType DIRECTORY
 			this.haveDirectoryResource = function(pathResources){
-
 				return this.havePathResourceType(pathResources, 'DIRECTORY');
-				
 			};
-			
 			// iterate over the array of pathResource and return true if any of them are resourceType FILE
 			this.haveFileResource = function(pathResources){
-				
 				return this.havePathResourceType(pathResources, 'FILE');
-				
 			};
-			
 			// return true if any of the directory resources are 'selected' in the smart table. Rows that are selected
 			// will have class 'st-selected' applied
 			this.haveSelectedDirectoryResource = function(pathResources){
-
-				return this.haveSelectedPathResources(pathResources, 'DIRECTORY');
-			
+				return this.haveSelectedPathResourceType(pathResources, 'DIRECTORY');
 			};
-			
 			// return true if any of the file resources are 'selected' in the smart table. Rows that are selected
 			// will have class 'st-selected' applied
 			this.haveSelectedFileResource = function(pathResources){
-				
-				return this.haveSelectedPathResources(pathResources, 'FILE');
-				
+				return this.haveSelectedPathResourceType(pathResources, 'FILE');
 			};
-
 			// unselect all selected directories in our smart table
 			this.unselectDirectories = function(pathResources){
-				
-				this.unselectPathResources(pathResources, 'DIRECTORY');
-				
+				this.unselectPathResourceType(pathResources, 'DIRECTORY');
 			};			
-			
 			// unselect all selected files in our smart table
 			this.unselectFiles = function(pathResources){
-				
-				this.unselectPathResources(pathResources, 'FILE');
-							
+				this.unselectPathResourceType(pathResources, 'FILE');			
 			};
-			
 			// delete all selected directories
 			this.deleteSelectedDirectories = function(pathResources){
-				
-				var items = this.getSelectedPathResources(pathResources, 'DIRECTORY');
+				var items = this.getSelectedPathResourcesType(pathResources, 'DIRECTORY');
 				alert('Delete directories coming soon!');
-				
 			};			
-			
 			// delete all selected files
 			this.deleteSelectedFiles = function(pathResources){
-				
-				var items = this.getSelectedPathResources(pathResources, 'FILE');
+				var items = this.getSelectedPathResourcesType(pathResources, 'FILE');
 				alert('Delete files coming soon!');
-				
 			};
-
 			// copy all selected directories (copy to clipboard)
 			this.copySelectedDirectories = function(pathResources){
-				
-				var items = this.getSelectedPathResources(pathResources, 'DIRECTORY');
+				var items = this.getSelectedPathResourcesType(pathResources, 'DIRECTORY');
 				alert('Copying directories coming soon!');
-				
 			};
-
 			// copy all selected files (copy to clipboard)
 			this.copySelectedFiles = function(pathResources){
-				
-				var items = this.getSelectedPathResources(pathResources, 'FILE');
+				var items = this.getSelectedPathResourcesType(pathResources, 'FILE');
 				alert('Copying files coming soon!');
-				
 			};
-
 			// cut all selected directories (cut to clipboard in preparation for moving)
 			this.cutSelectedDirectories = function(pathResources){
-				
-				var items = this.getSelectedPathResources(pathResources, 'DIRECTORY');
+				var items = this.getSelectedPathResourcesType(pathResources, 'DIRECTORY');
 				alert('Cut/move directories coming soon!');
-				
 			};
-
 			// cut all selected files (cut to clipboard in preparation for moving)
 			this.cutSelectedFiles = function(pathResources){
-				
-				var items = this.getSelectedPathResources(pathResources, 'FILE');
-				alert('Cut/move files coming soon!');
-							
+				var items = this.getSelectedPathResourcesType(pathResources, 'FILE');
+				alert('Cut/move files coming soon!');	
 			};
+			*/
+			
+			// cut selected resources
+			this.cutSelectedResources = function(sourceStore, sourceDirectory, pathResources){
+				var items = this.getSelectedPathResources(pathResources);
+				resourceClipboardService.setOperation('cut');
+				resourceClipboardService.setSourceStore(sourceStore);
+				resourceClipboardService.setSourceDirectory(sourceDirectory);
+				resourceClipboardService.addResources(items);
+			};	
+
+			// copy selected resources
+			this.copySelectedResources = function(sourceStore, sourceDirectory, pathResources){
+				var items = this.getSelectedPathResources(pathResources);
+				resourceClipboardService.setOperation('copy');
+				resourceClipboardService.setSourceStore(sourceStore);
+				resourceClipboardService.setSourceDirectory(sourceDirectory);
+				resourceClipboardService.addResources(items);
+			};
+			
+			// delete selected resources
+			this.deleteSelectedResources = function(sourceStore, sourceDirectory, pathResources){
+				var items = this.getSelectedPathResources(pathResources);
+				alert('Delete resources coming soon!');
+			};			
+			
+			// return tre/false if the clipboard has resources
+			this.haveResourcesOnClipboard = function(){
+				return resourceClipboardService.haveResources();
+			};
+			
+			// execute paste operation for clipboard
+			this.pasteItemsFromClipboard = function(destStore, destDirectory){
+				
+				if(!resourceClipboardService.haveResources()){
+					alert('No items on the clipboard');
+					return;
+				}
+				var operation = resourceClipboardService.getOperation();
+				var sourceDirectory = resourceClipboardService.getSourceDirectory();
+				var operationText = '[unknown operation]';
+				switch(operation){
+					case 'copy':
+						operationText = 'copy';
+						break;
+					case 'cut':
+						operationText = 'move';
+						break;
+				}
+				if(sourceDirectory.nodeId === destDirectory.nodeId){
+					alert('Cannot ' + operationText + ' resources. The source and destination directories are the same.');
+				}
+				
+			};
+			
+			// get all selected items n the collection of pathResources
+			this.getSelectedPathResources = function(pathResources, type){
+				var items = [];
+				for(var i = 0; i<pathResources.length; i++){
+					if(pathResources[i].isSelected){
+						items.push(pathResources[i]);
+					}
+				}
+				return items;
+			};			
 
 			// get all selected items, of the specified type, in the collection of pathResources
-			this.getSelectedPathResources = function(pathResources, type){
+			this.getSelectedPathResourcesType = function(pathResources, type){
 				var items = [];
 				for(var i = 0; i<pathResources.length; i++){
 					if(pathResources[i].resourceType === type && pathResources[i].isSelected){
@@ -359,8 +390,18 @@
 				return items;
 			};
 			
+			// return true if any of the resources are selected in collection of path resources
+			this.haveSelectedPathResource = function(pathResources){
+				for(var i = 0; i<pathResources.length; i++){
+					if(pathResources[i].isSelected){
+						return true;
+					}
+				}
+				return false;
+			};			
+			
 			// return true if any of the resources, of the specified type, are selected in collection of path resources
-			this.haveSelectedPathResources = function(pathResources, type){
+			this.haveSelectedPathResourceType = function(pathResources, type){
 				for(var i = 0; i<pathResources.length; i++){
 					if(pathResources[i].resourceType === type && pathResources[i].isSelected){
 						return true;
@@ -368,9 +409,18 @@
 				}
 				return false;
 			};
+			
+			// unselect any selected resources in the collection of path resources
+			this.unselectPathResource = function(pathResources){
+				for(var i = 0; i<pathResources.length; i++){
+					if(pathResources[i].isSelected){
+						pathResources[i].isSelected = false;
+					}
+				}	
+			};			
 
-			// unselect and selected resources, of the specified type, in the collection of path resources
-			this.unselectPathResources = function(pathResources, type){
+			// unselect any selected resources, of the specified type, in the collection of path resources
+			this.unselectPathResourceType = function(pathResources, type){
 				for(var i = 0; i<pathResources.length; i++){
 					if(pathResources[i].resourceType === type && pathResources[i].isSelected){
 						pathResources[i].isSelected = false;
