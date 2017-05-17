@@ -223,6 +223,20 @@
 			
 			//$log.debug('pathContentComponent controller');
 			
+			var progressValue = 0;
+			
+			this.getProgressValue = function(){
+				return progressValue;
+			};
+			
+			this.setProgressValue = function(val){
+				progressValue = val;
+			};
+			
+			this.setCalculatedProgress = function(currVal, totalVal){
+				progressValue = (currVal/totalVal)*100;
+			};
+			
 			this.clickResourceHandler = function(store, resource){
 				
 				if(resource.resourceType === 'FILE'){
@@ -255,65 +269,6 @@
 				}
 				
 			};
-			
-			/*
-			// iterate over the array of pathResource and return true if any of them are resourceType DIRECTORY
-			this.haveDirectoryResource = function(pathResources){
-				return this.havePathResourceType(pathResources, 'DIRECTORY');
-			};
-			// iterate over the array of pathResource and return true if any of them are resourceType FILE
-			this.haveFileResource = function(pathResources){
-				return this.havePathResourceType(pathResources, 'FILE');
-			};
-			// return true if any of the directory resources are 'selected' in the smart table. Rows that are selected
-			// will have class 'st-selected' applied
-			this.haveSelectedDirectoryResource = function(pathResources){
-				return this.haveSelectedPathResourceType(pathResources, 'DIRECTORY');
-			};
-			// return true if any of the file resources are 'selected' in the smart table. Rows that are selected
-			// will have class 'st-selected' applied
-			this.haveSelectedFileResource = function(pathResources){
-				return this.haveSelectedPathResourceType(pathResources, 'FILE');
-			};
-			// unselect all selected directories in our smart table
-			this.unselectDirectories = function(pathResources){
-				this.unselectPathResourceType(pathResources, 'DIRECTORY');
-			};			
-			// unselect all selected files in our smart table
-			this.unselectFiles = function(pathResources){
-				this.unselectPathResourceType(pathResources, 'FILE');			
-			};
-			// delete all selected directories
-			this.deleteSelectedDirectories = function(pathResources){
-				var items = this.getSelectedPathResourcesType(pathResources, 'DIRECTORY');
-				alert('Delete directories coming soon!');
-			};			
-			// delete all selected files
-			this.deleteSelectedFiles = function(pathResources){
-				var items = this.getSelectedPathResourcesType(pathResources, 'FILE');
-				alert('Delete files coming soon!');
-			};
-			// copy all selected directories (copy to clipboard)
-			this.copySelectedDirectories = function(pathResources){
-				var items = this.getSelectedPathResourcesType(pathResources, 'DIRECTORY');
-				alert('Copying directories coming soon!');
-			};
-			// copy all selected files (copy to clipboard)
-			this.copySelectedFiles = function(pathResources){
-				var items = this.getSelectedPathResourcesType(pathResources, 'FILE');
-				alert('Copying files coming soon!');
-			};
-			// cut all selected directories (cut to clipboard in preparation for moving)
-			this.cutSelectedDirectories = function(pathResources){
-				var items = this.getSelectedPathResourcesType(pathResources, 'DIRECTORY');
-				alert('Cut/move directories coming soon!');
-			};
-			// cut all selected files (cut to clipboard in preparation for moving)
-			this.cutSelectedFiles = function(pathResources){
-				var items = this.getSelectedPathResourcesType(pathResources, 'FILE');
-				alert('Cut/move files coming soon!');	
-			};
-			*/
 			
 			// cut selected resources
 			this.cutSelectedResources = function(sourceStore, sourceDirectory, pathResources){
@@ -351,6 +306,8 @@
 
 				$mdDialog.show(confirm).then(
 					function() {
+						
+						thisCtrl.setCalculatedProgress(0, resourcesToDelete.length);
 
 						for(var i=0; i<resourcesToDelete.length; i++){
 							if(resourcesToDelete[i].resourceType === 'FILE'){
@@ -361,7 +318,7 @@
 									.removeFile(theFileResource.nodeId)
 									.then( function ( jsonData ){
 										
-										$log.debug('completed deletion of file ' + theFileResource.nodeId);									
+										$log.debug('completed deletion of file ' + theFileResource.nodeId);
 										
 									}, function( error ){
 										alert('Error calling copyFile(...) service method' + JSON.stringify(error));
@@ -370,9 +327,10 @@
 										
 											$log.debug('file resource deleted, reload path state to update view');
 											
+											thisCtrl.setCalculatedProgress((i+1), resourcesToDelete.length);
 											thisCtrl.reloadCurrentState();
 										
-									});								
+									});									
 								
 							}else if(resourcesToDelete[i].resourceType === 'DIRECTORY'){
 
@@ -382,7 +340,7 @@
 									.removeDirectory(theDirectoryResource.nodeId)
 									.then( function ( jsonData ){
 										
-										$log.debug('completed deletion of directory ' + theDirectoryResource.nodeId);									
+										$log.debug('completed deletion of directory ' + theDirectoryResource.nodeId);
 										
 									}, function( error ){
 										alert('Error calling removeDirectory(...) service method' + JSON.stringify(error));
@@ -391,18 +349,23 @@
 										
 											$log.debug('directory resource deleted, reload path state to update view');
 											
+											thisCtrl.setCalculatedProgress((i+1), resourcesToDelete.length);
 											thisCtrl.reloadCurrentState();
 										
 									});							
 
 							}
 						}
+						
+						thisCtrl.setProgressValue(0);
 					
 				}, function() {
 					
 						$log.debug('Copy operation canceled.');
 					
-				});						
+				});
+
+				
 
 			};			
 			
@@ -454,60 +417,66 @@
 				$mdDialog.show(confirm).then(
 					function() {
 
-					for(var i=0; i<pathResources.length; i++){
-						if(pathResources[i].resourceType === 'FILE'){
-							
-							var theFileResource = pathResources[i];
-							
-							homeRestService
-								.copyFile(theFileResource.nodeId, destinationDirectory.nodeId, true)
-								.then( function ( jsonData ){
-									
-									$log.debug('completed copy of file ' + theFileResource.nodeId);									
-									
-								}, function( error ){
-									alert('Error calling copyFile(...) service method' + JSON.stringify(error));
-								})
-								.then( function ( jsonData ){
-									
-										$log.debug('file resource copied, reload path state to update view');
+						thisCtrl.setCalculatedProgress(0, pathResources.length);
+					
+						for(var i=0; i<pathResources.length; i++){
+							if(pathResources[i].resourceType === 'FILE'){
+								
+								var theFileResource = pathResources[i];
+								
+								homeRestService
+									.copyFile(theFileResource.nodeId, destinationDirectory.nodeId, true)
+									.then( function ( jsonData ){
 										
-										thisCtrl.reloadCurrentState();
+										$log.debug('completed copy of file ' + theFileResource.nodeId);									
 										
-										//thisCtrl.loadPathState(destinationStore, destinationDirectory);
-									
-								});
-							
-						}else if(pathResources[i].resourceType === 'DIRECTORY'){
-							
-							var theDirectoryResource = pathResources[i];
-							
-							homeRestService
-								.copyDirectory(theDirectoryResource.nodeId, destinationDirectory.nodeId, true)
-								.then( function ( jsonData ){
-									
-									$log.debug('completed copy of directory ' + theDirectoryResource.nodeId);									
-									
-								}, function( error ){
-									alert('Error calling copyDirectory(...) service method' + JSON.stringify(error));
-								})
-								.then( function ( jsonData ){
-	
-										$log.debug('directory resource copied, reload path state to update view');
+									}, function( error ){
+										alert('Error calling copyFile(...) service method' + JSON.stringify(error));
+									})
+									.then( function ( jsonData ){
 										
-										thisCtrl.reloadCurrentState();
+											$log.debug('file resource copied, reload path state to update view');
+											
+											thisCtrl.setCalculatedProgress((i+1), pathResources.length);
+											thisCtrl.reloadCurrentState();
+											
+											//thisCtrl.loadPathState(destinationStore, destinationDirectory);
 										
-										//thisCtrl.loadPathState(destinationStore, destinationDirectory);
+									});
+								
+							}else if(pathResources[i].resourceType === 'DIRECTORY'){
+								
+								var theDirectoryResource = pathResources[i];
+								
+								homeRestService
+									.copyDirectory(theDirectoryResource.nodeId, destinationDirectory.nodeId, true)
+									.then( function ( jsonData ){
+										
+										$log.debug('completed copy of directory ' + theDirectoryResource.nodeId);									
+										
+									}, function( error ){
+										alert('Error calling copyDirectory(...) service method' + JSON.stringify(error));
+									})
+									.then( function ( jsonData ){
+		
+											$log.debug('directory resource copied, reload path state to update view');
+											
+											thisCtrl.setCalculatedProgress((i+1), pathResources.length);
+											thisCtrl.reloadCurrentState();
+											
+											//thisCtrl.loadPathState(destinationStore, destinationDirectory);
 
-									
-								});							
+										
+									});							
+								
+							}else{
+								$log.error('Cannot copy resource, unknown resource type. Node ID = ' + pathResources[i].nodeId + 
+									', Resource Type + ' + pathResources[i].resourceType);
+							}
 							
-						}else{
-							$log.error('Cannot copy resource, unknown resource type. Node ID = ' + pathResources[i].nodeId + 
-								', Resource Type + ' + pathResources[i].resourceType);
 						}
 						
-					}
+						thisCtrl.setProgressValue(0);
 					
 				}, function() {
 					
@@ -538,60 +507,66 @@
 				$mdDialog.show(confirm).then(
 					function() {
 
-					for(var i=0; i<pathResources.length; i++){
-						if(pathResources[i].resourceType === 'FILE'){
-							
-							var theFileResource = pathResources[i];
-							
-							homeRestService
-								.moveFile(theFileResource.nodeId, destinationDirectory.nodeId, true)
-								.then( function ( jsonData ){
-									
-									$log.debug('completed move of file ' + theFileResource.nodeId);									
-									
-								}, function( error ){
-									alert('Error calling moveFile(...) service method' + JSON.stringify(error));
-								})
-								.then( function ( jsonData ){
-									
-										$log.debug('file resource moved, reload path state to update view');
+						thisCtrl.setCalculatedProgress(0, pathResources.length);
+					
+						for(var i=0; i<pathResources.length; i++){
+							if(pathResources[i].resourceType === 'FILE'){
+								
+								var theFileResource = pathResources[i];
+								
+								homeRestService
+									.moveFile(theFileResource.nodeId, destinationDirectory.nodeId, true)
+									.then( function ( jsonData ){
 										
-										thisCtrl.reloadCurrentState();
+										$log.debug('completed move of file ' + theFileResource.nodeId);									
 										
-										//thisCtrl.loadPathState(destinationStore, destinationDirectory);
-									
-								});
-							
-						}else if(pathResources[i].resourceType === 'DIRECTORY'){
-							
-							var theDirectoryResource = pathResources[i];
-							
-							homeRestService
-								.moveDirectory(theDirectoryResource.nodeId, destinationDirectory.nodeId, true)
-								.then( function ( jsonData ){
-									
-									$log.debug('completed move of directory ' + theDirectoryResource.nodeId);									
-									
-								}, function( error ){
-									alert('Error calling moveDirectory(...) service method' + JSON.stringify(error));
-								})
-								.then( function ( jsonData ){
-	
-										$log.debug('directory resource moved, reload path state to update view');
+									}, function( error ){
+										alert('Error calling moveFile(...) service method' + JSON.stringify(error));
+									})
+									.then( function ( jsonData ){
 										
-										thisCtrl.reloadCurrentState();
+											$log.debug('file resource moved, reload path state to update view');
+											
+											thisCtrl.setCalculatedProgress((i+1), pathResources.length);
+											thisCtrl.reloadCurrentState();
+											
+											//thisCtrl.loadPathState(destinationStore, destinationDirectory);
 										
-										//thisCtrl.loadPathState(destinationStore, destinationDirectory);
+									});
+								
+							}else if(pathResources[i].resourceType === 'DIRECTORY'){
+								
+								var theDirectoryResource = pathResources[i];
+								
+								homeRestService
+									.moveDirectory(theDirectoryResource.nodeId, destinationDirectory.nodeId, true)
+									.then( function ( jsonData ){
+										
+										$log.debug('completed move of directory ' + theDirectoryResource.nodeId);									
+										
+									}, function( error ){
+										alert('Error calling moveDirectory(...) service method' + JSON.stringify(error));
+									})
+									.then( function ( jsonData ){
+		
+											$log.debug('directory resource moved, reload path state to update view');
+											
+											thisCtrl.setCalculatedProgress((i+1), pathResources.length);
+											thisCtrl.reloadCurrentState();
+											
+											//thisCtrl.loadPathState(destinationStore, destinationDirectory);
 
-									
-								});							
+										
+									});							
+								
+							}else{
+								$log.error('Cannot move resource, unknown resource type. Node ID = ' + pathResources[i].nodeId + 
+									', Resource Type + ' + pathResources[i].resourceType);
+							}
 							
-						}else{
-							$log.error('Cannot move resource, unknown resource type. Node ID = ' + pathResources[i].nodeId + 
-								', Resource Type + ' + pathResources[i].resourceType);
 						}
 						
-					}
+						thisCtrl.setProgressValue(0);
 					
 				}, function() {
 					

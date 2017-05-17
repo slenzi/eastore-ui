@@ -1,6 +1,8 @@
 <%@ page language="java" contentType="text/html; charset=ISO-8859-1" pageEncoding="ISO-8859-1"%>
 	
-<md-content layout-padding layout="column" class= id="reportContent" style="padding: 5px;">
+<md-content layout-padding layout="column" class= id="reportContent" style="padding: 0px;">
+
+<md-progress-linear md-mode="determinate" value="{{pathCtrl.getProgressValue()}}" style="padding: 0px;" ></md-progress-linear>
 	
 	<section layout="row" layout-sm="row" layout-align="left left" layout-wrap>
 	
