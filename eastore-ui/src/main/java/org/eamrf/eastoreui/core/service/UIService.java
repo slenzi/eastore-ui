@@ -253,6 +253,32 @@ public class UIService {
     	
     	return storeService.moveDirectory(moveDirNodeId, destDirNodeId, replaceExisting);     	
     	
-    }    
+    }
+    
+    /**
+     * Call E-A Store /fsys/action/removeFile
+     * 
+     * @param fileNodeId
+     * @return
+     * @throws ServiceException
+     */
+    public String removeFile(Long fileNodeId) throws ServiceException {
+    	
+    	return storeService.removeFile(fileNodeId);
+    	
+    }
+    
+    /**
+     * Call E-A Store /fsys/action/removeDirectory
+     * 
+     * @param dirNodeId
+     * @return
+     * @throws ServiceException
+     */
+    public String removeDirectory(Long dirNodeId) throws ServiceException {
+    	
+    	return storeService.removeDirectory(dirNodeId);
+    	
+    }
 
 }

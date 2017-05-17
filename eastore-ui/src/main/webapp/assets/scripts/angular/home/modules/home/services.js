@@ -110,6 +110,26 @@
 							destDirNodeId : '@destDirNodeId',
 							replaceExisting : '@replaceExisting'
 						}					
+					},
+					
+					// call remove file service method
+					removeFile: {
+						url: appConstants.eastoreUiActionJaxrsService + '/removeFile',
+						method: 'POST',
+						isArray: false,
+						params: {
+							fileNodeId : '@fileNodeId'
+						}					
+					},
+					
+					// call remove directory service method
+					removeDirectory: {
+						url: appConstants.eastoreUiActionJaxrsService + '/removeDirectory',
+						method: 'POST',
+						isArray: false,
+						params: {
+							dirNodeId : '@dirNodeId'
+						}					
 					}					
 				
 				});		
@@ -271,6 +291,30 @@
 						replaceExisting : replaceExisting
 					}).$promise;			
 			
+		}
+		
+		// remove a file
+		function _removeFile(fileNodeId){
+			
+			$log.debug('Calling jax-rs _removeFile service method');
+			
+			return eastoreUiActionService.removeFile(
+					{
+						fileNodeId : fileNodeId
+					}).$promise;			
+			
+		}
+		
+		// remove a directory
+		function _removeDirectory(dirNodeId){
+			
+			$log.debug('Calling jax-rs _removeDirectory service method');
+			
+			return eastoreUiActionService.removeDirectory(
+					{
+						dirNodeId : dirNodeId
+					}).$promise;			
+			
 		}		
 		
 		// fetch a specific path resource by node id.
@@ -357,9 +401,13 @@
 			addDirectory : _addDirectory,
 			
 			copyFile : _copyFile,
-			moveFile : _moveFile,
 			copyDirectory : _copyDirectory,
+			
+			moveFile : _moveFile,
 			moveDirectory : _moveDirectory,
+			
+			removeFile : _removeFile,
+			removeDirectory : _removeDirectory,
 			
 			pathResourceByNodeId : _pathResourceByNodeId,
 			pathResourceByPath : _pathResourceByPath,

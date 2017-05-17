@@ -2,7 +2,6 @@ package org.eamrf.eastoreui.web.jaxrs.eastore.client;
 
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
-import java.util.Arrays;
 import java.util.Collections;
 import java.util.LinkedList;
 import java.util.List;
@@ -303,6 +302,70 @@ public class EAStoreActionClient {
 			.query("moveDirNodeId", moveDirNodeId)
 			.query("destDirNodeId", destDirNodeId)
 			.query("replaceExisting", replaceExisting);
+		
+		Response resp = client.post(null);
+		
+		if(resp.getStatus() != Response.Status.OK.getStatusCode()){
+			throw new WebServiceException(WebExceptionType.CODE_IO_ERROR, 
+					"Response error from " + client.getCurrentURI().toString() + ", response code = " + resp.getStatus());
+		}
+		
+		String responseString = resp.readEntity(String.class);
+		
+		return responseString;		
+		
+	}
+	
+	/**
+	 * Call E-A Store /fsys/action/removeFile
+	 * 
+	 * @param fileNodeId
+	 * @return
+	 * @throws WebServiceException
+	 */
+	public String removeFile(Long fileNodeId) throws WebServiceException {
+		
+		logger.info("Calling " + EAStoreActionClient.class.getSimpleName() + " removeFile(...) method");
+		
+		resetClient();
+		
+		String path = "/fsys/action/removeFile";
+		
+		client
+			.path(path)
+			.query("fileNodeId", fileNodeId);
+		
+		Response resp = client.post(null);
+		
+		if(resp.getStatus() != Response.Status.OK.getStatusCode()){
+			throw new WebServiceException(WebExceptionType.CODE_IO_ERROR, 
+					"Response error from " + client.getCurrentURI().toString() + ", response code = " + resp.getStatus());
+		}
+		
+		String responseString = resp.readEntity(String.class);
+		
+		return responseString;		
+		
+	}
+	
+	/**
+	 * Call E-A Store /fsys/action/removeDirectory
+	 * 
+	 * @param dirNodeId
+	 * @return
+	 * @throws WebServiceException
+	 */
+	public String removeDirectory(Long dirNodeId) throws WebServiceException {
+		
+		logger.info("Calling " + EAStoreActionClient.class.getSimpleName() + " removeDirectory(...) method");
+		
+		resetClient();
+		
+		String path = "/fsys/action/removeDirectory";
+		
+		client
+			.path(path)
+			.query("dirNodeId", dirNodeId);
 		
 		Response resp = client.post(null);
 		

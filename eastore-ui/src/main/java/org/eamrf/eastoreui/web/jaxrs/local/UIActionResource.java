@@ -371,6 +371,66 @@ public class UIActionResource extends BaseResourceHandler {
 		
 		return Response.ok(jsonReponse, MediaType.APPLICATION_JSON).build();
     	
+    }
+    
+    /**
+     * Delete a file
+     * 
+     * @param fileNodeId
+     * @return
+     * @throws WebServiceException
+     */
+    @POST
+    @Path("/removeFile")
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response removeFile(@QueryParam("fileNodeId") Long fileNodeId) throws WebServiceException {
+    	
+    	logger.info(UIActionResource.class.getSimpleName() + " removeFile(...) called");
+    	
+    	if(fileNodeId == null){
+    		handleError("Missing fileNodeId param.", WebExceptionType.CODE_IO_ERROR);
+    	}
+    	
+    	String jsonReponse = null;
+		try {
+			jsonReponse = uiService.removeFile(fileNodeId);
+		} catch (ServiceException e) {
+			logger.error(e.getMessage(), e);
+			throw new WebServiceException(WebExceptionType.CODE_IO_ERROR, e.getMessage(), e);
+		}
+		
+		return Response.ok(jsonReponse, MediaType.APPLICATION_JSON).build();
+    	
+    }
+    
+    /**
+     * Delete a directory
+     * 
+     * @param dirNodeId
+     * @return
+     * @throws WebServiceException
+     */
+    @POST
+    @Path("/removeDirectory")
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response removeDirectory(@QueryParam("dirNodeId") Long dirNodeId) throws WebServiceException {
+    	
+    	logger.info(UIActionResource.class.getSimpleName() + " removeFile(...) called");
+    	
+    	if(dirNodeId == null){
+    		handleError("Missing dirNodeId param.", WebExceptionType.CODE_IO_ERROR);
+    	}
+    	
+    	String jsonReponse = null;
+		try {
+			jsonReponse = uiService.removeDirectory(dirNodeId);
+		} catch (ServiceException e) {
+			logger.error(e.getMessage(), e);
+			throw new WebServiceException(WebExceptionType.CODE_IO_ERROR, e.getMessage(), e);
+		}
+		
+		return Response.ok(jsonReponse, MediaType.APPLICATION_JSON).build();
+    	
     }    
 
 	@Override

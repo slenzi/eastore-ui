@@ -365,6 +365,43 @@ public class EAStoreService {
 		}     	
     	
     }
+    
+    /**
+     * Call E-A Store /fsys/action/removeFile
+     * 
+     * @param fileNodeId
+     * @return
+     * @throws ServiceException
+     */
+    public String removeFile(Long fileNodeId) throws ServiceException {
+    	
+    	EAStoreActionClient client = eaStoreClientProvider.getActionClient();
+    	
+		try {
+			return client.removeFile(fileNodeId);
+		} catch (WebServiceException e) {
+			throw new ServiceException("Error calling eastore removeFile(...), " + e.getMessage(), e);
+		}    	
+    	
+    }
 
-
+    /**
+     * Call E-A Store /fsys/action/removeDirectory
+     * 
+     * @param dirNodeId
+     * @return
+     * @throws ServiceException
+     */
+    public String removeDirectory(Long dirNodeId) throws ServiceException {
+    	
+    	EAStoreActionClient client = eaStoreClientProvider.getActionClient();
+    	
+		try {
+			return client.removeDirectory(dirNodeId);
+		} catch (WebServiceException e) {
+			throw new ServiceException("Error calling eastore removeDirectory(...), " + e.getMessage(), e);
+		}     	
+    	
+    }
+    
 }

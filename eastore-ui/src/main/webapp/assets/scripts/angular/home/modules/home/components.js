@@ -335,8 +335,75 @@
 			
 			// delete selected resources
 			this.deleteSelectedResources = function(sourceStore, sourceDirectory, pathResources){
-				var items = this.getSelectedPathResources(pathResources);
-				alert('Delete resources coming soon!');
+
+				var resourcesToDelete = this.getSelectedPathResources(pathResources);
+				
+				var thisCtrl = this;
+				
+				var confirm = $mdDialog.confirm()
+					.parent(angular.element(document.body))
+					.title('Delete Confirmation')
+					.content("Please confirm that you want to delete the selected resources. There is no undo feature!")
+					.ariaLabel('Continue Deletion')
+					.ok('Continue')
+					.cancel('Cancel')
+					.targetEvent(event);
+
+				$mdDialog.show(confirm).then(
+					function() {
+
+						for(var i=0; i<resourcesToDelete.length; i++){
+							if(resourcesToDelete[i].resourceType === 'FILE'){
+								
+								var theFileResource = resourcesToDelete[i];
+								
+								homeRestService
+									.removeFile(theFileResource.nodeId)
+									.then( function ( jsonData ){
+										
+										$log.debug('completed deletion of file ' + theFileResource.nodeId);									
+										
+									}, function( error ){
+										alert('Error calling copyFile(...) service method' + JSON.stringify(error));
+									})
+									.then( function ( jsonData ){
+										
+											$log.debug('file resource deleted, reload path state to update view');
+											
+											thisCtrl.reloadCurrentState();
+										
+									});								
+								
+							}else if(resourcesToDelete[i].resourceType === 'DIRECTORY'){
+
+								var theDirectoryResource = resourcesToDelete[i];
+								
+								homeRestService
+									.removeDirectory(theDirectoryResource.nodeId)
+									.then( function ( jsonData ){
+										
+										$log.debug('completed deletion of directory ' + theDirectoryResource.nodeId);									
+										
+									}, function( error ){
+										alert('Error calling removeDirectory(...) service method' + JSON.stringify(error));
+									})
+									.then( function ( jsonData ){
+										
+											$log.debug('directory resource deleted, reload path state to update view');
+											
+											thisCtrl.reloadCurrentState();
+										
+									});							
+
+							}
+						}
+					
+				}, function() {
+					
+						$log.debug('Copy operation canceled.');
+					
+				});						
+
 			};			
 			
 			// return tre/false if the clipboard has resources
