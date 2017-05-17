@@ -64,7 +64,15 @@
 			<properties>
 				<property.file>eamrf.lenzi.development.properties</property.file>
 			</properties>
-		</profile>		
+		</profile>
+		
+		<!-- deployment on ecog2 at EA-MRF, using development database -->
+		<profile>
+			<id>eamrf.ecog2</id>
+			<properties>
+				<property.file>eamrf.ecog2.properties</property.file>
+			</properties>
+		</profile>			
 	
 	</profiles>
 	
