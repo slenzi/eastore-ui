@@ -16,7 +16,9 @@
     	"angular-material": "latest",
     	"angular-smart-table" : "2.1.8",
 		"jquery" : "latest",
-		"jquery-cycle2" : "latest"    	
+		"jquery-cycle2" : "latest",
+		"sockjs-client" : "latest",
+		"stomp-websocket" : "latest"		  	
   	},
   	"devDependencies": {
     	"angular-material": "latest"

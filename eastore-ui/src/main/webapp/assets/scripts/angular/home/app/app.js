@@ -12,6 +12,7 @@
 	 * eastore-ui-main ---- Our main module
 	 * eastore-ui-util ---- Utility module
 	 * ea-upload-module --- File upload module
+	 * ea-stomp-module ---- STOMP messaging over web sockets using SockJS
 	 * 
 	 * Third Party Modules:
 	 * 
@@ -24,7 +25,7 @@
 	homeApp = angular
 		.module('eastore-ui-home-app',
 				[
-				 'ui.router', 'ngMaterial', 'ngResource', 'eastore-ui-main', 'eastore-ui-util', 'ea-upload-module', 'smart-table'
+				 'ui.router', 'ngMaterial', 'ngResource', 'eastore-ui-main', 'eastore-ui-util', 'ea-upload-module', 'ea-stomp-module', 'smart-table'
 				 ])
 		// @xyz@ values are replaced/filtered by maven during build process
 		.constant('appConstants', {
@@ -34,6 +35,7 @@
 			eastoreUiJsonJaxrsService: '@eastore.ui.json.jax.rs.service@',
 			eastoreUiActionJaxrsService: '@eastore.ui.action.jax.rs.service@',
 			httpUploadHandler : '@eastore.ui.action.jax.rs.service@/uploadFile',
+			eastoreSockJsTestUrl : '@eastore.websocket.sockjs.test@',
 			leftNavComponentId : 'MyLeftNav'
 		})
 		// inject our own constants into our config

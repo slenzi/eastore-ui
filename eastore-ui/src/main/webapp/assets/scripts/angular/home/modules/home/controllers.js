@@ -3,7 +3,7 @@
 	angular
 		.module('eastore-ui-main')
 		.controller('homeController',[
-			'appConstants', '$scope', '$state', '$stateParams', '$mdSidenav', '$mdUtil', '$log', HomeController
+			'appConstants', '$scope', '$state', '$stateParams', '$mdSidenav', '$mdUtil', '$log', 'EAStomp', HomeController
 			]
 		);
 		
@@ -11,7 +11,7 @@
 	// Default controller which sets up rotating banner images, and left-hand navigation bar
 	//
 	function HomeController(
-		appConstants, $scope, $state, $stateParams, $mdSidenav, $mdUtil, $log) {
+		appConstants, $scope, $state, $stateParams, $mdSidenav, $mdUtil, $log, EAStomp) {
    
    
 		/****************************************************************************************
@@ -31,6 +31,9 @@
 		$scope.bannerImages.push({ src: appConstants.applicationUrl + "/secure/home/assets/img/ecog/brain-scan.jpg"});
 		$scope.bannerImages.push({ src: appConstants.applicationUrl + "/secure/home/assets/img/ecog/cancer cells.jpg"});        
 
+		// stomp messaging over websockets
+		var myStomp;
+		
 		/****************************************************************************************
 		 * On application load:  load all resource stores when page loads (asynchronously)
 		 */		
@@ -40,7 +43,37 @@
 			
 			$log.debug('Loading index page');
 			
+			_doWebSocketTest();
+			
 		}
+		
+		function _doWebSocketTest(){
+			$log.debug('peforming websocket test');
+			_initSocket();	
+		}
+		function _initSocket(){
+			$log.debug('initializing websocket');
+			$log.debug('setting up sockjs endpoint for ' + appConstants.eastoreSockJsTestUrl);
+			myStomp = new EAStomp({
+				sockJsUrl: appConstants.eastoreSockJsTestUrl
+			});
+			myStomp.setDebug(_myStompDebug);
+			myStomp.connect(_myStompConnect, _myStompConnectError);
+		}
+		function _myStompDebug(str){
+			$log.debug('STOMP Debug = ' + str);	
+		}		
+		function _myStompConnect(frame){
+			var testSubscription = myStomp.subscribe('/topic/tests', _myStompReceiveTestMessages);
+		}
+		function _myStompConnectError(error){
+			$log.debug('_onStompConnectError...');
+			//$log.debug(error.headers.message);
+			$log.debug('STOMP Error = ' + JSON.stringify(error));
+		}
+		function _myStompReceiveTestMessages(socketMessage){
+			$log.info('STOMP Received = ' + JSON.stringify(socketMessage));
+		}		
 		
 		/**
 		 * Loads an angular-ui state, with the provided state parameters
