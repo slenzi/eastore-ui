@@ -64,7 +64,8 @@
 			$log.debug('STOMP Debug = ' + str);	
 		}		
 		function _myStompConnect(frame){
-			var testSubscription = myStomp.subscribe('/topic/test', _myStompReceiveTestMessages);
+			var subscriptTest = myStomp.subscribe('/topic/test', _myStompReceiveTestMessages);
+			var subscriptResourceChange = myStomp.subscribe('/topic/resource/change', _myStompReceiveResourceChangeMessages);
 		}
 		function _myStompConnectError(error){
 			$log.debug('_onStompConnectError...');
@@ -73,7 +74,15 @@
 		}
 		function _myStompReceiveTestMessages(socketMessage){
 			$log.info('STOMP Received = ' + JSON.stringify(socketMessage));
-		}		
+		}
+		function _myStompReceiveResourceChangeMessages(socketMessage){
+			
+			$log.info('STOMP Resource Changed = ' + JSON.stringify(socketMessage));
+			
+			// reload current state (will re-resolve data)
+			$state.reload();
+			
+		}
 		
 		/**
 		 * Loads an angular-ui state, with the provided state parameters

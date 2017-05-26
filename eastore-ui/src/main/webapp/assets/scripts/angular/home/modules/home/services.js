@@ -19,7 +19,7 @@
 
 	mainModule
 		.service('resolveService', [
-			'$log', 'appConstants', 'urlParseService', 'homeRestService', 'EAFileUploader', ResolveService
+			'$log', 'appConstants', 'urlParseService', 'homeRestService', 'EAFileUploader', 'EAStomp', ResolveService
 			]
 		);	
 
@@ -471,7 +471,9 @@
 	/**
 	 * Helper service for "resolving" data in our angular-ui "resolve" setup. See state configuration in app.js.
 	 */
-	function ResolveService($log, appConstants, urlParseService, homeRestService, EAFileUploader){
+	function ResolveService($log, appConstants, urlParseService, homeRestService, EAFileUploader, EAStomp){
+		
+		var stompClient;
 		
 		//
 		// resolve the current store
@@ -678,6 +680,26 @@
 			
 		}
 		
+		//
+		// resolve singleton instance of EAStomp client
+		//
+		function _resolveStompSocketClient(){
+			
+			if(!stompClient){
+				stompClient = new EAStomp({
+					sockJsUrl: appConstants.eastoreStompSockJsUrl
+				});
+				stompClient.setDebug(this._stompSocketDebug);
+				stompClient.connect(_myStompConnect, _myStompConnectError);				
+			}else{
+				return stompClient;
+			}
+			
+		}
+		function _stompSocketDebug(str){
+			$log.debug('STOMP Debug = ' + str);	
+		}	
+		
 		// *********************************
 		// External API
 		// *********************************
@@ -693,7 +715,9 @@
 			
 			resolveStores : _resolveStores,
 			
-			resolveEAUploader : _resolveEAUploader
+			resolveEAUploader : _resolveEAUploader,
+			
+			resolveStompSocketClient : _resolveStompSocketClient
 			
 		};		
 		

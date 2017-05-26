@@ -257,6 +257,14 @@
 							$log.debug('------------ [path state] resolving breadcrumb parent tree');
 							return resolveService.resolveBreadcrumb($stateParams);
 							
+						},
+						
+						// resolve EAStomp websocket client
+						eastomp : function ($log, $stateParams, resolveService){
+							
+							$log.debug('------------ [path state] resolving EAStomp websocket client');
+							return resolveService.resolveStompSocketClient();							
+							
 						}
 					}				
 				}			
