@@ -53,9 +53,9 @@
 		}
 		function _initSocket(){
 			$log.debug('initializing websocket');
-			$log.debug('setting up sockjs endpoint for ' + appConstants.eastoreSockJsTestUrl);
+			$log.debug('setting up sockjs endpoint for ' + appConstants.eastoreStompSockJsUrl);
 			myStomp = new EAStomp({
-				sockJsUrl: appConstants.eastoreSockJsTestUrl
+				sockJsUrl: appConstants.eastoreStompSockJsUrl
 			});
 			myStomp.setDebug(_myStompDebug);
 			myStomp.connect(_myStompConnect, _myStompConnectError);

@@ -35,7 +35,7 @@
 			eastoreUiJsonJaxrsService: '@eastore.ui.json.jax.rs.service@',
 			eastoreUiActionJaxrsService: '@eastore.ui.action.jax.rs.service@',
 			httpUploadHandler : '@eastore.ui.action.jax.rs.service@/uploadFile',
-			eastoreSockJsTestUrl : '@eastore.websocket.sockjs.test@',
+			eastoreStompSockJsUrl : '@eastore.websocket.stomp.sockjs@',
 			leftNavComponentId : 'MyLeftNav'
 		})
 		// inject our own constants into our config
