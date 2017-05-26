@@ -64,7 +64,7 @@
 			$log.debug('STOMP Debug = ' + str);	
 		}		
 		function _myStompConnect(frame){
-			var testSubscription = myStomp.subscribe('/topic/tests', _myStompReceiveTestMessages);
+			var testSubscription = myStomp.subscribe('/topic/test', _myStompReceiveTestMessages);
 		}
 		function _myStompConnectError(error){
 			$log.debug('_onStompConnectError...');
