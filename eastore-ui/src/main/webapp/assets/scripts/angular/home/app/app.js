@@ -112,6 +112,7 @@
 		function uiRouteConfig(appConstants, $stateProvider, $urlRouterProvider){
 			
 			$urlRouterProvider.otherwise("/stores");
+			//$urlRouterProvider.otherwise("/root");
 			
 			var defaultStateParams = {
 				
@@ -129,11 +130,65 @@
 			};
 			
 			//
+			// root state - the parent state of all our other states. here we can resolve common data for all our states
+			//
+			$stateProvider.state(
+				'root', {
+					
+					abstract: true,
+					
+					//url: '/root',
+					//template :
+					//	'fu<div ui-view>hello!</div>bar',
+					
+					// this worked, but decided to change it to route to a component.
+					//views : {
+					//	'rootview' : {
+					//		templateUrl : appConstants.contextPath + '/assets/scripts/angular/home/modules/home/views/root.jsp'
+					//	}
+					//	
+					//},
+					
+					views : {
+						'rootview' : {
+							component : 'rootComponent'
+						}
+						
+					},					
+
+					resolve : {
+						
+						something: function($log){
+							$log.debug('------------ [root state] resolving something.');
+						},
+						
+						leftnavid : function($log, appConstants){
+							
+							$log.debug('------------ [root state] resolving left nav id');
+							return appConstants.leftNavComponentId;
+							
+						},
+
+						// resolve EAStomp websocket client
+						eastomp : function ($log, $state, $stateParams, resolveService){
+							
+							$log.debug('------------ [root state] resolving EAStomp websocket client');
+							return resolveService.resolveStompSocketClient($state, $stateParams);							
+							
+						}
+						
+					}
+					
+				}
+			);
+			
+			//
 			// store listing state - display a list of stores
 			//
 			$stateProvider.state(
 			
 				'stores', {
+					parent: 'root',
 					url: '/stores',
 					views : {
 						uicontent : {
@@ -177,6 +232,7 @@
 			$stateProvider.state(
 			
 				'path', {
+					parent: 'root',
 					url: '/path{urlPath:any}',
 					views : {
 						uicontent : {
@@ -198,7 +254,6 @@
 					resolve : {
 						
 						// the current store
-						//store : function(homeRestService, urlParseService, $log, $state, $stateParams) {
 						store : function($log, $stateParams, resolveService) {
 							
 							$log.debug('------------ [path state] resolving store');
@@ -207,7 +262,6 @@
 						},
 						
 						// current directory
-						//directory : function (homeRestService, urlParseService, $log, $state, $stateParams) {
 						directory : function ($log, $stateParams, resolveService) {
 
 							$log.debug('------------ [path state] resolving directory resource');
@@ -216,7 +270,6 @@
 						},	
 						
 						// the first-level child resources for the current directory
-						//pathresources : function (homeRestService, urlParseService, $log, $state, $stateParams) {
 						pathresources : function ($log, $stateParams, resolveService) {
 							
 							$log.debug('------------ [path state] resolving path resources');
@@ -251,21 +304,13 @@
 						},
 						
 						// breadcrumb parent tree (bottom-up) for current directory
-						//breadcrumb : function (homeRestService, urlParseService, $log, $stateParams){
 						breadcrumb : function ($log, $stateParams, resolveService){
 							
 							$log.debug('------------ [path state] resolving breadcrumb parent tree');
 							return resolveService.resolveBreadcrumb($stateParams);
 							
-						},
-						
-						// resolve EAStomp websocket client
-						eastomp : function ($log, $stateParams, resolveService){
-							
-							$log.debug('------------ [path state] resolving EAStomp websocket client');
-							return resolveService.resolveStompSocketClient();							
-							
 						}
+						
 					}				
 				}			
 			
@@ -277,6 +322,7 @@
 			$stateProvider.state(
 			
 				'upload', {
+					parent: 'root',
 					url: '/upload{urlPath:any}',
 					views : {
 						uicontent : {
@@ -311,7 +357,6 @@
 						},
 						
 						// the current store
-						//store : function(homeRestService, urlParseService, $log, $state, $stateParams) {
 						store : function($log, $stateParams, resolveService) {
 							
 							$log.debug('------------ [upload state] resolving store');
@@ -320,7 +365,6 @@
 						},
 						
 						// current directory
-						//directory : function (homeRestService, urlParseService, $log, $state, $stateParams) {
 						directory : function ($log, $stateParams, resolveService) {
 
 							$log.debug('------------ [upload state] resolving directory resource');
@@ -339,6 +383,7 @@
 			$stateProvider.state(
 			
 				'createdir', {
+					parent: 'root',
 					url: '/createdir{urlPath:any}',
 					views : {
 						uicontent : {
@@ -368,7 +413,6 @@
 						},
 						
 						// the current store
-						//store : function(homeRestService, urlParseService, $log, $state, $stateParams) {
 						store : function($log, $stateParams, resolveService) {
 							
 							$log.debug('------------ [createdir state] resolving store');
@@ -378,7 +422,6 @@
 						},
 						
 						// current directory
-						//directory : function (homeRestService, urlParseService, $log, $state, $stateParams) {
 						directory : function ($log, $stateParams, resolveService) {
 
 							$log.debug('------------ [createdir state] resolving directory resource');

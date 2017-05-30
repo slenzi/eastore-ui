@@ -78,6 +78,7 @@ Angular module for STOMP messaging over web sockets
 			 * Handle sockjs close
 			 */
 			function _onSocketClose(){
+				$log.debug('_onSocketClose()');
 				_doSocketReconnect();
 			}
 			
@@ -85,7 +86,8 @@ Angular module for STOMP messaging over web sockets
 			 *  Reinitialize and reconnect.
 			 */
 			function _doSocketReconnect(){
-				setTimeout(_initSocket(this, userOptions), 10000);
+				$log.debug('_doSocketReconnect()');
+				setTimeout(_doInit(this, userOptions), 10000);
 			}			
 			
 			/**

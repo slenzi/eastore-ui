@@ -683,22 +683,41 @@
 		//
 		// resolve singleton instance of EAStomp client
 		//
-		function _resolveStompSocketClient(){
+		function _resolveStompSocketClient($state, $stateParams){
 			
 			if(!stompClient){
+				$log.debug('Instantiating new instance of EAStomp client');
 				stompClient = new EAStomp({
 					sockJsUrl: appConstants.eastoreStompSockJsUrl
 				});
 				stompClient.setDebug(this._stompSocketDebug);
-				stompClient.connect(_myStompConnect, _myStompConnectError);				
+				stompClient.connect(this._myStompConnect, this._myStompConnectError);				
 			}else{
+				$log.debug('Fetching existing instance of EAStomp client');
 				return stompClient;
 			}
 			
 		}
 		function _stompSocketDebug(str){
 			$log.debug('STOMP Debug = ' + str);	
-		}	
+		}
+		function _myStompConnect(frame){
+			var subscriptTest = myStomp.subscribe('/topic/test', _myStompReceiveTestMessages);
+			var subscriptResourceChange = myStomp.subscribe('/topic/resource/change', _myStompReceiveResourceChangeMessages);
+		}
+		function _myStompConnectError(error){
+			$log.debug('_onStompConnectError...');
+			//$log.debug(error.headers.message);
+			$log.debug('STOMP Error = ' + JSON.stringify(error));
+		}
+		function _myStompReceiveTestMessages(socketMessage){
+			$log.info('STOMP Received = ' + JSON.stringify(socketMessage));
+		}
+		function _myStompReceiveResourceChangeMessages(socketMessage){
+			$log.info('STOMP Resource Changed = ' + JSON.stringify(socketMessage));
+			// reload current state (will re-resolve data)
+			$state.reload();
+		}		
 		
 		// *********************************
 		// External API

@@ -1,11 +1,49 @@
 (function(){
 
-	angular
-		.module('eastore-ui-main')
+	var eastoreModule = angular.module('eastore-ui-main');
+
+	eastoreModule
+		.controller('navController',[
+			'appConstants', '$mdSidenav', '$mdUtil', '$log', NavController
+			]
+		);	
+	
+	eastoreModule
 		.controller('homeController',[
 			'appConstants', '$scope', '$state', '$stateParams', '$mdSidenav', '$mdUtil', '$log', 'EAStomp', HomeController
 			]
 		);
+		
+	//
+	// controller for opening and closing nav bar. This should be done inside our "rootComponent" (see components.js)
+	// but for some reason I can't get the open/closing toggle method to work there...
+	//
+	function NavController(appConstants, $mdSidenav, $mdUtil, $log){
+		
+		function _buildTheToggle(navId) {
+			$log.debug('_buildTheToggle for nav ' + navId);
+			return $mdUtil.debounce(function(){
+				$log.debug('here');
+				$mdSidenav(navId)
+					.toggle()
+					.then(function () {
+						$log.debug("toggle " + navId + " is done");
+					});
+			},300);
+		};		
+	
+		var self = this;
+		
+		/*
+		 * External API
+		 */
+		return {
+		
+			toggleNav : _buildTheToggle(appConstants.leftNavComponentId)
+			
+		}		
+		
+	}
 		
 	//
 	// Default controller which sets up rotating banner images, and left-hand navigation bar
@@ -16,20 +54,7 @@
    
 		/****************************************************************************************
 		 * Internal models bound to UI
-		 */
-		var _sectionTitle = "Not set";	
-		
-		// will be true when data is being loaded from server web service
-		var _isLoadingDataFlag = false;
-		
-		$scope.leftNavComponentId = appConstants.leftNavComponentId;
-
-		// banner images to cycle through
-		$scope.bannerImages = new Array();
-		$scope.bannerImages.push({ src: appConstants.applicationUrl + "/secure/home/assets/img/ecog/dna-test.jpg"});
-		$scope.bannerImages.push({ src: appConstants.applicationUrl + "/secure/home/assets/img/ecog/dna strand.jpg"});
-		$scope.bannerImages.push({ src: appConstants.applicationUrl + "/secure/home/assets/img/ecog/brain-scan.jpg"});
-		$scope.bannerImages.push({ src: appConstants.applicationUrl + "/secure/home/assets/img/ecog/cancer cells.jpg"});        
+		 */     
 
 		// stomp messaging over websockets
 		var myStomp;
@@ -41,9 +66,9 @@
 
 		function _handleOnPageLoad(){
 			
-			$log.debug('Loading index page');
+			//$log.debug('Loading index page');
 			
-			_doWebSocketTest();
+			//_doWebSocketTest();
 			
 		}
 		
@@ -82,38 +107,7 @@
 			// reload current state (will re-resolve data)
 			$state.reload();
 			
-		}
-		
-		/**
-		 * Loads an angular-ui state, with the provided state parameters
-		 */
-		function _loadState(state, params){
-			$state.go(state, params);
-		}
-		
-		/**
-		 * Builds a toggle switch for opening/closing navigation bar
-		 */
-		function _buildToggler(navID) {
-			var debounceFn = $mdUtil.debounce(function(){
-				$mdSidenav(navID)
-				.toggle()
-				.then(function () {
-					//$log.debug("toggle " + navID + " is done");
-				});
-			},300);
-			return debounceFn;
-		}
-		
-		/**
-		 * Closes our left-hand navigation bar
-		 */
-		function _leftNavClose() {
-			$mdSidenav(appConstants.leftNavComponentId).close()
-			.then(function () {
-				//$log.debug("close MyLeftNav is done");
-			});
-		};
+		}	
 	
 		var self = this;
 		
@@ -122,9 +116,6 @@
 		 */
 		return {
 			
-			toggleLeftNav : _buildToggler(appConstants.leftNavComponentId),
-			
-			leftNavClose : _leftNavClose
 			
 		}
 

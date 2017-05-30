@@ -5,6 +5,73 @@
 	var mainModule = angular.module('eastore-ui-main');
 	
 	//
+	// template for root view. this is the parent component which renders the side nav, and sets up
+	// the child ui-view elements for all our other child states & components
+	//
+	mainModule.component('rootComponent', {
+		
+		bindings: { leftnavid : '<' },
+		
+		templateUrl : function (appConstants){
+			return appConstants.contextPath + '/assets/scripts/angular/home/modules/home/views/root.jsp'
+		},
+
+		controller : function(appConstants, $log, $mdSidenav, $mdUtil, $state){
+			
+			this.$onInit = function() {
+				$log.debug('rootComponent controller');
+			};
+			
+			this.leftNavComponentId = appConstants.leftNavComponentId;
+			
+			// banner images to cycle through
+			this.bannerImages = new Array();
+			this.bannerImages.push({ src: appConstants.applicationUrl + "/secure/home/assets/img/ecog/dna-test.jpg"});
+			this.bannerImages.push({ src: appConstants.applicationUrl + "/secure/home/assets/img/ecog/dna strand.jpg"});
+			this.bannerImages.push({ src: appConstants.applicationUrl + "/secure/home/assets/img/ecog/brain-scan.jpg"});
+			this.bannerImages.push({ src: appConstants.applicationUrl + "/secure/home/assets/img/ecog/cancer cells.jpg"});			
+			
+			// for some reason this isn't working, so we setup a separate controller for opening/closing the nav
+			// menu. see 'nacController' in controllers.js
+			//
+			// toggle the nav bar with the specified id
+			this.toggleNav = function(navId){
+				return this.buildToggler(navId);
+				//return function() {
+				//	$log.debug('yo');
+				//	$mdSidenav(navId).toggle();
+				//};				
+			};
+			
+			//builds a toggle switch for opening/closing navigation bar
+			this.buildToggler = function(navId) {
+				$log.debug('buildToggler for nav ' + navId);
+				return $mdUtil.debounce(function(){
+					$log.debug('here');
+					$mdSidenav(navId)
+						.toggle()
+						.then(function () {
+							$log.debug("toggle " + navId + " is done");
+						});
+				},300);
+			};
+
+			// close the nav bar with the specified id
+			this.closeNav = function(navId) {
+				$log.debug('close nav ' + navId);
+				$mdSidenav(navId).close()
+				.then(function () {
+					//$log.debug("close MyLeftNav is done");
+				});
+			};			
+					
+		},
+		
+		controllerAs : 'rootCtrl' // default is $ctrl		
+		
+	});	
+	
+	//
 	// template for the left-hand navbar menu
 	//
 	mainModule.component('leftMenuComponent', {
