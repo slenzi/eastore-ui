@@ -702,8 +702,10 @@
 			$log.debug('STOMP Debug = ' + str);	
 		}
 		function _myStompConnect(frame){
-			var subscriptTest = myStomp.subscribe('/topic/test', _myStompReceiveTestMessages);
-			var subscriptResourceChange = myStomp.subscribe('/topic/resource/change', _myStompReceiveResourceChangeMessages);
+			var subscriptTest = myStomp.subscribe(
+					'/topic/test', this._myStompReceiveTestMessages);
+			var subscriptResourceChange = myStomp.subscribe(
+					'/topic/resource/change', this._myStompReceiveResourceChangeMessages);
 		}
 		function _myStompConnectError(error){
 			$log.debug('_onStompConnectError...');
@@ -715,8 +717,11 @@
 		}
 		function _myStompReceiveResourceChangeMessages(socketMessage){
 			$log.info('STOMP Resource Changed = ' + JSON.stringify(socketMessage));
-			// reload current state (will re-resolve data)
-			$state.reload();
+			$log.info('Current state = ' + $state.current.name);
+			if($state.current.name == 'path'){
+				// reload the 'path' state so user sees updated data that changed on server
+				$state.reload();	
+			}
 		}		
 		
 		// *********************************
