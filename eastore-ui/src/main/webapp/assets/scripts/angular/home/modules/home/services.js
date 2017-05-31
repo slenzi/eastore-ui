@@ -683,45 +683,65 @@
 		//
 		// resolve singleton instance of EAStomp client
 		//
-		function _resolveStompSocketClient($state, $stateParams){
-			
-			if(!stompClient){
-				$log.debug('Instantiating new instance of EAStomp client');
-				stompClient = new EAStomp({
-					sockJsUrl: appConstants.eastoreStompSockJsUrl
-				});
-				stompClient.setDebug(this._stompSocketDebug);
-				stompClient.connect(this._myStompConnect, this._myStompConnectError);				
-			}else{
-				$log.debug('Fetching existing instance of EAStomp client');
-				return stompClient;
-			}
-			
+        function _resolveStompSocketClient($state, $stateParams){
+
+            if(!stompClient){
+
+                $log.debug('Instantiating new instance of EAStomp client');
+                stompClient = new EAStomp({
+                        sockJsUrl: appConstants.eastoreStompSockJsUrl
+                });
+                stompClient.setDebug(_stompSocketDebug);
+                stompClient.connect(_myStompConnect, _myStompConnectError);
+
+                //stompClient.setDebug(function(str){                                                                                                                                                                                                               
+                //  $log.debug('STOMP Debug => ' + str);                                                                                                                                                                                                            
+                //});                                                                                                                                                                                                                                               
+                //stompClient.connect(                                                                                                                                                                                                                              
+                //  function(frame){                                                                                                                                                                                                                                
+                //      var sub = stompClient.subscribe('/topic/test', function(socketMessage){                                                                                                                                                                     
+                //          $log.debug('STOMP Received Test Message => ' + JSON.stringify(socketMessage));                                                                                                                                                          
+                //      });                                                                                                                                                                                                                                         
+                //  },                                                                                                                                                                                                                                              
+                //  function(error){                                                                                                                                                                                                                                
+                //      $log.error('STOMP Error => ' + JSON.stringify(error));                                                                                                                                                                                      
+                //  });                                                                                                                                                                                                                                             
+
+            }else{
+                    $log.debug('Fetching existing instance of EAStomp client');
+                    return stompClient;
+            }
+
 		}
 		function _stompSocketDebug(str){
-			$log.debug('STOMP Debug = ' + str);	
+		        $log.debug('STOMP Debug = ' + str);
 		}
 		function _myStompConnect(frame){
-			var subscriptTest = myStomp.subscribe(
-					'/topic/test', this._myStompReceiveTestMessages);
-			var subscriptResourceChange = myStomp.subscribe(
-					'/topic/resource/change', this._myStompReceiveResourceChangeMessages);
+		        var subscriptTest = stompClient.subscribe(
+		        		'/topic/test', _myStompReceiveTestMessages);
+		        var subscriptResourceChange = stompClient.subscribe(
+		        		'/topic/resource/change', _myStompReceiveResourceChangeMessages);
 		}
 		function _myStompConnectError(error){
-			$log.debug('_onStompConnectError...');
-			//$log.debug(error.headers.message);
-			$log.debug('STOMP Error = ' + JSON.stringify(error));
+		        $log.debug('_onStompConnectError...');
+		        //$log.debug(error.headers.message);                                                                                                                                                                                                                    
+		        $log.debug('STOMP Error = ' + JSON.stringify(error));
 		}
 		function _myStompReceiveTestMessages(socketMessage){
-			$log.info('STOMP Received = ' + JSON.stringify(socketMessage));
+		        $log.info('STOMP Received = ' + JSON.stringify(socketMessage));
 		}
 		function _myStompReceiveResourceChangeMessages(socketMessage){
-			$log.info('STOMP Resource Changed = ' + JSON.stringify(socketMessage));
-			$log.info('Current state = ' + $state.current.name);
-			if($state.current.name == 'path'){
-				// reload the 'path' state so user sees updated data that changed on server
-				$state.reload();	
-			}
+		        $log.info('STOMP Resource Changed = ' + JSON.stringify(socketMessage));
+		        $log.info('Current state = ' + $state.current.name);
+		        
+		        //
+		        // $state is not defined. Can we simply inject it into our resolve service?
+		        // in fact can we inject all other items we need, (i.e. $stateParams)
+		        //
+		        if($state.current.name == 'path'){
+		                // reload the 'path' state so user sees updated data that changed on server                                                                                                                                                                     
+		                $state.reload();
+		        }
 		}		
 		
 		// *********************************
