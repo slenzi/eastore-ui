@@ -6,7 +6,7 @@
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>org.eamrf</groupId>
 	<artifactId>eastore-ui</artifactId>
-	<version>0.0.1</version>
+	<version>0.0.2</version>
 	<packaging>war</packaging>
 	<name>eastore-ui</name>
 	<description>EA Store UI</description>
@@ -31,20 +31,20 @@
 		<version.javax.ws.rs-api>2.0.1</version.javax.ws.rs-api>		
 		
 		<!-- spring dependencies -->
-		<version.spring>4.2.5.RELEASE</version.spring>		
+		<version.spring>4.3.12.RELEASE</version.spring> <!-- was 4.2.5.RELEASE -->		
 		
 		<!-- apache dependencies -->
-		<version.apache.cxf>3.1.10</version.apache.cxf>
+		<version.apache.cxf>3.2.0</version.apache.cxf> <!-- was 3.1.10 -->
 		
 		<!-- misc dependencies -->
-		<version.gson>2.8.0</version.gson>
-		<version.jackson>2.8.1</version.jackson>
-		<version.jodatime>2.9.3</version.jodatime>
-		<version.hikaricp>2.6.1</version.hikaricp>
+		<version.gson>2.8.2</version.gson> <!-- was 2.8.0 -->
+		<version.jackson>2.9.2</version.jackson> <!-- was 2.8.1 -->
+		<version.jodatime>2.9.9</version.jodatime> <!-- was 2.9.3 -->
+		<version.hikaricp>2.7.2</version.hikaricp> <!-- was 2.6.1 -->
 		
 		<!-- EA-MRF dependencies -->
 		<version.eamrf.common>0.3.0</version.eamrf.common>
-		<version.authworld>ecog2-0.5.3</version.authworld>				
+		<version.authworld>triton-tomcat8-0.5.5</version.authworld> <!-- was ecog2-0.5.3 -->			
 	
 	</properties>
 	
