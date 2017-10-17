@@ -28,7 +28,7 @@
 		<version.javax.servlet>3.1.0</version.javax.servlet>
 		<version.javax.mail>1.5.5</version.javax.mail>
 		<version.javax.mail-api>1.5.6</version.javax.mail-api>
-		<version.javax.ws.rs-api>2.0.1</version.javax.ws.rs-api>		
+		<version.javax.ws.rs-api>2.1</version.javax.ws.rs-api> <!-- was 2.0.1 -->	
 		
 		<!-- spring dependencies -->
 		<version.spring>4.3.12.RELEASE</version.spring> <!-- was 4.2.5.RELEASE -->		
