@@ -1,6 +1,7 @@
 package org.eamrf.eastoreui.web.jaxrs.eastore.client;
 
 import java.io.InputStream;
+import java.net.URI;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map.Entry;
@@ -215,6 +216,8 @@ public class EAStoreJsonClient {
 		String path = "/fsys/json/store/name/" + storeName;
 		client.path(path);
 		Response resp = client.get();
+		URI currentUri = client.getCurrentURI();
+		logger.info("Client URI = " + currentUri.toString());
 		
 		if(resp.getStatus() != Response.Status.OK.getStatusCode()){
 			throw new WebServiceException(WebExceptionType.CODE_IO_ERROR, 

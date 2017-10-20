@@ -45,6 +45,7 @@ public class UIJsonResource extends BaseResourceHandler {
     public Response getStoreByName(@QueryParam("storeName") String storeName) throws WebServiceException {
     	
     	logger.info(UIJsonResource.class.getSimpleName() + " getStoreByName(...) called");
+    	logger.info("storeName = "+storeName);
     	
     	String jsonReponse = null;
 		try {
