@@ -11,6 +11,7 @@ import org.eamrf.core.logging.stereotype.InjectLogger;
 import org.eamrf.eastoreui.core.exception.ServiceException;
 import org.eamrf.eastoreui.core.service.UIService;
 import org.eamrf.eastoreui.web.jaxrs.BaseResourceHandler;
+import org.eamrf.eastoreui.web.security.provider.AuthWorldUserProvider;
 import org.eamrf.web.rs.exception.WebServiceException;
 import org.eamrf.web.rs.exception.WebServiceException.WebExceptionType;
 import org.slf4j.Logger;
@@ -33,6 +34,9 @@ public class UIJsonResource extends BaseResourceHandler {
     @Autowired
     private UIService uiService;
     
+    @Autowired
+    private AuthWorldUserProvider authworldUserProvider;    
+    
     /**
      * fetch eastore by name
      * 
@@ -45,6 +49,10 @@ public class UIJsonResource extends BaseResourceHandler {
     public Response getStoreByName(@QueryParam("storeName") String storeName) throws WebServiceException {
     	
     	logger.info(UIJsonResource.class.getSimpleName() + " getStoreByName(...) called");
+    	
+    	// TODO - should stores have their own access group? Perhaps we can simply use the access group on the root
+    	// not of the store to decide whether or not a user as permission to access the store. If the user is a member
+    	// of any of the read groups for the store's root node, then they are considered to have access.    	
     	
     	String jsonReponse = null;
 		try {
@@ -70,6 +78,12 @@ public class UIJsonResource extends BaseResourceHandler {
     public Response stores() throws WebServiceException {
     	
     	logger.info(UIJsonResource.class.getSimpleName() + " stores() called");
+    	
+    	logger.info("Have AuthWorld User? = " + authworldUserProvider.haveUser());
+    	
+    	// TODO - should stores have their own access group? Perhaps we can simply use the access group on the root
+    	// not of the store to decide whether or not a user as permission to access the store. If the user is a member
+    	// of any of the read groups for the store's root node, then they are considered to have access.
     	
     	String jsonReponse = null;
 		try {
@@ -99,6 +113,8 @@ public class UIJsonResource extends BaseResourceHandler {
     	
     	logger.info(UIJsonResource.class.getSimpleName() + " stores() called");
     	
+    	// TODO - no access restriction on fetching the meta data for a path resource. 
+    	
     	String jsonReponse = null;
 		try {
 			jsonReponse = uiService.getPathResourceById(nodeId);
@@ -127,6 +143,8 @@ public class UIJsonResource extends BaseResourceHandler {
     	
     	logger.info(UIJsonResource.class.getSimpleName() + " stores() called");
     	
+    	// TODO - no access restriction on fetching the meta data for a path resource. 
+    	
     	String jsonReponse = null;
 		try {
 			jsonReponse = uiService.getPathResourceByPath(storeName, relPath);
@@ -152,6 +170,8 @@ public class UIJsonResource extends BaseResourceHandler {
     public Response breadcrumb(@QueryParam("nodeId") Long nodeId) throws WebServiceException {
     	
     	logger.info(UIJsonResource.class.getSimpleName() + " breadcrumb() called");
+    	
+    	// TODO - no access restriction on fetching breadcrumb data
     	
     	String jsonReponse = null;
 		try {
@@ -182,6 +202,8 @@ public class UIJsonResource extends BaseResourceHandler {
     	logger.info(UIJsonResource.class.getSimpleName() + " breadcrumb() called");
     	
     	logger.info("relPath = " + relPath);
+    	
+    	// TODO - no access restriction on fetching breadcrumb data
     	
     	String jsonReponse = null;
 		try {

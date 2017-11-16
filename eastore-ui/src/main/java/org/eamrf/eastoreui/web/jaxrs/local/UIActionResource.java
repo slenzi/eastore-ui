@@ -27,6 +27,7 @@ import org.eamrf.eastoreui.core.exception.ServiceException;
 import org.eamrf.eastoreui.core.model.file.FileResponse;
 import org.eamrf.eastoreui.core.service.UIService;
 import org.eamrf.eastoreui.web.jaxrs.BaseResourceHandler;
+import org.eamrf.eastoreui.web.security.provider.AuthWorldUserProvider;
 import org.eamrf.web.rs.exception.WebServiceException;
 import org.eamrf.web.rs.exception.WebServiceException.WebExceptionType;
 import org.slf4j.Logger;
@@ -46,7 +47,10 @@ public class UIActionResource extends BaseResourceHandler {
     private Logger logger;
     
     @Autowired
-    private UIService uiService;    
+    private UIService uiService;
+    
+    @Autowired
+    private AuthWorldUserProvider authworldUserProvider;
 	
 	public UIActionResource() {
 		
