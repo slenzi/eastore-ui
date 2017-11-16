@@ -49,6 +49,7 @@ public class UIJsonResource extends BaseResourceHandler {
     public Response getStoreByName(@QueryParam("storeName") String storeName) throws WebServiceException {
     	
     	logger.info(UIJsonResource.class.getSimpleName() + " getStoreByName(...) called");
+    	logger.info("storeName = "+storeName);
     	
     	// TODO - should stores have their own access group? Perhaps we can simply use the access group on the root
     	// not of the store to decide whether or not a user as permission to access the store. If the user is a member
