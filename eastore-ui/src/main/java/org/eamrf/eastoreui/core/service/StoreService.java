@@ -22,7 +22,7 @@ import org.springframework.stereotype.Service;
  * @author slenzi
  */
 @Service
-public class EAStoreService {
+public class StoreService {
 
     @InjectLogger
     private Logger logger;
@@ -30,7 +30,7 @@ public class EAStoreService {
     @Autowired
     private EAStoreClientProvider eaStoreClientProvider;
 	
-	public EAStoreService() { }
+	public StoreService() { }
 	
 	/**
 	 * Call E-A Store echo test method
@@ -41,7 +41,7 @@ public class EAStoreService {
 	 */
 	public String echo(String message) throws ServiceException {
 		
-		logger.info(EAStoreService.class.getSimpleName() + " echo() called");
+		logger.info(StoreService.class.getSimpleName() + " echo() called");
 		
 		EAStoreJsonClient client = eaStoreClientProvider.getJsonClient();
 		
@@ -64,7 +64,7 @@ public class EAStoreService {
 	 */
     public String addDirectory(Long dirNodeId, String dirName, String dirDesc) throws ServiceException {
     	
-    	logger.info(EAStoreService.class.getSimpleName() + " addDirectory(...) called");
+    	logger.info(StoreService.class.getSimpleName() + " addDirectory(...) called");
     	
 		EAStoreActionClient client = eaStoreClientProvider.getActionClient();
 		
@@ -89,7 +89,7 @@ public class EAStoreService {
 	 */
 	public String uploadFile(Long dirNodeId, String fileName, DataHandler dataHandler) throws ServiceException {
 		
-		logger.info(EAStoreService.class.getSimpleName() + " uploadFile(...) called");
+		logger.info(StoreService.class.getSimpleName() + " uploadFile(...) called");
 		
 		EAStoreActionClient client = eaStoreClientProvider.getActionClient();
 		
@@ -111,7 +111,7 @@ public class EAStoreService {
 	 */
 	public String getPathResourceById(Long nodeId) throws ServiceException {
 		
-		logger.info(EAStoreService.class.getSimpleName() + " getPathResourceById(...) called");
+		logger.info(StoreService.class.getSimpleName() + " getPathResourceById(...) called");
 		
 		EAStoreJsonClient client = eaStoreClientProvider.getJsonClient();
 		
@@ -132,7 +132,7 @@ public class EAStoreService {
 	 */
 	public String getPathResourceByPath(String storeName, String relPath) throws ServiceException {
 
-		logger.info(EAStoreService.class.getSimpleName() + " getPathResourceByPath(...) called");
+		logger.info(StoreService.class.getSimpleName() + " getPathResourceByPath(...) called");
 		
 		EAStoreJsonClient client = eaStoreClientProvider.getJsonClient();
 		

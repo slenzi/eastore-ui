@@ -9,7 +9,7 @@ import javax.ws.rs.core.Response;
 
 import org.eamrf.core.logging.stereotype.InjectLogger;
 import org.eamrf.eastoreui.core.exception.ServiceException;
-import org.eamrf.eastoreui.core.service.EAStoreService;
+import org.eamrf.eastoreui.core.service.StoreService;
 import org.eamrf.eastoreui.web.jaxrs.BaseResourceHandler;
 import org.eamrf.web.rs.exception.WebServiceException;
 import org.eamrf.web.rs.exception.WebServiceException.WebExceptionType;
@@ -31,7 +31,7 @@ public class TestResource extends BaseResourceHandler {
     private Logger logger;	
 	
     @Autowired
-    private EAStoreService eaStoreService;
+    private StoreService eaStoreService;
     
 	public TestResource() {
 

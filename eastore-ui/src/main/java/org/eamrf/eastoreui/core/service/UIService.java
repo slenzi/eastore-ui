@@ -32,7 +32,7 @@ public class UIService {
     private Logger logger;  
     
     @Autowired
-    private EAStoreService storeService;
+    private StoreService storeService;
     
     /**
      * Calls E-A Store action service, addDirectory
