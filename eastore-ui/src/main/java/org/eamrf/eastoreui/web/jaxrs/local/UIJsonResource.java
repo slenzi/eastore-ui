@@ -32,10 +32,7 @@ public class UIJsonResource extends BaseResourceHandler {
     private Logger logger;
     
     @Autowired
-    private UIService uiService;
-    
-    @Autowired
-    private AuthWorldUserProvider authworldUserProvider;    
+    private UIService uiService;  
     
     /**
      * fetch eastore by name
@@ -79,8 +76,6 @@ public class UIJsonResource extends BaseResourceHandler {
     public Response stores() throws WebServiceException {
     	
     	logger.info(UIJsonResource.class.getSimpleName() + " stores() called");
-    	
-    	logger.info("Have AuthWorld User? = " + authworldUserProvider.haveUser());
     	
     	// TODO - should stores have their own access group? Perhaps we can simply use the access group on the root
     	// not of the store to decide whether or not a user as permission to access the store. If the user is a member

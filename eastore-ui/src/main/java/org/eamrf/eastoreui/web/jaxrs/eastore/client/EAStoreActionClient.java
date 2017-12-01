@@ -2,12 +2,16 @@ package org.eamrf.eastoreui.web.jaxrs.eastore.client;
 
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
+import java.io.InputStream;
 import java.util.Collections;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Set;
+import java.util.Map.Entry;
 
 import javax.activation.DataHandler;
 import javax.ws.rs.core.MediaType;
+import javax.ws.rs.core.MultivaluedMap;
 import javax.ws.rs.core.Response;
 
 import org.apache.cxf.jaxrs.client.WebClient;
@@ -15,6 +19,8 @@ import org.apache.cxf.jaxrs.ext.multipart.Attachment;
 import org.apache.cxf.jaxrs.ext.multipart.ContentDisposition;
 import org.apache.cxf.jaxrs.ext.multipart.MultipartBody;
 import org.apache.cxf.jaxrs.provider.MultipartProvider;
+import org.eamrf.core.util.StringUtil;
+import org.eamrf.eastoreui.core.model.file.FileResponse;
 import org.eamrf.web.rs.exception.WebServiceException;
 import org.eamrf.web.rs.exception.WebServiceException.WebExceptionType;
 import org.slf4j.Logger;
@@ -82,10 +88,11 @@ public class EAStoreActionClient {
 	 * @param dirNodeId - id of the directory node
 	 * @param fileName - file name
 	 * @param dataHandler - interface to the binary data for the file
+	 * @param userId - id of user performing action
 	 * @return
 	 * @throws WebServiceException
 	 */
-	public String uploadFile(Long dirNodeId, String fileName, DataHandler dataHandler) throws WebServiceException {
+	public String uploadFile(Long dirNodeId, String fileName, DataHandler dataHandler, String userId) throws WebServiceException {
 		
 		logger.info("Calling " + EAStoreJsonClient.class.getSimpleName() + " uploadFile method");
 		
@@ -93,6 +100,7 @@ public class EAStoreActionClient {
 		
 		final String fileAttachId = "file_0";
 		final String dirIdAttachId = "dirId";
+		final String userIdAttachId = "userId";
 		
 		String path = "/fsys/action/uploadFile";
 		client.path(path);
@@ -113,15 +121,21 @@ public class EAStoreActionClient {
 					"Failed to create file_0 attachment, " + e.getMessage(), e);
 		}
 		
-		
 		// add 'dirId' attachment
 		Attachment dirIdAttach = new Attachment(
 				dirIdAttachId,
 				new ByteArrayInputStream(String.valueOf(dirNodeId).getBytes()),
 				new ContentDisposition("form-data; name=\"" + dirIdAttachId + "\";"));
 		
+		// add 'userId' attachment
+		Attachment userIdAttach = new Attachment(
+				userIdAttachId,
+				new ByteArrayInputStream(userId.getBytes()),
+				new ContentDisposition("form-data; name=\"" + userIdAttachId + "\";"));		
+		
 		atts.add(fileAttachment);
 		atts.add(dirIdAttach);
+		atts.add(userIdAttach);
 		
 		MultipartBody body = new MultipartBody(atts);
 		
@@ -142,10 +156,16 @@ public class EAStoreActionClient {
 	 * @param dirNodeId - id of parent directory. the new directory will be created under this directory
 	 * @param dirName - name of new directory
 	 * @param dirDesc - description for new directory
+	 * @param readGroup1 - optional read group
+	 * @param writeGroup1 - optional write group
+	 * @param executeGroup1 - optional execute group
+	 * @param userId - id of user performing action
 	 * @return
 	 * @throws WebServiceException
 	 */
-	public String addDirectory(Long dirNodeId, String dirName, String dirDesc) throws WebServiceException {
+	public String addDirectory(
+			Long dirNodeId, String dirName, String dirDesc, 
+			String readGroup1, String writeGroup1, String executeGroup1, String userId) throws WebServiceException {
 		
 		logger.info("Calling " + EAStoreActionClient.class.getSimpleName() + " addDirectory method");
 		
@@ -156,7 +176,11 @@ public class EAStoreActionClient {
 			.path(path)
 			.query("dirNodeId", dirNodeId)
 			.query("name", dirName)
-			.query("desc", dirDesc);
+			.query("desc", dirDesc)
+			.query("readGroup1", StringUtil.changeNull(readGroup1))
+			.query("writeGroup1", StringUtil.changeNull(writeGroup1))
+			.query("executeGroup1", StringUtil.changeNull(executeGroup1))
+			.query("userId", userId);
 		
 		// TODO - service method should be changed to POST
 		Response resp = client.get();
@@ -178,10 +202,11 @@ public class EAStoreActionClient {
 	 * @param fileNodeId
 	 * @param dirNodeId
 	 * @param replaceExisting
+	 * @param userId - id of user performing action
 	 * @return
 	 * @throws WebServiceException
 	 */
-	public String copyFile(Long fileNodeId, Long dirNodeId, Boolean replaceExisting) throws WebServiceException {
+	public String copyFile(Long fileNodeId, Long dirNodeId, Boolean replaceExisting, String userId) throws WebServiceException {
 		
 		logger.info("Calling " + EAStoreActionClient.class.getSimpleName() + " copyFile(...) method");
 		
@@ -193,7 +218,8 @@ public class EAStoreActionClient {
 			.path(path)
 			.query("fileNodeId", fileNodeId)
 			.query("dirNodeId", dirNodeId)
-			.query("replaceExisting", replaceExisting);
+			.query("replaceExisting", replaceExisting)
+			.query("userId", userId);
 		
 		Response resp = client.post(null);
 		
@@ -214,10 +240,11 @@ public class EAStoreActionClient {
 	 * @param copyDirNodeId
 	 * @param destDirNodeId
 	 * @param replaceExisting
+	 * @param userId - id of user performing action
 	 * @return
 	 * @throws WebServiceException
 	 */
-	public String copyDirectory(Long copyDirNodeId, Long destDirNodeId, Boolean replaceExisting) throws WebServiceException {
+	public String copyDirectory(Long copyDirNodeId, Long destDirNodeId, Boolean replaceExisting, String userId) throws WebServiceException {
 		
 		logger.info("Calling " + EAStoreActionClient.class.getSimpleName() + " copyDirectory(...) method");
 		
@@ -229,7 +256,8 @@ public class EAStoreActionClient {
 			.path(path)
 			.query("copyDirNodeId", copyDirNodeId)
 			.query("destDirNodeId", destDirNodeId)
-			.query("replaceExisting", replaceExisting);
+			.query("replaceExisting", replaceExisting)
+			.query("userId", userId);
 		
 		Response resp = client.post(null);
 		
@@ -250,10 +278,11 @@ public class EAStoreActionClient {
 	 * @param fileNodeId
 	 * @param dirNodeId
 	 * @param replaceExisting
+	 * @param userId - id of user performing action
 	 * @return
 	 * @throws WebServiceException
 	 */
-	public String moveFile(Long fileNodeId, Long dirNodeId, Boolean replaceExisting) throws WebServiceException {
+	public String moveFile(Long fileNodeId, Long dirNodeId, Boolean replaceExisting, String userId) throws WebServiceException {
 		
 		logger.info("Calling " + EAStoreActionClient.class.getSimpleName() + " moveFile(...) method");
 		
@@ -265,7 +294,8 @@ public class EAStoreActionClient {
 			.path(path)
 			.query("fileNodeId", fileNodeId)
 			.query("dirNodeId", dirNodeId)
-			.query("replaceExisting", replaceExisting);
+			.query("replaceExisting", replaceExisting)
+			.query("userId", userId);
 		
 		Response resp = client.post(null);
 		
@@ -286,10 +316,11 @@ public class EAStoreActionClient {
 	 * @param moveDirNodeId
 	 * @param destDirNodeId
 	 * @param replaceExisting
+	 * @param userId - id of user performing action
 	 * @return
 	 * @throws WebServiceException
 	 */
-	public String moveDirectory(Long moveDirNodeId, Long destDirNodeId, Boolean replaceExisting) throws WebServiceException {
+	public String moveDirectory(Long moveDirNodeId, Long destDirNodeId, Boolean replaceExisting, String userId) throws WebServiceException {
 		
 		logger.info("Calling " + EAStoreActionClient.class.getSimpleName() + " moveDirectory(...) method");
 		
@@ -301,7 +332,8 @@ public class EAStoreActionClient {
 			.path(path)
 			.query("moveDirNodeId", moveDirNodeId)
 			.query("destDirNodeId", destDirNodeId)
-			.query("replaceExisting", replaceExisting);
+			.query("replaceExisting", replaceExisting)
+			.query("userId", userId);
 		
 		Response resp = client.post(null);
 		
@@ -320,10 +352,11 @@ public class EAStoreActionClient {
 	 * Call E-A Store /fsys/action/removeFile
 	 * 
 	 * @param fileNodeId
+	 * @param userId - id of user performing action
 	 * @return
 	 * @throws WebServiceException
 	 */
-	public String removeFile(Long fileNodeId) throws WebServiceException {
+	public String removeFile(Long fileNodeId, String userId) throws WebServiceException {
 		
 		logger.info("Calling " + EAStoreActionClient.class.getSimpleName() + " removeFile(...) method");
 		
@@ -333,7 +366,8 @@ public class EAStoreActionClient {
 		
 		client
 			.path(path)
-			.query("fileNodeId", fileNodeId);
+			.query("fileNodeId", fileNodeId)
+			.query("userId", userId);
 		
 		Response resp = client.post(null);
 		
@@ -352,10 +386,11 @@ public class EAStoreActionClient {
 	 * Call E-A Store /fsys/action/removeDirectory
 	 * 
 	 * @param dirNodeId
+	 * @param userId - id of user performing action
 	 * @return
 	 * @throws WebServiceException
 	 */
-	public String removeDirectory(Long dirNodeId) throws WebServiceException {
+	public String removeDirectory(Long dirNodeId, String userId) throws WebServiceException {
 		
 		logger.info("Calling " + EAStoreActionClient.class.getSimpleName() + " removeDirectory(...) method");
 		
@@ -365,7 +400,8 @@ public class EAStoreActionClient {
 		
 		client
 			.path(path)
-			.query("dirNodeId", dirNodeId);
+			.query("dirNodeId", dirNodeId)
+			.query("userId", userId);
 		
 		Response resp = client.post(null);
 		
@@ -378,6 +414,75 @@ public class EAStoreActionClient {
 		
 		return responseString;		
 		
+	}
+	
+	/**
+	 * Call E-A Store /fsys/action/download/userId/{userId}/id/{fileId}
+	 * 
+	 * @param fileId
+	 * @param userId - id of user performing action
+	 * @throws WebServiceException
+	 */
+	public FileResponse getFileReponse(Long fileId, String userId) throws WebServiceException {
+		
+		logger.info("Calling " + EAStoreJsonClient.class.getSimpleName() + " getFile method");
+		
+		resetClient();
+		
+		String path = "/fsys/action/download/userId/" + userId + "/id/" + String.valueOf(fileId.longValue());
+		client.path(path);
+		Response resp = client.get();
+		
+		if(resp.getStatus() != Response.Status.OK.getStatusCode()){
+			throw new WebServiceException(WebExceptionType.CODE_IO_ERROR, 
+					"Response error from " + client.getCurrentURI().toString() + ", response code = " + resp.getStatus());
+		}
+
+		logResponseHeaders(resp);
+		
+		InputStream inStream = resp.readEntity(InputStream.class);
+		
+		FileResponse fresp = new FileResponse();
+		fresp.setName(getContentDispositionFileName(resp));
+		fresp.setInput(inStream);
+		
+		return fresp;
+	
+	}
+	
+	/**
+	 * Parse the file name from the Content-Disposition header
+	 * 
+	 * @param resp
+	 * @return
+	 */
+	private String getContentDispositionFileName(Response resp){
+		MultivaluedMap<String, String> headers = resp.getStringHeaders();
+		Set<Entry<String, List<String>>> entries = headers.entrySet();
+		for(Entry<String, List<String>> ent : entries){
+			if(ent.getKey().toLowerCase().equals("content-disposition")){
+				String val = StringUtil.changeNull(ent.getValue().get(0));
+				return val.substring(val.lastIndexOf("filename=") + "filename=".length());
+			}
+		}
+		return "unknown_file_name";
+	}
+
+	/**
+	 * Log response headers
+	 * 
+	 * @param resp
+	 */
+	private void logResponseHeaders(Response resp){
+		logger.info("Response Length=" + resp.getLength());
+		MultivaluedMap<String, String> headers = resp.getStringHeaders();
+		Set<Entry<String, List<String>>> entries = headers.entrySet();
+		for(Entry<String, List<String>> ent : entries){
+			logger.info("Header=" + ent.getKey());
+			for(String value : ent.getValue()){
+				logger.info(" Value=" + value);
+			}
+		}
 	}	
 
 }

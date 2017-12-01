@@ -9,8 +9,6 @@ import javax.activation.DataHandler;
 import org.eamrf.core.logging.stereotype.InjectLogger;
 import org.eamrf.eastoreui.core.exception.ServiceException;
 import org.eamrf.eastoreui.core.model.file.FileResponse;
-import org.eamrf.eastoreui.web.jaxrs.eastore.client.EAStoreActionClient;
-import org.eamrf.web.rs.exception.WebServiceException;
 import org.slf4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -40,12 +38,15 @@ public class UIService {
      * @param dirNodeId
      * @param dirName
      * @param dirDesc
+     * @param readGroup1 - optional read group
+     * @param writeGroup1 - optional write group
+     * @param executeGroup1 - optional execute group     * 
      * @return
      * @throws ServiceException
      */
-    public String addDirectory(Long dirNodeId, String dirName, String dirDesc) throws ServiceException {
+    public String addDirectory(Long dirNodeId, String dirName, String dirDesc, String readGroup1, String writeGroup1, String executeGroup1) throws ServiceException {
     	
-    	return storeService.addDirectory(dirNodeId, dirName, dirDesc);
+    	return storeService.addDirectory(dirNodeId, dirName, dirDesc, readGroup1, writeGroup1, executeGroup1);
     	
     }
     

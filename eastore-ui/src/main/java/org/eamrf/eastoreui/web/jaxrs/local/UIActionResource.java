@@ -48,9 +48,6 @@ public class UIActionResource extends BaseResourceHandler {
     
     @Autowired
     private UIService uiService;
-    
-    @Autowired
-    private AuthWorldUserProvider authworldUserProvider;
 	
 	public UIActionResource() {
 		
@@ -203,9 +200,12 @@ public class UIActionResource extends BaseResourceHandler {
 	/**
 	 * adds a new directory (via eastore)
 	 * 
-	 * @param dirNodeId
-	 * @param name
-	 * @param desc
+	 * @param dirNodeId - id of parent directory
+	 * @param name - name of new directory
+	 * @param desc - description for new directory
+     * @param readGroup1 - optional read group
+     * @param writeGroup1 - optional write group
+     * @param executeGroup1 - optional execute group
 	 * @return
 	 * @throws WebServiceException
 	 */
@@ -215,13 +215,16 @@ public class UIActionResource extends BaseResourceHandler {
     public Response addDirectory(
     		@QueryParam("dirNodeId") Long dirNodeId,
     		@QueryParam("name") String name,
-    		@QueryParam("desc") String desc) throws WebServiceException {
+    		@QueryParam("desc") String desc,
+    		@QueryParam("readGroup1") String readGroup1,
+    		@QueryParam("writeGroup1") String writeGroup1,
+    		@QueryParam("executeGroup1") String executeGroup1) throws WebServiceException {
     	
     	logger.info(UIActionResource.class.getSimpleName() + " addDirectory(...) called");
     	
     	String jsonReponse = null;
 		try {
-			jsonReponse = uiService.addDirectory(dirNodeId, name, desc);
+			jsonReponse = uiService.addDirectory(dirNodeId, name, desc, readGroup1, writeGroup1, executeGroup1);
 		} catch (ServiceException e) {
 			logger.error(e.getMessage(), e);
 			throw new WebServiceException(WebExceptionType.CODE_IO_ERROR, e.getMessage(), e);

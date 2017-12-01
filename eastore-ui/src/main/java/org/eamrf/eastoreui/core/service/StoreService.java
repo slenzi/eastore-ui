@@ -9,9 +9,11 @@ import org.eamrf.core.logging.stereotype.InjectLogger;
 import org.eamrf.eastoreui.core.exception.ServiceException;
 import org.eamrf.eastoreui.core.model.file.FileResponse;
 import org.eamrf.eastoreui.web.jaxrs.eastore.client.EAStoreJsonClient;
+import org.eamrf.eastoreui.web.security.provider.AuthWorldUserProvider;
 import org.eamrf.eastoreui.web.jaxrs.eastore.client.EAStoreActionClient;
 import org.eamrf.eastoreui.web.jaxrs.eastore.client.EAStoreClientProvider;
 import org.eamrf.web.rs.exception.WebServiceException;
+import org.frontier.ecog.webapp.authworld.model.AuthWorldUser;
 import org.slf4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -29,8 +31,27 @@ public class StoreService {
     
     @Autowired
     private EAStoreClientProvider eaStoreClientProvider;
+    
+    @Autowired
+    private AuthWorldUserProvider authworldUserProvider;    
 	
 	public StoreService() { }
+	
+	/**
+	 * Fetch the NCI MD Number (aka CTEP ID) from the currently logged in AuthWorld user.
+	 * 
+	 * @return
+	 * @throws ServiceException
+	 */
+	private String getLoggedInUserId() throws ServiceException {
+		
+		AuthWorldUser user = authworldUserProvider.getUser();
+		if(user == null) {
+			throw new ServiceException("No AuthWorld user in the session");
+		}
+		return user.getNciMdNum();
+		
+	}
 	
 	/**
 	 * Call E-A Store echo test method
@@ -59,17 +80,22 @@ public class StoreService {
 	 * @param dirNodeId - id of parent directory. the new directory will be created under this directory
 	 * @param dirName - name of new directory
 	 * @param dirDesc - description for new directory
+     * @param readGroup1 - optional read group
+     * @param writeGroup1 - optional write group
+     * @param executeGroup1 - optional execute group
 	 * @return
 	 * @throws ServiceException
 	 */
-    public String addDirectory(Long dirNodeId, String dirName, String dirDesc) throws ServiceException {
+    public String addDirectory(Long dirNodeId, String dirName, String dirDesc, String readGroup1, String writeGroup1, String executeGroup1) throws ServiceException {
     	
     	logger.info(StoreService.class.getSimpleName() + " addDirectory(...) called");
     	
 		EAStoreActionClient client = eaStoreClientProvider.getActionClient();
 		
+		String userId = getLoggedInUserId();
+		
 		try {
-			return client.addDirectory(dirNodeId, dirName, dirDesc);
+			return client.addDirectory(dirNodeId, dirName, dirDesc, readGroup1, writeGroup1, executeGroup1, userId);
 		} catch (WebServiceException e) {
 			throw new ServiceException("Error calling eastore addDirectory(...), " + e.getMessage(), e);
 		}    	
@@ -93,8 +119,10 @@ public class StoreService {
 		
 		EAStoreActionClient client = eaStoreClientProvider.getActionClient();
 		
+		String userId = getLoggedInUserId();
+		
 		try {
-			return client.uploadFile(dirNodeId, fileName, dataHandler);
+			return client.uploadFile(dirNodeId, fileName, dataHandler, userId);
 		} catch (WebServiceException e) {
 			throw new ServiceException("Error calling eastore uploadFile(...), " + e.getMessage(), e);
 		}		
@@ -102,7 +130,7 @@ public class StoreService {
 	}
 	
 	/**
-	 * Call E-A Store /fsys/json/resource/nodeId/{nodeId}
+	 * Call E-A Store /fsys/json/resource/userId/{userId}/nodeId/{nodeId}
 	 * 
 	 * @param nodeId - the id of the path resource. If the ID is of a file meta resource the binary
 	 * data for the file will not be inlcuded.
@@ -115,8 +143,10 @@ public class StoreService {
 		
 		EAStoreJsonClient client = eaStoreClientProvider.getJsonClient();
 		
+		String userId = getLoggedInUserId();
+		
 		try {
-			return client.getPathResourceById(nodeId);
+			return client.getPathResourceById(nodeId, userId);
 		} catch (WebServiceException e) {
 			throw new ServiceException("Error calling eastore getPathResourceById(...), " + e.getMessage(), e);
 		}
@@ -124,7 +154,7 @@ public class StoreService {
 	}
 	
 	/**
-	 * Call E-A Store /fsys/json/resource/path/{storeName}/{relPath:.+}
+	 * Call E-A Store /fsys/json/resource/userId/{userId}/path/{storeName}/{relPath:.+}
 	 * 
 	 * @param storeName
 	 * @param relPath
@@ -136,8 +166,10 @@ public class StoreService {
 		
 		EAStoreJsonClient client = eaStoreClientProvider.getJsonClient();
 		
+		String userId = getLoggedInUserId();
+		
 		try {
-			return client.getPathResourceByPath(storeName, relPath);
+			return client.getPathResourceByPath(storeName, relPath, userId);
 		} catch (WebServiceException e) {
 			throw new ServiceException("Error calling eastore getPathResourceByPath(...), " + e.getMessage(), e);
 		}		
@@ -187,7 +219,7 @@ public class StoreService {
 	}	
 	
 	/**
-	 * Calls E-A Store JSON service, getBreadcrumbsByNodeId(...) method
+	 * Calls E-A Store JSON service, /fsys/json/breadcrumb/userId/{userId}/nodeId/{nodeId}
 	 *
 	 * @param nodeId - id of the path resource node
 	 * @return - JSON array of path resources, first element being the root, and last element being the child most element.
@@ -197,9 +229,11 @@ public class StoreService {
 		
 		EAStoreJsonClient client = eaStoreClientProvider.getJsonClient();
 		
+		String userId = getLoggedInUserId();
+		
     	String jsonResponse = null;
     	try {
-    		jsonResponse = client.getBreadcrumbsByNodeId(nodeId);
+    		jsonResponse = client.getBreadcrumbsByNodeId(nodeId, userId);
 		} catch (WebServiceException e) {
 			throw new ServiceException("Error fetching breadcrumbs, nodeId=" + 
 					nodeId + ", " + e.getMessage(), e);
@@ -210,7 +244,7 @@ public class StoreService {
 	}
 	
 	/**
-	 * Calls E-A Store JSON service, getBreadcrumbsByPath(...) method
+	 * Calls E-A Store JSON service, /fsys/json/breadcrumb/path/userId/{userId}/{storeName}/{relPath:.+}
 	 *
 	 * @param storeName - the name of the store
 	 * @param relPath - the relative path of a resource within the source.
@@ -221,9 +255,11 @@ public class StoreService {
 		
 		EAStoreJsonClient client = eaStoreClientProvider.getJsonClient();
 		
+		String userId = getLoggedInUserId();
+		
     	String jsonResponse = null;
     	try {
-    		jsonResponse = client.getBreadcrumbsByPath(storeName, relPath);
+    		jsonResponse = client.getBreadcrumbsByPath(storeName, relPath, userId);
 		} catch (WebServiceException e) {
 			throw new ServiceException("Error fetching breadcrumbs, store=" + 
 					storeName + ", relPath=" + relPath + ", " + e.getMessage(), e);
@@ -234,7 +270,7 @@ public class StoreService {
 	}	
 	
 	/**
-	 * Calls E-A Store JSON service, getChildPathResourceByPath(...) method
+	 * Calls E-A Store JSON service, /fsys/json/child/resource/userId/{userId}/path/{storeName}/{relPath:.+}
 	 *
 	 * @param storeName - the name of the store
 	 * @param relPath - the relative path of a resource within the source.
@@ -245,9 +281,11 @@ public class StoreService {
 		
 		EAStoreJsonClient client = eaStoreClientProvider.getJsonClient();
 		
+		String userId = getLoggedInUserId();
+		
     	String jsonResponse = null;
     	try {
-    		jsonResponse = client.getChildPathResourceByPath(storeName, relPath);
+    		jsonResponse = client.getChildPathResourceByPath(storeName, relPath, userId);
 		} catch (WebServiceException e) {
 			throw new ServiceException("Error fetching first-level child resources from eastore, store=" + 
 					storeName + ", relPath=" + relPath + ", " + e.getMessage(), e);
@@ -258,7 +296,7 @@ public class StoreService {
 	}
 	
 	/**
-	 * Calls E-A Store action service, downloadFile(...) method
+	 * Calls E-A Store action service, /fsys/action/download/userId/{userId}/id/{fileId}
 	 * 
 	 * @param fileNodeId - node id of the file meta resource to download
 	 * @return
@@ -266,11 +304,13 @@ public class StoreService {
 	 */
     public FileResponse getFileReponse(Long fileNodeId) throws ServiceException {
     	
-    	EAStoreJsonClient client = eaStoreClientProvider.getJsonClient();
+    	EAStoreActionClient client = eaStoreClientProvider.getActionClient();
+    	
+    	String userId = getLoggedInUserId();
     	
     	FileResponse fresp = null;
     	try {
-    		fresp = client.getFileReponse(fileNodeId);
+    		fresp = client.getFileReponse(fileNodeId, userId);
 		} catch (WebServiceException e) {
 			if(fresp != null && fresp.hasInputStream()){
 				fresp.close();
@@ -295,8 +335,10 @@ public class StoreService {
     	
     	EAStoreActionClient client = eaStoreClientProvider.getActionClient();
     	
+    	String userId = getLoggedInUserId();
+    	
 		try {
-			return client.copyFile(fileNodeId, dirNodeId, replaceExisting);
+			return client.copyFile(fileNodeId, dirNodeId, replaceExisting, userId);
 		} catch (WebServiceException e) {
 			throw new ServiceException("Error calling eastore copyFile(...), " + e.getMessage(), e);
 		}    	
@@ -316,8 +358,10 @@ public class StoreService {
     	
     	EAStoreActionClient client = eaStoreClientProvider.getActionClient();
     	
+    	String userId = getLoggedInUserId();
+    	
 		try {
-			return client.copyDirectory(copyDirNodeId, destDirNodeId, replaceExisting);
+			return client.copyDirectory(copyDirNodeId, destDirNodeId, replaceExisting, userId);
 		} catch (WebServiceException e) {
 			throw new ServiceException("Error calling eastore copyDirectory(...), " + e.getMessage(), e);
 		}     	
@@ -337,8 +381,10 @@ public class StoreService {
     	
     	EAStoreActionClient client = eaStoreClientProvider.getActionClient();
     	
+    	String userId = getLoggedInUserId();
+    	
 		try {
-			return client.moveFile(fileNodeId, dirNodeId, replaceExisting);
+			return client.moveFile(fileNodeId, dirNodeId, replaceExisting, userId);
 		} catch (WebServiceException e) {
 			throw new ServiceException("Error calling eastore moveFile(...), " + e.getMessage(), e);
 		}    	
@@ -358,8 +404,10 @@ public class StoreService {
     	
     	EAStoreActionClient client = eaStoreClientProvider.getActionClient();
     	
+    	String userId = getLoggedInUserId();
+    	
 		try {
-			return client.moveDirectory(moveDirNodeId, destDirNodeId, replaceExisting);
+			return client.moveDirectory(moveDirNodeId, destDirNodeId, replaceExisting, userId);
 		} catch (WebServiceException e) {
 			throw new ServiceException("Error calling eastore moveDirectory(...), " + e.getMessage(), e);
 		}     	
@@ -377,8 +425,10 @@ public class StoreService {
     	
     	EAStoreActionClient client = eaStoreClientProvider.getActionClient();
     	
+    	String userId = getLoggedInUserId();
+    	
 		try {
-			return client.removeFile(fileNodeId);
+			return client.removeFile(fileNodeId, userId);
 		} catch (WebServiceException e) {
 			throw new ServiceException("Error calling eastore removeFile(...), " + e.getMessage(), e);
 		}    	
@@ -396,8 +446,10 @@ public class StoreService {
     	
     	EAStoreActionClient client = eaStoreClientProvider.getActionClient();
     	
+    	String userId = getLoggedInUserId();
+    	
 		try {
-			return client.removeDirectory(dirNodeId);
+			return client.removeDirectory(dirNodeId, userId);
 		} catch (WebServiceException e) {
 			throw new ServiceException("Error calling eastore removeDirectory(...), " + e.getMessage(), e);
 		}     	

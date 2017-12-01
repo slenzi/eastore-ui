@@ -20,8 +20,8 @@ import org.springframework.stereotype.Controller;
 		"org.eamrf.core.jpa",
 		"org.eamrf.web",
 		"org.eamrf.eastoreui.web",
-		"org.eamrf.eastoreui.core",
-		"org.eamrf.repository"
+		"org.eamrf.eastoreui.core"
+		//,"org.eamrf.repository"
 	},
 	excludeFilters = {
 		@ComponentScan.Filter(type = FilterType.ANNOTATION, value = Controller.class),
@@ -29,10 +29,13 @@ import org.springframework.stereotype.Controller;
 	}
 )
 @Import({
-	PropertyConfig.class,
-	DataSourceConfig.class,
-	JdbcConfig.class,
-	CxfConfig.class
+	PropertyConfig.class
+	,CxfConfig.class
+	
+	// project doesn't currently use any databases
+	//,DataSourceConfig.class
+	//,JdbcConfig.class
+	
 })
 public class AppConfig {
 	
