@@ -6,6 +6,7 @@ package org.eamrf.eastoreui.core.service;
 import javax.activation.DataHandler;
 
 import org.eamrf.core.logging.stereotype.InjectLogger;
+import org.eamrf.core.util.StringUtil;
 import org.eamrf.eastoreui.core.exception.ServiceException;
 import org.eamrf.eastoreui.core.model.file.FileResponse;
 import org.eamrf.eastoreui.web.jaxrs.eastore.client.EAStoreJsonClient;
@@ -49,6 +50,11 @@ public class StoreService {
 		if(user == null) {
 			throw new ServiceException("No AuthWorld user in the session");
 		}
+		String ctepId = user.getNciMdNum();
+		if(StringUtil.isNullEmpty(ctepId)) {
+			throw new ServiceException("Currently logged in AuthWorld user has a null or empty CTEP ID (ncimdnum)");
+		}
+		
 		return user.getNciMdNum();
 		
 	}

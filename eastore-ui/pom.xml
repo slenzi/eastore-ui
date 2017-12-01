@@ -44,7 +44,8 @@
 		
 		<!-- EA-MRF dependencies -->
 		<version.eamrf.common>0.3.0</version.eamrf.common>
-		<version.authworld>triton-tomcat8-0.5.5</version.authworld> <!-- was ecog2-0.5.3 -->			
+		<version.authworld>triton-tomcat8-0.5.5</version.authworld> <!-- was ecog2-0.5.3 -->
+		<version.gatekeeper>1.0.0.RC2</version.gatekeeper>			
 	
 	</properties>
 	
@@ -73,6 +74,14 @@
 				<property.file>eamrf.lenzi.development.properties</property.file>
 			</properties>
 		</profile>
+		
+		<!-- deployment on lenzi's personal desktop machine at EA-MRF, using locally deployed instance of eastore (which uses canprodb for testing) -->
+		<profile>
+			<id>eamrf.lenzi.testground</id>
+			<properties>
+				<property.file>eamrf.lenzi.testground.properties</property.file>
+			</properties>
+		</profile>		
 		
 		<!-- deployment on ecog2 at EA-MRF, using development database -->
 		<profile>
@@ -219,7 +228,20 @@
 		        </exclusion>		                
     		</exclusions>		    
 		    <scope>provided</scope>
-		</dependency>										
+		</dependency>
+		
+		<dependency>
+		    <groupId>org.eamrf</groupId>
+		    <artifactId>gatekeeper-client</artifactId>
+		    <version>${version.gatekeeper}</version>
+			<!-- exclude transitive dependencies -->
+			<exclusions>
+		        <exclusion>
+		            <groupId>*</groupId>
+		            <artifactId>*</artifactId>
+		        </exclusion>		                
+    		</exclusions>		    
+		</dependency>												
 	
 	</dependencies>
 	

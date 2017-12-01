@@ -1,5 +1,7 @@
 package org.eamrf.eastoreui.web.jaxrs.local;
 
+import java.util.List;
+
 import javax.ws.rs.GET;
 import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
@@ -11,7 +13,8 @@ import org.eamrf.core.logging.stereotype.InjectLogger;
 import org.eamrf.eastoreui.core.exception.ServiceException;
 import org.eamrf.eastoreui.core.service.UIService;
 import org.eamrf.eastoreui.web.jaxrs.BaseResourceHandler;
-import org.eamrf.eastoreui.web.security.provider.AuthWorldUserProvider;
+import org.eamrf.gatekeeper.web.service.jaxws.model.Category;
+import org.eamrf.gatekeeper.web.service.jaxws.model.Group;
 import org.eamrf.web.rs.exception.WebServiceException;
 import org.eamrf.web.rs.exception.WebServiceException.WebExceptionType;
 import org.slf4j.Logger;
@@ -32,7 +35,58 @@ public class UIJsonResource extends BaseResourceHandler {
     private Logger logger;
     
     @Autowired
-    private UIService uiService;  
+    private UIService uiService; 
+    
+    /**
+     * Fetch all gatekeeper categories
+     * 
+     * @return
+     * @throws WebServiceException
+     */
+    @GET
+	@Path("/gatekeeper/categories")
+	@Produces(MediaType.APPLICATION_JSON)      
+    public List<Category> getGatekeeperCategories() throws WebServiceException {
+    	
+    	logger.info(UIJsonResource.class.getSimpleName() + " getGatekeeperCategories(...) called");
+    	
+    	List<Category> categories = null;
+    	try {
+    		categories = uiService.getGatekeeperCategories();
+		} catch (ServiceException e) {
+			logger.error(e.getMessage(), e);
+			throw new WebServiceException(WebExceptionType.CODE_IO_ERROR, e.getMessage(), e);
+		}
+    	
+    	return categories;
+    	
+    }
+    
+    /**
+     * Fetch all gatekeeper groups for a specific category
+     * 
+     * @param categoryCode
+     * @return
+     * @throws WebServiceException
+     */
+    @GET
+	@Path("/gatekeeper/groups/category")
+	@Produces(MediaType.APPLICATION_JSON)     
+    public List<Group> getGatekeeperGroupsForCategory(@QueryParam("categoryCode") String categoryCode) throws WebServiceException {
+    	
+    	logger.info(UIJsonResource.class.getSimpleName() + " getGatekeeperGroupsForCategory(...) called");
+    	
+    	List<Group> groups = null;
+    	try {
+    		groups = uiService.getGatekeeperGroupsForCategory(categoryCode);
+		} catch (ServiceException e) {
+			logger.error(e.getMessage(), e);
+			throw new WebServiceException(WebExceptionType.CODE_IO_ERROR, e.getMessage(), e);
+		}
+    	
+    	return groups;    	
+    	
+    }
     
     /**
      * fetch eastore by name

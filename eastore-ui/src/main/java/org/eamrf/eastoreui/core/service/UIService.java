@@ -9,6 +9,9 @@ import javax.activation.DataHandler;
 import org.eamrf.core.logging.stereotype.InjectLogger;
 import org.eamrf.eastoreui.core.exception.ServiceException;
 import org.eamrf.eastoreui.core.model.file.FileResponse;
+import org.eamrf.eastoreui.core.service.security.GatekeeperService;
+import org.eamrf.gatekeeper.web.service.jaxws.model.Category;
+import org.eamrf.gatekeeper.web.service.jaxws.model.Group;
 import org.slf4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -31,6 +34,33 @@ public class UIService {
     
     @Autowired
     private StoreService storeService;
+    
+    @Autowired
+    private GatekeeperService gatekeeperService;
+    
+    /**
+     * fetch all gatekeeper groups for a specific category
+     * 
+     * @param categoryCode
+     * @return
+     * @throws ServiceException
+     */
+    public List<Group> getGatekeeperGroupsForCategory(String categoryCode) throws ServiceException {
+    	
+    	return gatekeeperService.getGroupsForCategory(categoryCode);
+    	
+    }
+    
+    /**
+     * fetch all gatekeeper categories
+     * 
+     * @return
+     * @throws ServiceException
+     */
+    public List<Category> getGatekeeperCategories() throws ServiceException {
+    	
+    	return gatekeeperService.getGatekeeperCategories();
+    }
     
     /**
      * Calls E-A Store action service, addDirectory
