@@ -206,6 +206,24 @@
 						storeName: '@storeName',
 						relPath : '@relPath'
 					}	
+				},
+				
+				// fetch list of all gatekeeper categories
+				gatekeeperCategories: {
+					url: appConstants.eastoreUiJsonJaxrsService + '/gatekeeper/categories',
+					method: 'GET',
+					isArray: true,
+					params: {}					
+				},
+				
+				// fetch list of all gatekeeper groups for a category
+				gatekeeperGroupsForCategory: {
+					url: appConstants.eastoreUiJsonJaxrsService + '/gatekeeper/groups/category',
+					method: 'GET',
+					isArray: true,
+					params: {
+						storeName: '@categoryCode'
+					}				
 				}				
 			
 			});
@@ -389,6 +407,24 @@
 			
 			window.location.href = downloadUrl;
 			
+		}
+		
+		// fetch all gatekeeper categories
+		function _fetchGatekeeperCategories(){
+			
+			$log.debug('Calling jax-rs method to fetch gatekeeper categories');
+			
+			return eastoreUiJsonService.gatekeeperCategories().$promise;
+			
+		}
+		
+		// fetch all gatekeeper groups for specific category
+		function _fetchGatekeeperGroupsForCategory(categoryCode){
+			
+			$log.debug('Calling jax-rs method to fetch gatekeeper groups for caregory code ' + categoryCode);
+			
+			return eastoreUiJsonService.gatekeeperGroupsForCategory({ categoryCode : categoryCode }).$promise;
+			
 		}		
 		
 		// *********************************
@@ -420,7 +456,10 @@
 			
 			loadRelPath : _loadRelPath,
 			
-			downloadFile : _downloadFile
+			downloadFile : _downloadFile,
+			
+			fetchGatekeeperCategories : _fetchGatekeeperCategories,
+			fetchGatekeeperGroupsForCategory : _fetchGatekeeperGroupsForCategory
 	    	
 	    };
 		
@@ -681,6 +720,38 @@
 		}
 		
 		//
+		// resolve gatekeeper categories
+		//
+		function _resolveGatekeeperCategories(){
+			
+			return homeRestService
+			.fetchGatekeeperCategories()
+			.then( function ( jsonData ){
+				//$log.debug(JSON.stringify(jsonData));
+				return jsonData;
+			}, function( error ){
+				alert('Error calling fetchGatekeeperCategories() service method' + JSON.stringify(error));
+			});				
+			
+		}
+		
+		//
+		// resolve gatekeeper groups for a category
+		//
+		function _resolveGatekeeperGroupsForCategory(categoryCode){
+			
+			return homeRestService
+			.fetchGatekeeperGroupsForCategory(categoryCode)
+			.then( function ( jsonData ){
+				//$log.debug(JSON.stringify(jsonData));
+				return jsonData;
+			}, function( error ){
+				alert('Error calling fetchGatekeeperGroupsForCategory() service method' + JSON.stringify(error));
+			});				
+			
+		}		
+		
+		//
 		// resolve singleton instance of EAStomp client
 		//
         function _resolveStompSocketClient($state, $stateParams){
@@ -761,7 +832,10 @@
 			
 			resolveEAUploader : _resolveEAUploader,
 			
-			resolveStompSocketClient : _resolveStompSocketClient
+			resolveStompSocketClient : _resolveStompSocketClient,
+			
+			resolveGatekeeperCategories : _resolveGatekeeperCategories,
+			resolveGatekeeperGroupsForCategory : _resolveGatekeeperGroupsForCategory
 			
 		};		
 		

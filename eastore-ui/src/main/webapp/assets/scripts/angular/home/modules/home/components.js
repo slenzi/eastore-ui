@@ -961,7 +961,8 @@
 		
 		bindings: {
 			store : '<',
-			directory : '<'
+			directory : '<',
+			gatekeeperCategories : '<'
 		},
 		
 		templateUrl : function (appConstants){
@@ -974,9 +975,32 @@
 			
 			// data for the new directory
 			this._newDir = {
+				
 				dirName : '',
-				dirDescription: ''
+				dirDescription: '',
+				
+				readCat1: '',
+				readGroup1: '',
+				
+				writeCat1: '',
+				writeGroup1: '',
+				
+				executeCat1: '',
+				executeGroup1: ''
+				
 			};
+			
+			this.read1CatChange = function(){
+				alert("Read category changed!");
+			};
+			
+			this.write1CatChange = function(){
+				alert("Read category changed!");
+			};	
+
+			this.execute1CatChange = function(){
+				alert("Execute category changed!");
+			};	
 			
 			this.doCreateDirectory = function(store, directoryResource){
 				

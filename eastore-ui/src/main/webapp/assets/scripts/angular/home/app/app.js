@@ -428,7 +428,21 @@
 							
 							return resolveService.resolveCurrentDirectory($stateParams);
 
-						}						
+						},
+						
+						gatekeeperCategories : function ($log, $stateParams, resolveService) {
+							
+							$log.debug('------------ [createdir state] resolving gatekeeper categories');
+							
+							return resolveService.resolveGatekeeperCategories();
+							
+						}
+						
+						// if one resolve depends on another, inject the first resolve into
+						// the second resolved statement. The first one will resolve first so
+						// that you have it when you resolve the second dependency
+						//
+						// https://stackoverflow.com/questions/43347819/ui-router-resolve-depends-on-other-resolve
 						
 					}					
 				}				
