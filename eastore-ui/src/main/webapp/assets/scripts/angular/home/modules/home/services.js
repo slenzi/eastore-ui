@@ -60,7 +60,10 @@
 						params: {
 							dirNodeId : '@dirNodeId',
 							name : '@name',
-							desc : '@desc'
+							desc : '@desc',
+							readGroup1: '@readGroup1',
+							writeGroup1: '@writeGroup1',
+							executeGroup1: '@executeGroup1'
 						}					
 					},
 					
@@ -242,7 +245,7 @@
 		}
 		
 		// add a new directory
-		function _addDirectory(parentDirId, dirName, dirDesc){
+		function _addDirectory(parentDirId, dirName, dirDesc, readGroup1, writeGroup1, executeGroup1){
 			
 			$log.debug('Calling jax-rs _addDirectory service method');
 			
@@ -250,7 +253,10 @@
 					{
 						dirNodeId : parentDirId,
 						name : dirName,
-						desc : dirDesc
+						desc : dirDesc,
+						readGroup1: readGroup1,
+						writeGroup1: writeGroup1,
+						executeGroup1: executeGroup1
 					}).$promise;
 			
 		}
