@@ -28,6 +28,9 @@ third party scripts
 <script type="text/javascript" src="<%=request.getContextPath()%>/assets/bower/jquery/dist/jquery.min.js"></script>
 <script type="text/javascript" src="<%=request.getContextPath()%>/assets/bower/jquery-cycle2/build/jquery.cycle2.min.js"></script>
 
+<!-- date library -->
+<script type="text/javascript" src="<%=request.getContextPath()%>/assets/bower/datejs/build/production/date.min.js"></script>
+
 <!-- -------------------------------------------
 
 application scripts

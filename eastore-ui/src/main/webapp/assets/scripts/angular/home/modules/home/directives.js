@@ -67,7 +67,8 @@
 						return storeObj.description;
 					},
 					getDateCreated: function (storeObj) {
-						return storeObj.dateCreated;
+						var dateCreated = new Date(storeObj.dateCreated);
+						return dateCreated.toString("MM/dd/yyyy hh:mm:ss tt");
 					}						
 				}
 			};
@@ -98,7 +99,7 @@
 			'	<tr st-select-row="storeObj" st-select-mode="multiple" ng-repeat="storeObj in storeListView">' +	
 			'        <td><a href ng-click=\"viewStore(storeObj);  $event.stopPropagation();\">{{storeObj.name}}</a></td>' +
 			'        <td>{{storeObj.description}}</td>' +
-			'        <td>{{storeObj.dateCreated}}</td>' +			
+			'        <td>{{tableGetters().getDateCreated(storeObj)}}</td>' +			
 			'	</tr>' +
 			'	</tbody>' +
 			'	<tfoot>' +
