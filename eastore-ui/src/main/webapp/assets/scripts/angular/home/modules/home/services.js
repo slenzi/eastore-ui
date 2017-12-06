@@ -133,7 +133,25 @@
 						params: {
 							dirNodeId : '@dirNodeId'
 						}					
-					}					
+					},
+					
+					// call add store service method
+					addStore : {
+						url: appConstants.eastoreUiActionJaxrsService + '/addStore',
+						method: 'POST',
+						isArray: false,
+						params: {
+							storeName : '@storeName',
+							storeDesc : '@storeDesc',
+							storePath : '@storePath',
+							maxFileSizeBytes : '@maxFileSizeBytes',
+							rootDirName : '@rootDirName',
+							rootDirDesc : '@rootDirDesc',
+							readGroup1 : '@readGroup1',
+							writeGroup1 : '@writeGroup1',
+							executeGroup1 : '@executeGroup1'
+						}						
+					}
 				
 				});		
 		
@@ -258,6 +276,26 @@
 						writeGroup1: writeGroup1,
 						executeGroup1: executeGroup1
 					}).$promise;
+			
+		}
+		
+		// add a new store
+		function _addStore(storeName, storeDesc, storePath, maxFileSizeBytes, rootDirName, rootDirDesc, readGroup1, writeGroup1, executeGroup1){
+			
+			$log.debug('Calling jax-rs _addStore service method');
+			
+			return eastoreUiActionService.addStore(
+					{
+						storeName : storeName,
+						storeDesc : storeDesc,
+						storePath : storePath,
+						maxFileSizeBytes : maxFileSizeBytes,
+						rootDirName : rootDirName,
+						rootDirDesc : rootDirDesc,
+						readGroup1: readGroup1,
+						writeGroup1: writeGroup1,
+						executeGroup1: executeGroup1
+					}).$promise;			
 			
 		}
 		
@@ -439,6 +477,8 @@
 	    return {
 	    	
 			echo : _echo,
+			
+			addStore : _addStore,
 			
 			addDirectory : _addDirectory,
 			

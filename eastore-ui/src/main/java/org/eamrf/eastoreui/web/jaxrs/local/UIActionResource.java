@@ -52,6 +52,65 @@ public class UIActionResource extends BaseResourceHandler {
 		
 	}
 	
+    /**
+     * Create a new store
+     * 
+     * @param storeName - store name must be unique. an exception will be thrown if a store with
+     * the provided name already exists.
+     * @param storeDesc - store description
+     * @param storePath - store path on the local file system. This application must have read/write
+     * permission to create the directory.
+     * @param maxFileSizeBytes - max file size in bytes allowed by the store for file storage in the
+     * database in blob format (file will still be saved to the local file system.)
+     * @param rootDirName - directory name for the root directory for the store.
+     * @param rootDirDesc - description for the root directory
+     * @param readGroup1 - required read access group
+     * @param writeGroup1 - required write access group
+     * @param executeGroup1 - required execute access group
+     * @return
+     * @throws WebServiceException
+     */
+    @POST
+    @Path("/addStore")
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response addStore(
+    		@QueryParam("storeName") String storeName,
+    		@QueryParam("storeDesc") String storeDesc,
+    		@QueryParam("storePath") String storePath,
+    		@QueryParam("maxFileSizeBytes") Long maxFileSizeBytes,
+    		@QueryParam("rootDirName") String rootDirName,
+    		@QueryParam("rootDirDesc") String rootDirDesc,
+    		@QueryParam("readGroup1") String readGroup1,
+    		@QueryParam("writeGroup1") String writeGroup1,
+    		@QueryParam("executeGroup1") String executeGroup1) throws WebServiceException {
+    	
+    	if(maxFileSizeBytes == null || StringUtil.isNullEmpty(storeName) || StringUtil.isNullEmpty(storeDesc)
+    			|| StringUtil.isNullEmpty(storePath) || StringUtil.isNullEmpty(rootDirName) ||
+    			StringUtil.isNullEmpty(rootDirDesc) || StringUtil.isNullEmpty(readGroup1) ||
+    			StringUtil.isNullEmpty(writeGroup1) || StringUtil.isNullEmpty(executeGroup1)){
+    		
+    		handleError("Missing required params. Please check, storeName, storeDesc, storePath, "
+    				+ "maxFileSizeBytes, rootDirName, rootDirDesc, readGroup1, writeGroup1, and/or executeGroup1 values.", 
+    				WebExceptionType.CODE_IO_ERROR);
+    		
+    	}
+    	
+    	// needs to be lowercase
+    	//storePath = storePath.toLowerCase();
+    	
+    	String jsonResponse = null;
+    	try {
+	    	jsonResponse = uiService.createStore(storeName, storeDesc, storePath, rootDirName, rootDirDesc, maxFileSizeBytes, 
+					readGroup1, writeGroup1, executeGroup1);
+		} catch (ServiceException e) {
+			logger.error(e.getMessage(), e);
+			throw new WebServiceException(WebExceptionType.CODE_IO_ERROR, e.getMessage(), e);
+		}
+		
+		return Response.ok(jsonResponse, MediaType.APPLICATION_JSON).build();
+    	
+    } 	
+	
 	/**
 	 * Processes the uploaded file and forwards it to eastore
 	 * 
@@ -221,15 +280,15 @@ public class UIActionResource extends BaseResourceHandler {
     	
     	logger.info(UIActionResource.class.getSimpleName() + " addDirectory(...) called");
     	
-    	String jsonReponse = null;
+    	String jsonResponse = null;
 		try {
-			jsonReponse = uiService.addDirectory(dirNodeId, name, desc, readGroup1, writeGroup1, executeGroup1);
+			jsonResponse = uiService.addDirectory(dirNodeId, name, desc, readGroup1, writeGroup1, executeGroup1);
 		} catch (ServiceException e) {
 			logger.error(e.getMessage(), e);
 			throw new WebServiceException(WebExceptionType.CODE_IO_ERROR, e.getMessage(), e);
 		}
 		
-		return Response.ok(jsonReponse, MediaType.APPLICATION_JSON).build();    	
+		return Response.ok(jsonResponse, MediaType.APPLICATION_JSON).build();    	
    
     }
     
@@ -259,15 +318,15 @@ public class UIActionResource extends BaseResourceHandler {
     				WebExceptionType.CODE_IO_ERROR);
     	}
     	
-    	String jsonReponse = null;
+    	String jsonResponse = null;
 		try {
-			jsonReponse = uiService.copyFile(fileNodeId, dirNodeId, replaceExisting);
+			jsonResponse = uiService.copyFile(fileNodeId, dirNodeId, replaceExisting);
 		} catch (ServiceException e) {
 			logger.error(e.getMessage(), e);
 			throw new WebServiceException(WebExceptionType.CODE_IO_ERROR, e.getMessage(), e);
 		}
 		
-		return Response.ok(jsonReponse, MediaType.APPLICATION_JSON).build();
+		return Response.ok(jsonResponse, MediaType.APPLICATION_JSON).build();
     	
     }
 
@@ -294,15 +353,15 @@ public class UIActionResource extends BaseResourceHandler {
     		handleError("Missing copyDirNodeId, destDirNodeId, and/or replaceExisting params.", WebExceptionType.CODE_IO_ERROR);
     	}
     	
-    	String jsonReponse = null;
+    	String jsonResponse = null;
 		try {
-			jsonReponse = uiService.copyDirectory(copyDirNodeId, destDirNodeId, replaceExisting);
+			jsonResponse = uiService.copyDirectory(copyDirNodeId, destDirNodeId, replaceExisting);
 		} catch (ServiceException e) {
 			logger.error(e.getMessage(), e);
 			throw new WebServiceException(WebExceptionType.CODE_IO_ERROR, e.getMessage(), e);
 		}
 		
-		return Response.ok(jsonReponse, MediaType.APPLICATION_JSON).build();
+		return Response.ok(jsonResponse, MediaType.APPLICATION_JSON).build();
     	
     }
     
@@ -332,15 +391,15 @@ public class UIActionResource extends BaseResourceHandler {
     				WebExceptionType.CODE_IO_ERROR);
     	}
     	
-    	String jsonReponse = null;
+    	String jsonResponse = null;
 		try {
-			jsonReponse = uiService.moveFile(fileNodeId, dirNodeId, replaceExisting);
+			jsonResponse = uiService.moveFile(fileNodeId, dirNodeId, replaceExisting);
 		} catch (ServiceException e) {
 			logger.error(e.getMessage(), e);
 			throw new WebServiceException(WebExceptionType.CODE_IO_ERROR, e.getMessage(), e);
 		}
 		
-		return Response.ok(jsonReponse, MediaType.APPLICATION_JSON).build();
+		return Response.ok(jsonResponse, MediaType.APPLICATION_JSON).build();
     	
     }
     
@@ -367,15 +426,15 @@ public class UIActionResource extends BaseResourceHandler {
     		handleError("Missing moveDirNodeId, destDirNodeId, and/or replaceExisting params.", WebExceptionType.CODE_IO_ERROR);
     	}
     	
-    	String jsonReponse = null;
+    	String jsonResponse = null;
 		try {
-			jsonReponse = uiService.moveDirectory(moveDirNodeId, destDirNodeId, replaceExisting);
+			jsonResponse = uiService.moveDirectory(moveDirNodeId, destDirNodeId, replaceExisting);
 		} catch (ServiceException e) {
 			logger.error(e.getMessage(), e);
 			throw new WebServiceException(WebExceptionType.CODE_IO_ERROR, e.getMessage(), e);
 		}
 		
-		return Response.ok(jsonReponse, MediaType.APPLICATION_JSON).build();
+		return Response.ok(jsonResponse, MediaType.APPLICATION_JSON).build();
     	
     }
     
@@ -397,15 +456,15 @@ public class UIActionResource extends BaseResourceHandler {
     		handleError("Missing fileNodeId param.", WebExceptionType.CODE_IO_ERROR);
     	}
     	
-    	String jsonReponse = null;
+    	String jsonResponse = null;
 		try {
-			jsonReponse = uiService.removeFile(fileNodeId);
+			jsonResponse = uiService.removeFile(fileNodeId);
 		} catch (ServiceException e) {
 			logger.error(e.getMessage(), e);
 			throw new WebServiceException(WebExceptionType.CODE_IO_ERROR, e.getMessage(), e);
 		}
 		
-		return Response.ok(jsonReponse, MediaType.APPLICATION_JSON).build();
+		return Response.ok(jsonResponse, MediaType.APPLICATION_JSON).build();
     	
     }
     
@@ -427,15 +486,15 @@ public class UIActionResource extends BaseResourceHandler {
     		handleError("Missing dirNodeId param.", WebExceptionType.CODE_IO_ERROR);
     	}
     	
-    	String jsonReponse = null;
+    	String jsonResponse = null;
 		try {
-			jsonReponse = uiService.removeDirectory(dirNodeId);
+			jsonResponse = uiService.removeDirectory(dirNodeId);
 		} catch (ServiceException e) {
 			logger.error(e.getMessage(), e);
 			throw new WebServiceException(WebExceptionType.CODE_IO_ERROR, e.getMessage(), e);
 		}
 		
-		return Response.ok(jsonReponse, MediaType.APPLICATION_JSON).build();
+		return Response.ok(jsonResponse, MediaType.APPLICATION_JSON).build();
     	
     }    
 

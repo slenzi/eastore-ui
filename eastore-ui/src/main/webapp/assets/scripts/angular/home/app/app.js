@@ -225,6 +225,57 @@
 				}				
 				
 			);
+			
+			//
+			// store listing state - display a list of stores
+			//
+			$stateProvider.state(
+			
+				'createstore', {
+					parent: 'root',
+					url: '/createstore',
+					views : {
+						uicontent : {
+							component : 'createStoreContentComponent' // when 'createstore' state is active, render 'createStoreContentComponent' into view with name 'uicontent'
+						},
+						uiheader : {
+							component : 'createStoreHeaderComponent' // when 'createstore' state is active, render 'createStoreHeaderComponent' into view with name 'uiheader'
+						},
+						uititle : {
+							component : 'titleHeaderComponent' // when 'createstore' state is active, render 'titleHeaderComponent' into view with name 'uititle'
+						},
+						uileftmenu : {
+							component : 'leftMenuComponent' // when 'createstore' state is active, render 'leftMenuComponent' into view with name 'uileftmenu'
+						}
+					},
+					params : defaultStateParams,
+					resolve : {
+						
+						headerTitle : function ($log, $stateParams){
+							
+							$log.debug('------------ [create store state] resolving header title ');
+							return 'Store List';
+							
+						},
+						
+						gatekeeperCategories : function ($log, $stateParams, resolveService) {
+							
+							$log.debug('------------ [create store state] resolving gatekeeper categories');
+							
+							return resolveService.resolveGatekeeperCategories();
+							
+						}
+						
+						// if one resolve depends on another, inject the first resolve into
+						// the second resolved statement. The first one will resolve first so
+						// that you have it when you resolve the second dependency
+						//
+						// https://stackoverflow.com/questions/43347819/ui-router-resolve-depends-on-other-resolve						
+						
+					}					
+				}				
+				
+			);			
 
 			//
 			// path resource state - display a list of child path resources (directory and file meta) for the currently selected directory path

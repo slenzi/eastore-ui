@@ -461,5 +461,40 @@ public class StoreService {
 		}     	
     	
     }
+
+    /**
+     * Call E-A store /fsys/action/addStore
+     * 
+     * @param storeName - store name must be unique. an exception will be thrown if a store with
+     * the provided name already exists.
+     * @param storeDesc - store description
+     * @param storePath - store path on the local file system. This application must have read/write
+     * permission to create the directory.
+     * @param maxFileSizeBytes - max file size in bytes allowed by the store for file storage in the
+     * database in blob format (file will still be saved to the local file system.)
+     * @param rootDirName - directory name for the root directory for the store.
+     * @param rootDirDesc - description for the root directory
+     * @param readGroup1 - required read access group
+     * @param writeGroup1 - required write access group
+     * @param executeGroup1 - required execute access group
+     * @return
+     */
+	public String addStore(String storeName, String storeDesc, String storePath, String rootDirName,
+			String rootDirDesc, Long maxFileSizeBytes, String readGroup1, String writeGroup1, String executeGroup1) throws ServiceException {
+
+    	EAStoreActionClient client = eaStoreClientProvider.getActionClient();
+    	
+    	String userId = getLoggedInUserId();
+    	
+    	// TODO - check for user permission to add store?
+    	
+		try {
+			return client.addStore(storeName, storeDesc, storePath, rootDirName, rootDirDesc,
+					maxFileSizeBytes, readGroup1, writeGroup1, executeGroup1);
+		} catch (WebServiceException e) {
+			throw new ServiceException("Error calling eastore addStore(...), " + e.getMessage(), e);
+		} 		
+		
+	}
     
 }

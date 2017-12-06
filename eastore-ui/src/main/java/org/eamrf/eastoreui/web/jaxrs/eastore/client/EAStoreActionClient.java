@@ -164,8 +164,13 @@ public class EAStoreActionClient {
 	 * @throws WebServiceException
 	 */
 	public String addDirectory(
-			Long dirNodeId, String dirName, String dirDesc, 
-			String readGroup1, String writeGroup1, String executeGroup1, String userId) throws WebServiceException {
+			Long dirNodeId, 
+			String dirName, 
+			String dirDesc, 
+			String readGroup1, 
+			String writeGroup1, 
+			String executeGroup1, 
+			String userId) throws WebServiceException {
 		
 		logger.info("Calling " + EAStoreActionClient.class.getSimpleName() + " addDirectory method");
 		
@@ -177,10 +182,19 @@ public class EAStoreActionClient {
 			.query("dirNodeId", dirNodeId)
 			.query("name", dirName)
 			.query("desc", dirDesc)
-			.query("readGroup1", StringUtil.changeNull(readGroup1))
-			.query("writeGroup1", StringUtil.changeNull(writeGroup1))
-			.query("executeGroup1", StringUtil.changeNull(executeGroup1))
 			.query("userId", userId);
+		
+		// read, write, and execute groups are optional
+		if(readGroup1 != null) {
+			client.query("readGroup1", readGroup1);
+		}
+		if(writeGroup1 != null) {
+			client.query("writeGroup1", writeGroup1);
+		}
+		if(executeGroup1 != null) {
+			client.query("executeGroup1", executeGroup1);
+		}
+			
 		
 		// TODO - service method should be changed to POST
 		Response resp = client.get();
@@ -449,6 +463,64 @@ public class EAStoreActionClient {
 		return fresp;
 	
 	}
+	
+	/**
+     * Call E-A store /fsys/action/addStore
+     * 
+     * @param storeName - store name must be unique. an exception will be thrown if a store with
+     * the provided name already exists.
+     * @param storeDesc - store description
+     * @param storePath - store path on the local file system. This application must have read/write
+     * permission to create the directory.
+     * @param maxFileSizeBytes - max file size in bytes allowed by the store for file storage in the
+     * database in blob format (file will still be saved to the local file system.)
+     * @param rootDirName - directory name for the root directory for the store.
+     * @param rootDirDesc - description for the root directory
+     * @param readGroup1 - required read access group
+     * @param writeGroup1 - required write access group
+     * @param executeGroup1 - required execute access group
+	 * @return
+	 */
+	public String addStore(
+			String storeName,
+			String storeDesc, 
+			String storePath, 
+			String rootDirName, 
+			String rootDirDesc,
+			Long maxFileSizeBytes, 
+			String readGroup1, 
+			String writeGroup1, 
+			String executeGroup1) throws WebServiceException {
+
+		logger.info("Calling " + EAStoreActionClient.class.getSimpleName() + " addStore method");
+		
+		resetClient();
+		
+		String path = "/fsys/action/addStore";
+		client
+			.path(path)
+			.query("storeName", storeName)
+			.query("storeDesc", storeDesc)
+			.query("storePath", storePath)
+			.query("maxFileSizeBytes", maxFileSizeBytes)
+			.query("rootDirName", rootDirName)
+			.query("rootDirDesc", rootDirDesc)
+			.query("readGroup1", readGroup1)
+			.query("writeGroup1", writeGroup1)
+			.query("executeGroup1", executeGroup1);
+		
+		Response resp = client.post("");
+		
+		if(resp.getStatus() != Response.Status.OK.getStatusCode()){
+			throw new WebServiceException(WebExceptionType.CODE_IO_ERROR, 
+					"Response error from " + client.getCurrentURI().toString() + ", response code = " + resp.getStatus());
+		}
+		
+		String responseString = resp.readEntity(String.class);
+		
+		return responseString;		
+		
+	}	
 	
 	/**
 	 * Parse the file name from the Content-Disposition header
