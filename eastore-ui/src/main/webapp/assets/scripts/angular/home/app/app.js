@@ -580,14 +580,34 @@
 					// https://stackoverflow.com/questions/43347819/ui-router-resolve-depends-on-other-resolve
 					
 					// inject directory so its resolved before we get all the groups
-					gateKeeperCategoriesForPermissionGroups : function ($log, $stateParams, resolveService, directory) {
+					currentGatekeeperCategories : function ($log, $stateParams, resolveService, directory) {
 						
 						$log.debug('------------ [editdir state] resolving gatekeeper groups for current directory');
 						
-						//
-						// need to fetch the categories for the current read, write, and execute groups
-						//
+						// fetch the categories for the current read, write, and execute groups
+				
+						var currentCats = {
+							read1Cat : {},
+							write1Cat : {},
+							execute1Cat : {}
+						}
 						
+						// get category for read group
+						if(directory.readGroup1){
+							currentCats.read1Cat = resolveService.resolveGatekeeperCategoryByGroupCode(directory.readGroup1);
+						}
+						// get category for write group
+						if(directory.writeGroup1){
+							currentCats.write1Cat = resolveService.resolveGatekeeperCategoryByGroupCode(directory.writeGroup1);
+						}
+						// get category for execute group
+						if(directory.executeGroup1){
+							currentCats.execute1Cat = resolveService.resolveGatekeeperCategoryByGroupCode(directory.executeGroup1);
+						}
+						
+						$log.debug(JSON.stringify(currentCats));
+						
+						return currentCats;
 						
 					}
 					

@@ -245,7 +245,17 @@
 					params: {
 						storeName: '@categoryCode'
 					}				
-				}				
+				},
+				
+				// fetch the category for a group, by group code
+				gatekeeperCategoryForGroup: {
+					url: appConstants.eastoreUiJsonJaxrsService + '/gatekeeper/category',
+					method: 'GET',
+					isArray: false,
+					params: {
+						groupCode: '@groupCode'
+					}
+				}
 			
 			});
 		
@@ -469,7 +479,16 @@
 			
 			return eastoreUiJsonService.gatekeeperGroupsForCategory({ categoryCode : categoryCode }).$promise;
 			
-		}		
+		}
+		
+		// fetch gatekeeper category by group code
+		function _fetchGatekeeperCategoryByGroupCode(groupCode){
+			
+			$log.debug('Calling jax-rs method to fetch gatekeeper category for group code ' + groupCode);
+			
+			return eastoreUiJsonService.gatekeeperCategoryForGroup({ groupCode : groupCode }).$promise;
+			
+		}
 		
 		// *********************************
 		// External API
@@ -505,7 +524,8 @@
 			downloadFile : _downloadFile,
 			
 			fetchGatekeeperCategories : _fetchGatekeeperCategories,
-			fetchGatekeeperGroupsForCategory : _fetchGatekeeperGroupsForCategory
+			fetchGatekeeperGroupsForCategory : _fetchGatekeeperGroupsForCategory,
+			fetchGatekeeperCategoryByGroupCode : _fetchGatekeeperCategoryByGroupCode
 	    	
 	    };
 		
@@ -826,13 +846,13 @@
 		function _resolveGatekeeperCategories(){
 			
 			return homeRestService
-			.fetchGatekeeperCategories()
-			.then( function ( jsonData ){
-				//$log.debug(JSON.stringify(jsonData));
-				return jsonData;
-			}, function( error ){
-				alert('Error calling fetchGatekeeperCategories() service method' + JSON.stringify(error));
-			});				
+				.fetchGatekeeperCategories()
+				.then( function ( jsonData ){
+					//$log.debug(JSON.stringify(jsonData));
+					return jsonData;
+				}, function( error ){
+					alert('Error calling fetchGatekeeperCategories() service method' + JSON.stringify(error));
+				});				
 			
 		}
 		
@@ -842,15 +862,31 @@
 		function _resolveGatekeeperGroupsForCategory(categoryCode){
 			
 			return homeRestService
-			.fetchGatekeeperGroupsForCategory(categoryCode)
-			.then( function ( jsonData ){
-				//$log.debug(JSON.stringify(jsonData));
-				return jsonData;
-			}, function( error ){
-				alert('Error calling fetchGatekeeperGroupsForCategory() service method' + JSON.stringify(error));
-			});				
+				.fetchGatekeeperGroupsForCategory(categoryCode)
+				.then( function ( jsonData ){
+					//$log.debug(JSON.stringify(jsonData));
+					return jsonData;
+				}, function( error ){
+					alert('Error calling fetchGatekeeperGroupsForCategory() service method' + JSON.stringify(error));
+				});				
 			
-		}		
+		}
+		
+		//
+		// resolve gatekeeper category for a group, by group code
+		//
+		function _resolveGatekeeperCategoryByGroupCode(groupCode){
+			
+			return homeRestService
+				.fetchGatekeeperCategoryByGroupCode(groupCode)
+				.then( function ( jsonData ){
+					//$log.debug(JSON.stringify(jsonData));
+					return jsonData;
+				}, function( error ){
+					alert('Error calling fetchGatekeeperCategoryByGroupCode() service method' + JSON.stringify(error));
+				});			
+			
+		}
 		
 		//
 		// resolve singleton instance of EAStomp client
@@ -938,7 +974,8 @@
 			resolveStompSocketClient : _resolveStompSocketClient,
 			
 			resolveGatekeeperCategories : _resolveGatekeeperCategories,
-			resolveGatekeeperGroupsForCategory : _resolveGatekeeperGroupsForCategory
+			resolveGatekeeperGroupsForCategory : _resolveGatekeeperGroupsForCategory,
+			resolveGatekeeperCategoryByGroupCode : _resolveGatekeeperCategoryByGroupCode
 			
 		};		
 		

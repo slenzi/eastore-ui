@@ -63,6 +63,19 @@ public class UIService {
     }
     
     /**
+     * fetch gatekeeper category for a group
+     * 
+     * @param groupCode - the unique group code
+     * @return
+     * @throws ServiceException
+     */
+    public Category getGatekeeperCategoryForGroup(String groupCode) throws ServiceException {
+    	
+    	return gatekeeperService.getCategoryForGroup(groupCode);
+    	
+    }
+    
+    /**
      * Calls E-A Store action service, addDirectory
      * 
      * @param dirNodeId

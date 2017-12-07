@@ -1615,7 +1615,8 @@
 			store : '<',
 			directory : '<',
 			directoryToEdit : '<',
-			gatekeeperCategories : '<'
+			gatekeeperCategories : '<',
+			currentGatekeeperCategories : '<' // current read, write, execute categories for directory being edited
 		},
 		
 		templateUrl : function (appConstants){

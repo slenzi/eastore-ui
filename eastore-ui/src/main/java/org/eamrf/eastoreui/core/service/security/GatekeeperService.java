@@ -76,6 +76,28 @@ public class GatekeeperService {
 		
 		return cats;
 		
-	}	
+	}
+	
+	/**
+	 * Fetch a category for a group
+	 * 
+	 * @param groupCode - the unique group code
+	 * @return
+	 * @throws ServiceException
+	 */
+	public Category getCategoryForGroup(String groupCode) throws ServiceException {
+		
+		GatekeeperRestClient client = clientProvider.getRestClient();
+		
+		Category cat = null;
+		try {
+			cat = client.getCategoryForGroupCode(groupCode);
+		} catch (WebServiceException e) {
+			throw new ServiceException("Error fetching category for group code " + groupCode + " from gatekeeper, " + e.getMessage(), e);
+		}
+		
+		return cat;
+		
+	}
 
 }

@@ -63,6 +63,32 @@ public class UIJsonResource extends BaseResourceHandler {
     }
     
     /**
+     * Fetch a gatekeeper category for a group
+     * 
+     * @param groupCode - the unique group code
+     * @return
+     * @throws WebServiceException
+     */
+    @GET
+	@Path("/gatekeeper/category")
+	@Produces(MediaType.APPLICATION_JSON)      
+    public Category getGatekeeperCategoryForGroup(@QueryParam("groupCode") String groupCode) throws WebServiceException {
+    	
+    	logger.info(UIJsonResource.class.getSimpleName() + " getGatekeeperCategoryForGroup(...) called");
+    	
+    	Category cat = null;
+    	try {
+			cat = uiService.getGatekeeperCategoryForGroup(groupCode);
+		} catch (ServiceException e) {
+			logger.error(e.getMessage(), e);
+			throw new WebServiceException(WebExceptionType.CODE_IO_ERROR, e.getMessage(), e);
+		}
+    	
+    	return cat;
+    	
+    }
+    
+    /**
      * Fetch all gatekeeper groups for a specific category
      * 
      * @param categoryCode
