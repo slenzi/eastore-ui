@@ -627,7 +627,7 @@
 
 			}	
 
-			// fetch directory patn resource
+			// fetch directory path resource
 			return homeRestService
 				.pathResourceByPath(storeName, relPathToLoad)
 				.then( function ( jsonData ){
@@ -639,6 +639,61 @@
 				});			
 			
 		}
+		
+		//
+		// resolve the current resource the user wants to edit
+		//
+		function _resolveCurrentEditResource($stateParams){
+			
+			$log.debug('Resolving current edit resource');
+			
+			//$log.debug(JSON.stringify($stateParams));
+
+			var storeName;
+			var currEditResource;
+			var relPathToLoad;
+
+			// use current store and current edit resource from state params
+			if($stateParams.store && $stateParams.currEditResource){
+				
+				storeName = $stateParams.store.name;
+				currEditResource = $stateParams.currEditResource;
+				relPathToLoad = currEditResource.relativePath;
+
+				// pathResObj.resourceType === \'FILE\'
+			
+			}
+			
+			/* Nothing to parse in the URL for the resource to edit...we'd have to possibly add something in components.js
+			    where we initiate the state change.
+			 
+			// otherwise parse store name and relative path from urlPath value
+			}else{
+				
+				$log.debug('parse store name and relpath from urlPath');
+				
+				var parseData = urlParseService.parseStoreAndRelpath($stateParams.urlPath);
+				
+				$log.debug('storeName = ' + parseData.storeName + ', relPathToLoad = ' + parseData.relPath);
+				
+				storeName = parseData.storeName;
+				relPathToLoad = parseData.relPath;
+
+			}
+			*/
+
+			// fetch path resource for edit
+			return homeRestService
+				.pathResourceByPath(storeName, relPathToLoad)
+				.then( function ( jsonData ){
+					$log.debug('resolved current edit resource, storeName = ' + storeName + ', relPathToLoad = ' + relPathToLoad);
+					$log.debug(JSON.stringify(jsonData))
+					return jsonData;
+				}, function( error ){
+					alert('Error calling pathResourceByPath(...) service method' + JSON.stringify(error));
+				});			
+			
+		}		
 		
 		//
 		// resolve firs-level child path resources for current directory
@@ -869,6 +924,8 @@
 			resolveCurrentStore : _resolveCurrentStore,
 			
 			resolveCurrentDirectory : _resolveCurrentDirectory,
+			
+			resolveCurrentEditResource : _resolveCurrentEditResource,
 			
 			resolvePathResources : _resolvePathResources,
 			

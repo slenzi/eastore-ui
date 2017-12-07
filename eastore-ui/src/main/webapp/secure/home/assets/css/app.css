@@ -49,18 +49,6 @@ md-tab-item.md-active  span {
 }
 
 /**
- * Angular menu inside smart table
- */
- /*
-.fstoreSmartTable .md-button {
-	height: 15px;
-	line-height: 0px;
-	width: 20px;
-	min-height: 10px;
-}
-*/
-
-/**
  * Angular Smart Table:  selected row
  */
 .mySmartTable {
@@ -79,11 +67,33 @@ md-tab-item.md-active  span {
 	text-decoration: underline;
 }
 
+/**
+ * Angular menu inside smart table
+ */
+.mySmartTable .md-button {
+	min-height: 0px;
+}
+.mySmartTable .md-button.md-icon-button {
+	height: 20px;
+	padding: 0px;
+}
+ /*
+.mySmartTable .md-button {
+	height: 15px;
+	line-height: 0px;
+	width: 20px;
+	min-height: 10px;
+}
+*/
+
+
+/*
 .mySmartTable td:first-child, .mySmartTable th:first-child {
 	min-width: 300px;
 	max-width:500px;
 	width:35%;
 }
+*/
 
 /**
  * temp fix for md-menu showing a scrollbar

@@ -77,6 +77,10 @@
 				$scope.storeClickHandler( {theStore: storeObj} );
 			};
 			
+			$scope.editStore = function(storeObj){
+				alert('Edit functionality coming soon!');
+			};
+			
 		}];
 		
 		// track by $index
@@ -85,11 +89,13 @@
 			'<table st-table="storeListView" st-safe-src="storeListSafe" class="table mySmartTable">' +
 			'	<thead>' +
 			'	<tr>' +
-			'        <th st-sort="tableGetters().getStoreName">Name</th>' +
-			'        <th st-sort="tableGetters().getStoreDescription">Description</th>' +
-			'        <th st-sort="tableGetters().getDateCreated">Created</th>' +		
+			'		 <th st-ratio="5">Menu</th>' +
+			'        <th st-ratio="50" st-sort="tableGetters().getStoreName">Name</th>' +
+			'        <th st-ratio="30" st-sort="tableGetters().getStoreDescription">Description</th>' +
+			'        <th st-ratio="15" st-sort="tableGetters().getDateCreated">Created</th>' +		
 			'	</tr>' +
 			'	<tr>' +
+			'		<th></th>' +
 			'		<th><input st-search="name" placeholder="search by name" class="input-sm form-control" type="search"/></th>' +
 			'		<th><input st-search="description" placeholder="search by description" class="input-sm form-control" type="search"/></th>' +	
 			'		<th><input st-search="dateCreated" placeholder="search by date created" class="input-sm form-control" type="search"/></th>' +				
@@ -97,6 +103,20 @@
 			'	</thead>' +
 			'	<tbody>' +
 			'	<tr st-select-row="storeObj" st-select-mode="multiple" ng-repeat="storeObj in storeListView">' +	
+			'        <td>' +
+			'			<md-menu >' +
+			'				<md-button aria-label="Open phone interactions menu" class="md-icon-button" ng-click="$mdOpenMenu(); $event.stopPropagation();">' +
+			'					<md-icon md-menu-origin md-svg-icon="/eastore-ui/secure/home/assets/img/icons/ic_more_horiz_24px.svg" style="height: 20px;"></md-icon>' +
+			'				</md-button>' +
+			'				<md-menu-content width="3">' +
+			'					<md-menu-item>' +
+			'						<md-button ng-click="editStore(storeObj)">' +
+			'							Edit Store' +
+			'						</md-button>' +
+			'					</md-menu-item>' +			
+			'				</md-menu-content>' +		
+			'			</md-menu>' +
+			'        </td>' +			
 			'        <td><a href ng-click=\"viewStore(storeObj);  $event.stopPropagation();\">{{storeObj.name}}</a></td>' +
 			'        <td>{{storeObj.description}}</td>' +
 			'        <td>{{tableGetters().getDateCreated(storeObj)}}</td>' +			
@@ -104,7 +124,7 @@
 			'	</tbody>' +
 			'	<tfoot>' +
 			'		<tr>' +		
-			'			<td colspan="3" class="text-center">' +
+			'			<td colspan="4" class="text-center">' +
 			'				<div st-pagination="" st-items-by-page="10" st-displayed-pages="15"></div>' +
 			'			</td>' +
 			'		</tr>' +
@@ -364,6 +384,11 @@
 					$scope.storeViewObj = newStore;
 				}, true);
 				
+				$scope.directoryViewObj = $scope.directory;
+				$scope.$watch('directory', function(newDirectory, oldDirectory){
+					$scope.directoryViewObj = newDirectory;
+				}, true);				
+				
 				$scope.resourceListSafe = $scope.resourceList;
 				// a separate list copy for display. this is needed for smart table
 				$scope.resourceListView = [].concat($scope.resourceList);
@@ -398,10 +423,25 @@
 				}
 			};
 			
+			// click on a resource link (download file or view directory)
 			$scope.viewChildResources = function(storeObj, pathResObj){
 				$scope.resourceClickHandler({
 						theStore : storeObj,
 						thePathResource: pathResObj
+					});
+			};
+			
+			/*  click on edit resource menu item
+			 *
+			 *  storeObj - the current store
+			 *  directoryObject - the current directory we are in
+			 *  directoryToEdit - the child directory that the user wants to edit
+			 */
+			$scope.editDirectory = function(storeObj, directoryObject, directoryToEdit){
+				$scope.resourceEditClickHandler({
+						theStore : storeObj,
+						theDirectory: directoryObject,
+						thePathResource: directoryToEdit
 					});
 			};
 			
@@ -429,15 +469,15 @@
 			'<table st-table="resourceListView" st-safe-src="resourceListSafe" class="table mySmartTable">' +
 			'	<thead>' +
 			'	<tr>' +
-			//'     <th>&nbsp;</th>' +
+			'		 <th st-ratio="5">Menu</th>' +
 			//'     <th st-sort="tableGetters().getNodeId">ID</th>' +
-			'        <th st-sort="tableGetters().getNodeName">Name</th>' +
-			'        <th st-sort="tableGetters().getDescription">Description</th>' +
-			'        <th st-sort="tableGetters().getMimeType">Type</th>' +
-			'        <th st-sort="tableGetters().getSize">Size</th>' +
+			'        <th st-ratio="40" st-sort="tableGetters().getNodeName">Name</th>' +
+			'        <th st-ratio="30" st-sort="tableGetters().getDescription">Description</th>' +
+			'        <th st-ratio="10" st-sort="tableGetters().getMimeType">Type</th>' +
+			'        <th st-ratio="15" st-sort="tableGetters().getSize">Size</th>' +
 			'	</tr>' +
 			'	<tr>' +
-			//'		<th></th>' +
+			'		<th></th>' +
 			//'		<th><input st-search="nodeId" placeholder="search by node id" class="input-sm form-control" type="search"/></th>' +
 			'		<th><input st-search="nodeName" placeholder="search by name" class="input-sm form-control" type="search"/></th>' +	
 			'		<th><input st-search="desc" placeholder="search by description" class="input-sm form-control" type="search"/></th>' +
@@ -447,6 +487,20 @@
 			'	</thead>' +
 			'	<tbody>' +
 			'	<tr st-select-row="pathResObj" st-select-mode="multiple" ng-repeat="pathResObj in resourceListView" >' +
+			'        <td>' +
+			'			<md-menu ng-if="pathResObj.resourceType === \'DIRECTORY\'">' +
+			'				<md-button aria-label="Open phone interactions menu" class="md-icon-button" ng-click="$mdOpenMenu(); $event.stopPropagation();">' +
+			'					<md-icon md-menu-origin md-svg-icon="/eastore-ui/secure/home/assets/img/icons/ic_more_horiz_24px.svg" style="height: 20px;"></md-icon>' +
+			'				</md-button>' +
+			'				<md-menu-content width="3">' +
+			'					<md-menu-item>' +
+			'						<md-button ng-click="editDirectory(storeViewObj, directoryViewObj, pathResObj)">' +
+			'							Edit Directory' +
+			'						</md-button>' +
+			'					</md-menu-item>' +			
+			'				</md-menu-content>' +		
+			'			</md-menu>' +
+			'        </td>' +			
 			//'		 <td><md-button class=\"md-raised\" ng-click=\"viewChildResources(pathResObj);  $event.stopPropagation();\">Download</md-button></td>' +		
 			//'      <td>{{ pathResObj.nodeId }}</td>' +
 			'        <td><a href ng-click=\"viewChildResources(storeViewObj, pathResObj);  $event.stopPropagation();\">{{ pathResObj.nodeName }}</a></td>' +
@@ -457,7 +511,7 @@
 			'	</tbody>' +
 			'	<tfoot>' +
 			'		<tr>' +		
-			'			<td colspan="4" class="text-center">' +
+			'			<td colspan="5" class="text-center">' +
 			'				<div st-pagination="" st-items-by-page="20" st-displayed-pages="15"></div>' +
 			'			</td>' +
 			'		</tr>' +
@@ -468,8 +522,10 @@
 			restrict: 'AE',
 			scope: {
 				store: '=',
+				directory: '=',
 				resourceList: '=',
-				resourceClickHandler: '&'
+				resourceClickHandler: '&',
+				resourceEditClickHandler: '&'
 			},
 			controller: controller,
 			template: template

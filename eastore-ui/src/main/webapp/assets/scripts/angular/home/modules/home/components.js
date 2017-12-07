@@ -607,6 +607,7 @@
 				progressValue = (currVal/totalVal)*100;
 			};
 			
+			// handle click on a resource. either download file or view directory contents
 			this.clickResourceHandler = function(store, resource){
 				
 				if(resource.resourceType === 'FILE'){
@@ -639,6 +640,38 @@
 				}
 				
 			};
+			
+			// handle click for edit resource
+			this.clickEditResourceHandler = function(store, directory, resourceToEdit){
+				
+				if(resourceToEdit.resourceType === 'FILE'){
+					
+					alert('Edit file functionality coming later!');
+				
+				}else if(resourceToEdit.resourceType === 'DIRECTORY'){
+					
+					this.loadEditDirectory(store, directory, resourceToEdit);				
+					
+				}else{
+
+					alert('You clicked on a path resource with an unrecognized resource type:\n\n' + JSON.stringify(resource));
+
+				}
+				
+			};	
+
+			this.loadEditDirectory = function(currentStore, currentDirectory, childDirectoryToEdit){
+				
+				var newUrlPath = '/' + currentStore.name + currentDirectory.relativePath;
+				
+				$state.go('editdir', {
+					urlPath: newUrlPath,
+					store : currentStore,
+					currDirResource : currentDirectory,
+					currEditResource : childDirectoryToEdit
+					});				
+				
+			}
 			
 			// cut selected resources
 			this.cutSelectedResources = function(sourceStore, sourceDirectory, pathResources){
@@ -1526,6 +1559,97 @@
 					store : store,
 					currDirResource : directoryResource
 					});
+				
+			};
+			
+		},
+		
+		controllerAs : 'dirCtrl' // default is $ctrl
+		
+	});
+
+	//
+	// header for edit directory state
+	//
+	mainModule.component('editDirHeaderComponent', {
+		
+		bindings: {
+			store : '<',
+			directory : '<'
+		},
+		
+		templateUrl : function (appConstants){
+			return appConstants.contextPath +  '/assets/scripts/angular/home/modules/home/partials/edit_directory_header.jsp';
+		},			
+		
+		controller : function($log, $state){
+			
+			//$log.debug('editDirHeaderComponent controller');
+			
+			this.cancelEdit = function(store, directoryResource){
+				
+				$log.debug('cancel create directory');
+				
+				var newUrlPath = '/' + store.name + directoryResource.relativePath;
+				
+				$state.go('path', {
+					urlPath: newUrlPath,
+					store : store,
+					currDirResource : directoryResource
+					});				
+				
+			};				
+			
+		},
+		
+		controllerAs : 'dirCtrl' // default is $ctrl
+		
+	});
+	
+	//
+	// content for edit directory state
+	//
+	mainModule.component('editDirContentComponent', {
+		
+		bindings: {
+			store : '<',
+			directory : '<',
+			directoryToEdit : '<',
+			gatekeeperCategories : '<'
+		},
+		
+		templateUrl : function (appConstants){
+			return appConstants.contextPath +  '/assets/scripts/angular/home/modules/home/partials/edit_directory_content.jsp';
+		},				
+		
+		controller : function($log, $state, $scope, homeRestService){
+			
+			//$log.debug('editDirContentComponent controller');
+			
+			var thisCtrl = this;
+
+			this.cancelEdit = function(store, directoryResource){
+				
+				$log.debug('cancel edit directory');
+				
+				this.loadPathState(store, directoryResource);			
+				
+			};
+
+			this.loadPathState = function(store, directoryResource){
+				
+				var newUrlPath = '/' + store.name + directoryResource.relativePath;
+				
+				$state.go('path', {
+					urlPath: newUrlPath,
+					store : store,
+					currDirResource : directoryResource
+					});
+				
+			};
+			
+			this.doEditDirectory = function(store, directoryResource){
+				
 				
 			};
 			

@@ -69,10 +69,19 @@
 		
 	</section>	
 	
+	<!--
+	current store
+	current directory
+	child resources for current directory
+	click handler for clicking on resources
+	click handler for editing resources
+	-->
 	<div smart-table-resource-list
 		store="pathCtrl.store"
+		directory="pathCtrl.directory"
 		resource-list="pathCtrl.pathresources" 
-		resource-click-handler="pathCtrl.clickResourceHandler(theStore, thePathResource)">
+		resource-click-handler="pathCtrl.clickResourceHandler(theStore, thePathResource)"
+		resource-edit-click-handler="pathCtrl.clickEditResourceHandler(theStore, theDirectory, thePathResource)">
 	</div>	
 		
 </md-content>
