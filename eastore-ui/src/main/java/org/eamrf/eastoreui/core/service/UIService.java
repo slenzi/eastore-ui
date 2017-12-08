@@ -91,12 +91,12 @@ public class UIService {
     /**
      * Calls E-A Store action service, addDirectory
      * 
-     * @param dirNodeId
-     * @param dirName
-     * @param dirDesc
+     * @param dirNodeId - id of parent directory under which the new directory will be created
+     * @param dirName - directory name
+     * @param dirDesc - directory description
      * @param readGroup1 - optional read group
      * @param writeGroup1 - optional write group
-     * @param executeGroup1 - optional execute group     * 
+     * @param executeGroup1 - optional execute group
      * @return
      * @throws ServiceException
      */
@@ -105,6 +105,24 @@ public class UIService {
     	return storeService.addDirectory(dirNodeId, dirName, dirDesc, readGroup1, writeGroup1, executeGroup1);
     	
     }
+    
+    /**
+     * Calls E-A Store action service, updateDirectory
+     * 
+     * @param dirNodeId - id of directory to update
+     * @param dirName - new name
+     * @param dirDesc - new description
+     * @param readGroup1 - optional read group
+     * @param writeGroup1 - optional write group
+     * @param executeGroup1 - optional execute group
+     * @return
+     * @throws ServiceException
+     */
+    public String updateDirectory(Long dirNodeId, String dirName, String dirDesc, String readGroup1, String writeGroup1, String executeGroup1) throws ServiceException {
+    	
+    	return storeService.updateDirectory(dirNodeId, dirName, dirDesc, readGroup1, writeGroup1, executeGroup1);
+    	
+    }    
     
     /**
      * Forwards the incoming upload to ea-store

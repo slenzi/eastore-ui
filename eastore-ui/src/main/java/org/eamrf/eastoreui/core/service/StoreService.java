@@ -106,7 +106,35 @@ public class StoreService {
 			throw new ServiceException("Error calling eastore addDirectory(...), " + e.getMessage(), e);
 		}    	
     	
-    }	
+    }
+    
+    /**
+     * Update a directory
+     * 
+     * @param dirNodeId - id of directory to update
+	 * @param dirName - name of new directory
+	 * @param dirDesc - description for new directory
+     * @param readGroup1 - optional read group
+     * @param writeGroup1 - optional write group
+     * @param executeGroup1 - optional execute group
+     * @return
+     * @throws ServiceException
+     */
+    public String updateDirectory(Long dirNodeId, String dirName, String dirDesc, String readGroup1, String writeGroup1, String executeGroup1) throws ServiceException {
+    	
+    	logger.info(StoreService.class.getSimpleName() + " updateDirectory(...) called");
+    	
+		EAStoreActionClient client = eaStoreClientProvider.getActionClient();
+		
+		String userId = getLoggedInUserId();
+		
+		try {
+			return client.updateDirectory(dirNodeId, dirName, dirDesc, readGroup1, writeGroup1, executeGroup1, userId);
+		} catch (WebServiceException e) {
+			throw new ServiceException("Error calling eastore updateDirectory(...), " + e.getMessage(), e);
+		}    	
+    	
+    }    
 	
 	/**
 	 * Call E-A Store /fsys/action/uploadFile

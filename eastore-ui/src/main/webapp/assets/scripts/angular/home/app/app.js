@@ -634,6 +634,7 @@
 
 						var editDirModel = {
 							
+							dirId : directoryToEdit.nodeId,
 							dirName : directoryToEdit.nodeName,
 							dirDescription: directoryToEdit.desc,
 							

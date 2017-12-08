@@ -1506,10 +1506,6 @@
 			
 			this.doCreateDirectory = function(store, directoryResource){
 				
-				//alert('create directory coming soon!');
-				
-				//var thisCtrl = this;
-				
 				// we put 'required' attribute on each of the input fields in the markup
 				// the form will only be valid if values are entered into all field flag as required
 				if($scope.dirForm.$valid){
@@ -1537,8 +1533,6 @@
 				}else{
 					alert('Please fill out all required fields. Thank you.');
 				}
-				
-				$log.debug('New dir name = ' + this._newDir.dirName);
 				
 			};
 
@@ -1802,8 +1796,42 @@
 				
 			};
 			
+			/**
+			 * store - current working store
+			 * directoryResource - current working directory (not the one being edited)
+			 */
 			this.doEditDirectory = function(store, directoryResource){
 				
+				// we put 'required' attribute on each of the input fields in the markup
+				// the form will only be valid if values are entered into all field flag as required
+				if($scope.dirForm.$valid){
+					
+					// call service to update directory, then reload path state
+					homeRestService
+						.updateDirectory(
+								this.editDirModel.dirId, 
+								this.editDirModel.dirName, 
+								this.editDirModel.dirDescription, 
+								this.editDirModel.readGroup1.groupCode, 
+								this.editDirModel.writeGroup1.groupCode, 
+								this.editDirModel.executeGroup1.groupCode)
+						.then( function ( jsonData ){
+							
+							$log.debug('completed updateDirectory service call');
+							
+							$log.debug(JSON.stringify(jsonData))
+							//return jsonData;
+							thisCtrl.loadPathState(store, directoryResource);
+							
+						}, function( error ){
+							alert('Error calling updateDirectory(...) service method' + JSON.stringify(error));
+						});
+
+					//this.loadPathState(store, directoryResource);
+					
+				}else{
+					alert('Please fill out all required fields. Thank you.');
+				}				
 				
 			};
 			

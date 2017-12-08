@@ -211,6 +211,64 @@ public class EAStoreActionClient {
 	}
 	
 	/**
+	 * Update a directory
+	 * 
+	 * @param dirNodeId - id of directory to update
+	 * @param dirName - new name
+	 * @param dirDesc - new desc
+	 * @param readGroup1 - optional read group
+	 * @param writeGroup1 - optional write group
+	 * @param executeGroup1 - optional execute group
+	 * @param userId - id of user performing action
+	 * @return
+	 * @throws WebServiceException
+	 */
+	public String updateDirectory(
+			Long dirNodeId, 
+			String dirName, 
+			String dirDesc, 
+			String readGroup1, 
+			String writeGroup1, 
+			String executeGroup1, 
+			String userId) throws WebServiceException {
+		
+		logger.info("Calling " + EAStoreActionClient.class.getSimpleName() + " updateDirectory method");
+		
+		resetClient();
+		
+		String path = "/fsys/action/updateDirectory";
+		client
+			.path(path)
+			.query("dirNodeId", dirNodeId)
+			.query("name", dirName)
+			.query("desc", dirDesc)
+			.query("userId", userId);
+		
+		// read, write, and execute groups are optional
+		if(readGroup1 != null) {
+			client.query("readGroup1", readGroup1);
+		}
+		if(writeGroup1 != null) {
+			client.query("writeGroup1", writeGroup1);
+		}
+		if(executeGroup1 != null) {
+			client.query("executeGroup1", executeGroup1);
+		}
+			
+		Response resp = client.post("");
+		
+		if(resp.getStatus() != Response.Status.OK.getStatusCode()){
+			throw new WebServiceException(WebExceptionType.CODE_IO_ERROR, 
+					"Response error from " + client.getCurrentURI().toString() + ", response code = " + resp.getStatus());
+		}
+		
+		String responseString = resp.readEntity(String.class);
+		
+		return responseString;			
+		
+	}	
+	
+	/**
 	 * Call E-A Store /fsys/action/copyFile
 	 * 
 	 * @param fileNodeId

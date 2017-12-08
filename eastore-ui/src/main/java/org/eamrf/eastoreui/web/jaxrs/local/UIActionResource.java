@@ -256,7 +256,7 @@ public class UIActionResource extends BaseResourceHandler {
 	}
 	
 	/**
-	 * adds a new directory (via eastore)
+	 * adds a new directory
 	 * 
 	 * @param dirNodeId - id of parent directory
 	 * @param name - name of new directory
@@ -291,6 +291,43 @@ public class UIActionResource extends BaseResourceHandler {
 		return Response.ok(jsonResponse, MediaType.APPLICATION_JSON).build();    	
    
     }
+    
+    /**
+     * Update a directory
+     * 
+     * @param dirNodeId - id of directory to update
+     * @param dirName - new name
+     * @param dirDesc - new description
+     * @param readGroup1 - optional read group
+     * @param writeGroup1 - optional write group
+     * @param executeGroup1 - optional execute group
+     * @return
+     * @throws WebServiceException
+     */
+    @POST
+    @Path("/updateDirectory")
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response updateDirectory(
+    		@QueryParam("dirNodeId") Long dirNodeId,
+    		@QueryParam("name") String name,
+    		@QueryParam("desc") String desc,
+    		@QueryParam("readGroup1") String readGroup1,
+    		@QueryParam("writeGroup1") String writeGroup1,
+    		@QueryParam("executeGroup1") String executeGroup1) throws WebServiceException {
+    	
+    	logger.info(UIActionResource.class.getSimpleName() + " updateDirectory(...) called");
+    	
+    	String jsonResponse = null;
+		try {
+			jsonResponse = uiService.updateDirectory(dirNodeId, name, desc, readGroup1, writeGroup1, executeGroup1);
+		} catch (ServiceException e) {
+			logger.error(e.getMessage(), e);
+			throw new WebServiceException(WebExceptionType.CODE_IO_ERROR, e.getMessage(), e);
+		}
+		
+		return Response.ok(jsonResponse, MediaType.APPLICATION_JSON).build();    	
+   
+    }    
     
     /**
      * Copy a file
