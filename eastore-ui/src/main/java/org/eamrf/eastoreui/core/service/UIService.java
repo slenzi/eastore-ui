@@ -39,6 +39,19 @@ public class UIService {
     private GatekeeperService gatekeeperService;
     
     /**
+     * fetch group by group code
+     * 
+     * @param groupCode - the unique group code
+     * @return
+     * @throws ServiceException
+     */
+    public Group getGroup(String groupCode)  throws ServiceException {
+    	
+    	return gatekeeperService.getGroup(groupCode);
+    	
+    }
+    
+    /**
      * fetch all gatekeeper groups for a specific category
      * 
      * @param categoryCode

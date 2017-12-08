@@ -255,6 +255,15 @@
 					params: {
 						groupCode: '@groupCode'
 					}
+				},
+				
+				gateKeeperGroupByCode: {
+					url: appConstants.eastoreUiJsonJaxrsService + '/gatekeeper/group',
+					method: 'GET',
+					isArray: false,
+					params: {
+						groupCode: '@groupCode'
+					}
 				}
 			
 			});
@@ -490,6 +499,15 @@
 			
 		}
 		
+		// fetch gatekeeper group by group code
+		function _fetchGatekeeperGroupByGroupCode(groupCode){
+			
+			$log.debug('Calling jax-rs method to fetch gatekeeper group for group code ' + groupCode);
+			
+			return eastoreUiJsonService.gateKeeperGroupByCode({ groupCode : groupCode }).$promise;
+			
+		}		
+		
 		// *********************************
 		// External API
 		// *********************************
@@ -525,6 +543,7 @@
 			
 			fetchGatekeeperCategories : _fetchGatekeeperCategories,
 			fetchGatekeeperGroupsForCategory : _fetchGatekeeperGroupsForCategory,
+			fetchGatekeeperGroupByGroupCode : _fetchGatekeeperGroupByGroupCode,
 			fetchGatekeeperCategoryByGroupCode : _fetchGatekeeperCategoryByGroupCode
 	    	
 	    };
@@ -877,6 +896,8 @@
 		//
 		function _resolveGatekeeperCategoryByGroupCode(groupCode){
 			
+			$log.debug('resolving gatekeeper category for group code ' + groupCode);
+			
 			return homeRestService
 				.fetchGatekeeperCategoryByGroupCode(groupCode)
 				.then( function ( jsonData ){
@@ -884,6 +905,24 @@
 					return jsonData;
 				}, function( error ){
 					alert('Error calling fetchGatekeeperCategoryByGroupCode() service method' + JSON.stringify(error));
+				});			
+			
+		}
+		
+		//
+		// resolve gatekeeper group by group code
+		//
+		function _resolveGatekeeperGroupByGroupCode(groupCode){
+			
+			$log.debug('resolving gatekeeper group for group code ' + groupCode);
+			
+			return homeRestService
+				.fetchGatekeeperGroupByGroupCode(groupCode)
+				.then( function ( jsonData ){
+					//$log.debug(JSON.stringify(jsonData));
+					return jsonData;
+				}, function( error ){
+					alert('Error calling fetchGatekeeperGroupByGroupCode() service method' + JSON.stringify(error));
 				});			
 			
 		}
@@ -975,6 +1014,7 @@
 			
 			resolveGatekeeperCategories : _resolveGatekeeperCategories,
 			resolveGatekeeperGroupsForCategory : _resolveGatekeeperGroupsForCategory,
+			resolveGatekeeperGroupByGroupCode : _resolveGatekeeperGroupByGroupCode,
 			resolveGatekeeperCategoryByGroupCode : _resolveGatekeeperCategoryByGroupCode
 			
 		};		

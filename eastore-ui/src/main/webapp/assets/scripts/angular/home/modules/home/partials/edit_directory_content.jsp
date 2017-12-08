@@ -10,13 +10,13 @@
 				<div layout-gt-sm="row">
 					<md-input-container class="md-block" flex-gt-sm>
 					<label>Directory Name (250 character max)</label>
-					<input ng-model="dirCtrl.directoryToEdit.nodeName" md-maxlength="250" required>
+					<input ng-model="dirCtrl.editDirModel.dirName" md-maxlength="250" required>
 					</md-input-container>
 				</div>
 				
 				<md-input-container class="md-block">
 					<label>Directory Description (4,000 character max)</label>
-					<textarea ng-model="dirCtrl.directoryToEdit.desc" md-maxlength="4000" rows="5" md-select-on-focus required></textarea>
+					<textarea ng-model="dirCtrl.editDirModel.dirDescription" md-maxlength="4000" rows="5" md-select-on-focus required></textarea>
 				</md-input-container>
 
 				<md-card-content>
@@ -53,31 +53,31 @@
 
 							<md-input-container style="margin-right: 10px;">
 								<label>Read Category</label>
-								<md-select ng-model="dirCtrl._newDir.readCat1" ng-change="dirCtrl.read1CatChange()">
+								<md-select ng-model="dirCtrl.editDirModel.readCat1" ng-model-options="{trackBy: '$value.categoryId'}" ng-change="dirCtrl.read1CatChange()">
 									<md-option><em>None</em></md-option>
-									<md-option ng-repeat="cat in dirCtrl.gatekeeperCategories" ng-value="cat.categoryCode">
+									<md-option ng-repeat="cat in dirCtrl.gatekeeperCategories" ng-value="cat">
 										{{cat.categoryName}}
-									</md-option>				
+									</md-option>	
 								</md-select>
 							</md-input-container>
 						
 							<md-input-container style="margin-right: 10px;">
 								<label>Write Category</label>
-								<md-select ng-model="dirCtrl._newDir.writeCat1" ng-change="dirCtrl.write1CatChange()">
+								<md-select ng-model="dirCtrl.editDirModel.writeCat1" ng-model-options="{trackBy: '$value.categoryId'}" ng-change="dirCtrl.write1CatChange()">
 									<md-option><em>None</em></md-option>
-									<md-option ng-repeat="cat in dirCtrl.gatekeeperCategories" ng-value="cat.categoryCode">
+									<md-option ng-repeat="cat in dirCtrl.gatekeeperCategories" ng-value="cat">
 										{{cat.categoryName}}
-									</md-option>				
+									</md-option>	
 								</md-select>
 							</md-input-container>
 						
 							<md-input-container style="margin-right: 10px;">
 								<label>Execute Category</label>
-								<md-select ng-model="dirCtrl._newDir.executeCat1" ng-change="dirCtrl.execute1CatChange()">
+								<md-select ng-model="dirCtrl.editDirModel.executeCat1" ng-model-options="{trackBy: '$value.categoryId'}" ng-change="dirCtrl.execute1CatChange()">
 									<md-option><em>None</em></md-option>
-									<md-option ng-repeat="cat in dirCtrl.gatekeeperCategories" ng-value="cat.categoryCode">
+									<md-option ng-repeat="cat in dirCtrl.gatekeeperCategories" ng-value="cat">
 										{{cat.categoryName}}
-									</md-option>				
+									</md-option>	
 								</md-select>
 							</md-input-container>
 							
@@ -90,7 +90,7 @@
 								  <md-autocomplete
 									  ng-disabled="dirCtrl.isDisabled"
 									  md-no-cache="dirCtrl.noCache"
-									  md-selected-item="dirCtrl._newDir.readGroup1"
+									  md-selected-item="dirCtrl.editDirModel.readGroup1"
 									  md-search-text-change="dirCtrl.read1GroupSearchTextChange(dirCtrl._read1GroupSearchText)"
 									  md-search-text="dirCtrl._read1GroupSearchText"
 									  md-selected-item-change="dirCtrl.read1GroupSelectedItemChange(group)"
@@ -113,7 +113,7 @@
 								  <md-autocomplete
 									  ng-disabled="dirCtrl.isDisabled"
 									  md-no-cache="dirCtrl.noCache"
-									  md-selected-item="dirCtrl._newDir.writeGroup1"
+									  md-selected-item="dirCtrl.editDirModel.writeGroup1"
 									  md-search-text-change="dirCtrl.write1GroupSearchTextChange(dirCtrl._write1GroupSearchText)"
 									  md-search-text="dirCtrl._write1GroupSearchText"
 									  md-selected-item-change="dirCtrl.write1GroupSelectedItemChange(group)"
@@ -136,7 +136,7 @@
 								  <md-autocomplete
 									  ng-disabled="dirCtrl.isDisabled"
 									  md-no-cache="dirCtrl.noCache"
-									  md-selected-item="dirCtrl._newDir.executeGroup1"
+									  md-selected-item="dirCtrl.editDirModel.executeGroup1"
 									  md-search-text-change="dirCtrl.execute1GroupSearchTextChange(dirCtrl._execute1GroupSearchText)"
 									  md-search-text="dirCtrl._execute1GroupSearchText"
 									  md-selected-item-change="dirCtrl.execute1GroupSelectedItemChange(group)"

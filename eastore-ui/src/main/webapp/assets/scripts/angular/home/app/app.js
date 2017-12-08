@@ -579,10 +579,11 @@
 					//
 					// https://stackoverflow.com/questions/43347819/ui-router-resolve-depends-on-other-resolve
 					
-					// inject directory so its resolved before we get all the groups
-					currentGatekeeperCategories : function ($log, $stateParams, resolveService, directory) {
+					/*
+					// inject directoryToEdit so its resolved before we fetch the categories for it's read, write, and execute groups
+					currentGatekeeperCategories : function ($log, $stateParams, resolveService, directoryToEdit) {
 						
-						$log.debug('------------ [editdir state] resolving gatekeeper groups for current directory');
+						$log.debug('------------ [editdir state] resolving gatekeeper groups for edit directory');
 						
 						// fetch the categories for the current read, write, and execute groups
 				
@@ -592,22 +593,116 @@
 							execute1Cat : {}
 						}
 						
+						//
+						// If you return a promise from a resolve then the resolve function will wait for the promise to be resolved
+						// before returning that data, that way all resolves are....resolved.
+						//
+						
 						// get category for read group
-						if(directory.readGroup1){
-							currentCats.read1Cat = resolveService.resolveGatekeeperCategoryByGroupCode(directory.readGroup1);
+						if(directoryToEdit.readGroup1){
+							resolveService.resolveGatekeeperCategoryByGroupCode(directoryToEdit.readGroup1).then(function (data){
+								currentCats.read1Cat = data;
+							});							
+							//currentCats.read1Cat = resolveService.resolveGatekeeperCategoryByGroupCode(directoryToEdit.readGroup1);
 						}
 						// get category for write group
-						if(directory.writeGroup1){
-							currentCats.write1Cat = resolveService.resolveGatekeeperCategoryByGroupCode(directory.writeGroup1);
+						if(directoryToEdit.writeGroup1){
+							resolveService.resolveGatekeeperCategoryByGroupCode(directoryToEdit.writeGroup1).then(function (data){
+								currentCats.write1Cat = data;
+							});								
+							//currentCats.write1Cat = resolveService.resolveGatekeeperCategoryByGroupCode(directoryToEdit.writeGroup1);
 						}
 						// get category for execute group
-						if(directory.executeGroup1){
-							currentCats.execute1Cat = resolveService.resolveGatekeeperCategoryByGroupCode(directory.executeGroup1);
+						if(directoryToEdit.executeGroup1){
+							resolveService.resolveGatekeeperCategoryByGroupCode(directoryToEdit.executeGroup1).then(function (data){
+								currentCats.execute1Cat = data;
+							});							
+							//currentCats.execute1Cat = resolveService.resolveGatekeeperCategoryByGroupCode(directoryToEdit.executeGroup1);
 						}
 						
-						$log.debug(JSON.stringify(currentCats));
+						//$log.debug(JSON.stringify(currentCats));
 						
 						return currentCats;
+						
+					},
+					*/
+					
+					// inject directoryToEdit so its resolved before we fetch the categories for it's read, write, and execute groups
+					editDirModel : function ($log, $stateParams, resolveService, directoryToEdit) {
+						
+						$log.debug('------------ [editdir state] resolving edit dir model for display');
+
+						var editDirModel = {
+							
+							dirName : directoryToEdit.nodeName,
+							dirDescription: directoryToEdit.desc,
+							
+							readCat1: '',
+							readGroup1: '',
+							
+							writeCat1: '',
+							writeGroup1: '',
+							
+							executeCat1: '',
+							executeGroup1: '',
+
+							groupsForReadCat1: [],
+							groupsForWriteCat1: [],
+							groupsForExecuteCat1: []
+							
+						}
+
+						// get read group, category for read group, and all groups for the category
+						if(directoryToEdit.readGroup1){
+							
+							resolveService.resolveGatekeeperGroupByGroupCode(directoryToEdit.readGroup1).then(function (data){
+								editDirModel.readGroup1 = data;
+							});							
+							resolveService.resolveGatekeeperCategoryByGroupCode(directoryToEdit.readGroup1).then(function (data){
+								editDirModel.readCat1 = data;
+							}).then(function(){
+								// run in another 'then' block because we have to wait for value 'editDirModel.readCat1' to resolve
+								resolveService.resolveGatekeeperGroupsForCategory(editDirModel.readCat1.categoryCode).then(function (data){
+									editDirModel.groupsForReadCat1 = data;
+								});								
+								
+							});							
+						}
+						
+						// get write group, category for write group, and all groups for the category
+						if(directoryToEdit.writeGroup1){
+							
+							resolveService.resolveGatekeeperGroupByGroupCode(directoryToEdit.writeGroup1).then(function (data){
+								editDirModel.writeGroup1 = data;
+							});							
+							resolveService.resolveGatekeeperCategoryByGroupCode(directoryToEdit.writeGroup1).then(function (data){
+								editDirModel.writeCat1 = data;
+							}).then(function(){
+								// run in another 'then' block because we have to wait for value 'editDirModel.writeCat1' to resolve
+								resolveService.resolveGatekeeperGroupsForCategory(editDirModel.writeCat1.categoryCode).then(function (data){
+									editDirModel.groupsForWriteCat1 = data;
+								});								
+								
+							});							
+						}
+						
+						// get execute group, category for execute group, and all groups for the category
+						if(directoryToEdit.executeGroup1){
+							resolveService.resolveGatekeeperGroupByGroupCode(directoryToEdit.executeGroup1).then(function (data){
+								editDirModel.executeGroup1 = data;
+							});								
+							resolveService.resolveGatekeeperCategoryByGroupCode(directoryToEdit.executeGroup1).then(function (data){
+								editDirModel.executeCat1 = data;
+							}).then(function(){
+								// run in another 'then' block because we have to wait for value 'editDirModel.executeCat1' to resolve
+								resolveService.resolveGatekeeperGroupsForCategory(editDirModel.executeCat1.categoryCode).then(function (data){
+									editDirModel.groupsForExecuteCat1 = data;
+								});								
+								
+							});							
+						}
+
+						return editDirModel;
 						
 					}
 					
