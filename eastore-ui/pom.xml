@@ -66,6 +66,14 @@
 				<property.file>lenzi.mac.production.properties</property.file>
 			</properties>
 		</profile>
+		
+		<!-- deployment on lenzi's personal mac, using cancordb with local instance of eastore -->
+		<profile>
+			<id>lenzi.mac.testground</id>
+			<properties>
+				<property.file>lenzi.mac.testground.properties</property.file>
+			</properties>
+		</profile>
 	
 		<!-- deployment on lenzi's personal desktop machine at EA-MRF, using development database -->
 		<profile>
