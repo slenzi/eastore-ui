@@ -296,8 +296,8 @@ public class UIActionResource extends BaseResourceHandler {
      * Update a directory
      * 
      * @param dirNodeId - id of directory to update
-     * @param dirName - new name
-     * @param dirDesc - new description
+     * @param dirName - new name for directory
+     * @param dirDesc - new description for directory
      * @param readGroup1 - optional read group
      * @param writeGroup1 - optional write group
      * @param executeGroup1 - optional execute group
@@ -320,6 +320,37 @@ public class UIActionResource extends BaseResourceHandler {
     	String jsonResponse = null;
 		try {
 			jsonResponse = uiService.updateDirectory(dirNodeId, name, desc, readGroup1, writeGroup1, executeGroup1);
+		} catch (ServiceException e) {
+			logger.error(e.getMessage(), e);
+			throw new WebServiceException(WebExceptionType.CODE_IO_ERROR, e.getMessage(), e);
+		}
+		
+		return Response.ok(jsonResponse, MediaType.APPLICATION_JSON).build();    	
+   
+    }
+    
+    /**
+     * Update a file
+     * 
+     * @param fileNodeId - id of file to update
+     * @param dirName - new name for file
+     * @param dirDesc - new description for file 
+     * @return
+     * @throws WebServiceException
+     */
+    @POST
+    @Path("/updateFile")
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response updateFile(
+    		@QueryParam("fileNodeId") Long fileNodeId,
+    		@QueryParam("name") String name,
+    		@QueryParam("desc") String desc) throws WebServiceException {
+    	
+    	logger.info(UIActionResource.class.getSimpleName() + " updateFile(...) called");
+    	
+    	String jsonResponse = null;
+		try {
+			jsonResponse = uiService.updateFile(fileNodeId, name, desc);
 		} catch (ServiceException e) {
 			logger.error(e.getMessage(), e);
 			throw new WebServiceException(WebExceptionType.CODE_IO_ERROR, e.getMessage(), e);

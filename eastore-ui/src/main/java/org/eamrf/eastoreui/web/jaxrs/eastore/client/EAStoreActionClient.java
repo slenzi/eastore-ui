@@ -211,6 +211,47 @@ public class EAStoreActionClient {
 	}
 	
 	/**
+	 * Update a file
+	 * 
+	 * @param fileNodeId - id of file to update
+	 * @param fileName - new name
+	 * @param fileDesc - new desc
+	 * @param userId - id of user performing action
+	 * @return
+	 * @throws WebServiceException
+	 */
+	public String updateFile(
+			Long fileNodeId, 
+			String fileName, 
+			String fileDesc, 
+			String userId) throws WebServiceException {
+		
+		logger.info("Calling " + EAStoreActionClient.class.getSimpleName() + " updateFile method");
+		
+		resetClient();
+		
+		String path = "/fsys/action/updateFile";
+		client
+			.path(path)
+			.query("fileNodeId", fileNodeId)
+			.query("name", fileName)
+			.query("desc", fileDesc)
+			.query("userId", userId);
+			
+		Response resp = client.post("");
+		
+		if(resp.getStatus() != Response.Status.OK.getStatusCode()){
+			throw new WebServiceException(WebExceptionType.CODE_IO_ERROR, 
+					"Response error from " + client.getCurrentURI().toString() + ", response code = " + resp.getStatus());
+		}
+		
+		String responseString = resp.readEntity(String.class);
+		
+		return responseString;			
+		
+	}	
+	
+	/**
 	 * Update a directory
 	 * 
 	 * @param dirNodeId - id of directory to update

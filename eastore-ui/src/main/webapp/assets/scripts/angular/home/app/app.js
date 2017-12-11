@@ -313,7 +313,7 @@
 						
 					},
 					
-					// current directory
+					// current working directory
 					directory : function ($log, $stateParams, resolveService) {
 
 						$log.debug('------------ [path state] resolving directory resource');
@@ -416,7 +416,7 @@
 						
 					},
 					
-					// current directory
+					// current working directory
 					directory : function ($log, $stateParams, resolveService) {
 
 						$log.debug('------------ [upload state] resolving directory resource');
@@ -473,7 +473,7 @@
 						
 					},
 					
-					// current directory
+					// current working directory
 					directory : function ($log, $stateParams, resolveService) {
 
 						$log.debug('------------ [createdir state] resolving directory resource');
@@ -579,54 +579,6 @@
 					//
 					// https://stackoverflow.com/questions/43347819/ui-router-resolve-depends-on-other-resolve
 					
-					/*
-					// inject directoryToEdit so its resolved before we fetch the categories for it's read, write, and execute groups
-					currentGatekeeperCategories : function ($log, $stateParams, resolveService, directoryToEdit) {
-						
-						$log.debug('------------ [editdir state] resolving gatekeeper groups for edit directory');
-						
-						// fetch the categories for the current read, write, and execute groups
-				
-						var currentCats = {
-							read1Cat : {},
-							write1Cat : {},
-							execute1Cat : {}
-						}
-						
-						//
-						// If you return a promise from a resolve then the resolve function will wait for the promise to be resolved
-						// before returning that data, that way all resolves are....resolved.
-						//
-						
-						// get category for read group
-						if(directoryToEdit.readGroup1){
-							resolveService.resolveGatekeeperCategoryByGroupCode(directoryToEdit.readGroup1).then(function (data){
-								currentCats.read1Cat = data;
-							});							
-							//currentCats.read1Cat = resolveService.resolveGatekeeperCategoryByGroupCode(directoryToEdit.readGroup1);
-						}
-						// get category for write group
-						if(directoryToEdit.writeGroup1){
-							resolveService.resolveGatekeeperCategoryByGroupCode(directoryToEdit.writeGroup1).then(function (data){
-								currentCats.write1Cat = data;
-							});								
-							//currentCats.write1Cat = resolveService.resolveGatekeeperCategoryByGroupCode(directoryToEdit.writeGroup1);
-						}
-						// get category for execute group
-						if(directoryToEdit.executeGroup1){
-							resolveService.resolveGatekeeperCategoryByGroupCode(directoryToEdit.executeGroup1).then(function (data){
-								currentCats.execute1Cat = data;
-							});							
-							//currentCats.execute1Cat = resolveService.resolveGatekeeperCategoryByGroupCode(directoryToEdit.executeGroup1);
-						}
-						
-						//$log.debug(JSON.stringify(currentCats));
-						
-						return currentCats;
-						
-					},
-					*/
-					
 					// inject directoryToEdit so its resolved before we fetch the categories for it's read, write, and execute groups
 					editDirModel : function ($log, $stateParams, resolveService, directoryToEdit) {
 						
@@ -710,7 +662,93 @@
 				}					
 			}				
 			
-		);			
+		);
+		
+		//
+		// edit file state - show create directory form
+		//
+		$stateProvider.state(
+		
+			'editfile', {
+				parent: 'root',
+				url: '/editfile{urlPath:any}',
+				views : {
+					uicontent : {
+						component : 'editFileContentComponent' // when 'editfile' state is active, render 'editFileContentComponent' into view with name 'uicontent'
+					},
+					uiheader : {
+						component : 'editFileHeaderComponent' // when 'editfile' state is active, render 'editFileHeaderComponent' into view with name 'uiheader'
+					},
+					uititle : {
+						//template : 'Protocol Listing'
+						component : 'titleHeaderComponent' // when 'editfile' state is active, render 'titleHeaderComponent' into view with name 'uititle'
+					},
+					uileftmenu : {
+						//template : 'Protocol Listing'
+						component : 'leftMenuComponent' // when 'editfile' state is active, render 'leftMenuComponent' into view with name 'uileftmenu'
+					}
+				},
+				params : defaultStateParams,
+				resolve : {
+					headerTitle : function ($log, $stateParams){
+						
+						$log.debug('------------ [editfile state] resolving headerTitle');							
+						//$log.debug(JSON.stringify($stateParams));						
+						
+						return 'Edit File Form';
+						
+					},
+					
+					// the current store
+					store : function($log, $stateParams, resolveService) {
+						
+						$log.debug('------------ [editfile state] resolving store');
+
+						return resolveService.resolveCurrentStore($stateParams);
+						
+					},
+					
+					// current working directory
+					directory : function ($log, $stateParams, resolveService) {
+
+						$log.debug('------------ [editfile state] resolving directory resource');
+						
+						return resolveService.resolveCurrentDirectory($stateParams);
+
+					},
+					
+					// file the user wants to edit
+					fileToEdit : function ($log, $stateParams, resolveService) {
+
+						$log.debug('------------ [editfile state] resolving file to edit');
+						
+						//$log.debug(JSON.stringify($stateParams));							
+						
+						return resolveService.resolveCurrentEditResource($stateParams);
+
+					},
+
+					// inject fileToEdit so its resolved before we fetch any other potential file data we need for the edit file form
+					editFileModel : function ($log, $stateParams, resolveService, fileToEdit) {
+
+						$log.debug('------------ [editdir state] resolving edit file model for display');
+					
+						var editFileModel = {
+							
+							fileId : fileToEdit.nodeId,
+							fileName : fileToEdit.nodeName,
+							fileDescription: fileToEdit.desc
+							
+						}
+						
+						return editFileModel;
+
+					}					
+					
+				}					
+			}				
+			
+		);		
 	
 
 	};

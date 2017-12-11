@@ -109,11 +109,36 @@ public class StoreService {
     }
     
     /**
+     * Update a file
+     * 
+     * @param fileNodeId - id of file to update
+	 * @param fileName - new name for file
+	 * @param fileDesc - new description for file
+     * @return
+     * @throws ServiceException
+     */
+    public String updateFile(Long fileNodeId, String fileName, String fileDesc) throws ServiceException {
+    	
+    	logger.info(StoreService.class.getSimpleName() + " updateFile(...) called");
+    	
+		EAStoreActionClient client = eaStoreClientProvider.getActionClient();
+		
+		String userId = getLoggedInUserId();
+		
+		try {
+			return client.updateFile(fileNodeId, fileName, fileDesc, userId);
+		} catch (WebServiceException e) {
+			throw new ServiceException("Error calling eastore updateFile(...), " + e.getMessage(), e);
+		}    	
+    	
+    }     
+    
+    /**
      * Update a directory
      * 
      * @param dirNodeId - id of directory to update
-	 * @param dirName - name of new directory
-	 * @param dirDesc - description for new directory
+	 * @param dirName - new name for directory
+	 * @param dirDesc -  new description for directory
      * @param readGroup1 - optional read group
      * @param writeGroup1 - optional write group
      * @param executeGroup1 - optional execute group

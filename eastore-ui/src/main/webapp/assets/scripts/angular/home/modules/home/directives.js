@@ -431,7 +431,7 @@
 					});
 			};
 			
-			/*  click on edit resource menu item
+			/*  click on edit directory menu item
 			 *
 			 *  storeObj - the current store
 			 *  directoryObject - the current directory we are in
@@ -444,6 +444,20 @@
 						thePathResource: directoryToEdit
 					});
 			};
+			
+			/*  click on edit file menu item
+			 *
+			 *  storeObj - the current store
+			 *  directoryObject - the current directory we are in
+			 *  fileToEdit - the file that the user wants to edit
+			 */
+			$scope.editFile = function(storeObj, directoryObject, fileToEdit){
+				$scope.resourceEditClickHandler({
+						theStore : storeObj,
+						theDirectory: directoryObject,
+						thePathResource: fileToEdit
+					});
+			};			
 			
 			$scope.humanFileSize = function(bytes, si){
 				var thresh = si ? 1000 : 1024;
@@ -500,6 +514,18 @@
 			'					</md-menu-item>' +			
 			'				</md-menu-content>' +		
 			'			</md-menu>' +
+			'			<md-menu ng-if="pathResObj.resourceType === \'FILE\'">' +
+			'				<md-button aria-label="Open phone interactions menu" class="md-icon-button" ng-click="$mdOpenMenu(); $event.stopPropagation();">' +
+			'					<md-icon md-menu-origin md-svg-icon="/eastore-ui/secure/home/assets/img/icons/ic_more_horiz_24px.svg" style="height: 20px;"></md-icon>' +
+			'				</md-button>' +
+			'				<md-menu-content width="3">' +
+			'					<md-menu-item>' +
+			'						<md-button ng-click="editFile(storeViewObj, directoryViewObj, pathResObj)">' +
+			'							Edit File' +
+			'						</md-button>' +
+			'					</md-menu-item>' +			
+			'				</md-menu-content>' +		
+			'			</md-menu>' +			
 			'        </td>' +			
 			//'		 <td><md-button class=\"md-raised\" ng-click=\"viewChildResources(pathResObj);  $event.stopPropagation();\">Download</md-button></td>' +		
 			//'      <td>{{ pathResObj.nodeId }}</td>' +

@@ -107,6 +107,21 @@ public class UIService {
     }
     
     /**
+     * Calls E-A Store action service, updateFile
+     * 
+     * @param fileNodeId - id of file to update
+     * @param fileName - new name for the file
+     * @param fileDesc - new description for the file
+     * @return
+     * @throws ServiceException
+     */
+    public String updateFile(Long fileNodeId, String fileName, String fileDesc) throws ServiceException {
+    	
+    	return storeService.updateFile(fileNodeId, fileName, fileDesc);
+    	
+    }
+    
+    /**
      * Calls E-A Store action service, updateDirectory
      * 
      * @param dirNodeId - id of directory to update

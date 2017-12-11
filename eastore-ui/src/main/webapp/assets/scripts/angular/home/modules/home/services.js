@@ -94,6 +94,18 @@
 						}					
 					},
 					
+					// call update file service method
+					updateFile: {
+						url: appConstants.eastoreUiActionJaxrsService + '/updateFile',
+						method: 'POST',
+						isArray: false,
+						params: {
+							fileNodeId : '@fileNodeId',
+							name : '@name',
+							desc : '@desc'
+						}					
+					},					
+					
 					// call copy directory service method
 					copyDirectory: {
 						url: appConstants.eastoreUiActionJaxrsService + '/copyDirectory',
@@ -313,7 +325,21 @@
 			
 		}
 		
-		// update a new directory
+		// update a file
+		function _updateFile(fileNodeId, newName, newDesc){
+			
+			$log.debug('Calling jax-rs _updateFile service method');
+			
+			return eastoreUiActionService.updateFile(
+					{
+						fileNodeId : fileNodeId,
+						name : newName,
+						desc : newDesc
+					}).$promise;
+			
+		}		
+		
+		// update a directory
 		function _updateDirectory(dirNodeId, newName, newDesc, readGroup1, writeGroup1, executeGroup1){
 			
 			$log.debug('Calling jax-rs _updateDirectory service method');
@@ -553,6 +579,7 @@
 			updateDirectory : _updateDirectory,
 			
 			copyFile : _copyFile,
+			updateFile : _updateFile,
 			copyDirectory : _copyDirectory,
 			
 			moveFile : _moveFile,
