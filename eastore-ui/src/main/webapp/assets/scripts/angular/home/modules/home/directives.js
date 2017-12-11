@@ -119,7 +119,7 @@
 			'        </td>' +			
 			'        <td><a href ng-click=\"viewStore(storeObj);  $event.stopPropagation();\">{{storeObj.name}}</a></td>' +
 			'        <td>{{storeObj.description}}</td>' +
-			'        <td>{{tableGetters().getDateCreated(storeObj)}}</td>' +			
+			'        <td>{{tableGetters().getDateCreated(storeObj)}}</td>' +
 			'	</tr>' +
 			'	</tbody>' +
 			'	<tfoot>' +
@@ -419,11 +419,16 @@
 					},
 					getSize: function (pathResObj) {
 						return pathResObj.fileSize;
+					},
+					getPermissions: function(pathResObj){
+						return $scope.getPermissionDetails(pathResObj);
 					}
 				}
 			};
 			
-			// click on a resource link (download file or view directory)
+			/**
+			  * click on a resource link (download file or view directory)
+			  */
 			$scope.viewChildResources = function(storeObj, pathResObj){
 				$scope.resourceClickHandler({
 						theStore : storeObj,
@@ -431,7 +436,8 @@
 					});
 			};
 			
-			/*  click on edit directory menu item
+			/**
+			 *  click on edit directory menu item
 			 *
 			 *  storeObj - the current store
 			 *  directoryObject - the current directory we are in
@@ -445,7 +451,60 @@
 					});
 			};
 			
-			/*  click on edit file menu item
+			/**
+			 * Check the canRead bit on the resource
+			 */
+			$scope.canReadPathResource = function(pathResource){
+				//$log.debug(JSON.stringify(pathResource, null, 2));
+				if(pathResource.canRead && pathResource.canRead === true){
+					return true;
+				}
+				return false;
+			};
+			
+			/**
+			 * Check the canWrite bit on the resource
+			 */
+			$scope.canWritePathResource = function(pathResource){
+				//$log.debug(JSON.stringify(pathResource, null, 2));
+				if(pathResource.canWrite && pathResource.canWrite === true){
+					return true;
+				}
+				return false;
+			};
+
+			/**
+			 * Check the canExecute bit on the resource
+			 */
+			$scope.canExecutePathResource = function(pathResource){
+				//$log.debug(JSON.stringify(pathResource, null, 2));
+				if(pathResource.canExecute && pathResource.canExecute === true){
+					return true;
+				}
+				return false;
+			};
+
+			/**
+			 * Get permission string for the 'permission column in the table
+			 */
+			$scope.getPermissionDetails = function(pathResource){
+				
+				var permissionDetails = '';
+				if(pathResource.canRead && pathResource.canRead === true){
+					permissionDetails = permissionDetails + 'r';
+				}
+				if(pathResource.canWrite && pathResource.canWrite === true){
+					permissionDetails = permissionDetails + 'w';
+				}
+				if(pathResource.canExecute && pathResource.canExecute === true){
+					permissionDetails = permissionDetails + 'x';
+				}				
+				return permissionDetails;
+				
+			};			
+			
+			/** 
+			 * Click on edit file menu item
 			 *
 			 *  storeObj - the current store
 			 *  directoryObject - the current directory we are in
@@ -487,6 +546,7 @@
 			//'     <th st-sort="tableGetters().getNodeId">ID</th>' +
 			'        <th st-ratio="40" st-sort="tableGetters().getNodeName">Name</th>' +
 			'        <th st-ratio="30" st-sort="tableGetters().getDescription">Description</th>' +
+			'        <th st-ratio="30" st-sort="tableGetters().getPermissions">Permissions</th>' +
 			'        <th st-ratio="10" st-sort="tableGetters().getMimeType">Type</th>' +
 			'        <th st-ratio="15" st-sort="tableGetters().getSize">Size</th>' +
 			'	</tr>' +
@@ -495,6 +555,7 @@
 			//'		<th><input st-search="nodeId" placeholder="search by node id" class="input-sm form-control" type="search"/></th>' +
 			'		<th><input st-search="nodeName" placeholder="search by name" class="input-sm form-control" type="search"/></th>' +	
 			'		<th><input st-search="desc" placeholder="search by description" class="input-sm form-control" type="search"/></th>' +
+			'		<th></th>' +
 			'		<th><input st-search="mimeType" placeholder="search by type" class="input-sm form-control" type="search"/></th>' +
 			'		<th><input st-search="fileSize" placeholder="search by size" class="input-sm form-control" type="search"/></th>' +
 			'	</tr>' +			
@@ -502,7 +563,7 @@
 			'	<tbody>' +
 			'	<tr st-select-row="pathResObj" st-select-mode="multiple" ng-repeat="pathResObj in resourceListView" >' +
 			'        <td>' +
-			'			<md-menu ng-if="pathResObj.resourceType === \'DIRECTORY\'">' +
+			'			<md-menu ng-if="pathResObj.resourceType === \'DIRECTORY\' && canExecutePathResource(pathResObj)">' +
 			'				<md-button aria-label="Open phone interactions menu" class="md-icon-button" ng-click="$mdOpenMenu(); $event.stopPropagation();">' +
 			'					<md-icon md-menu-origin md-svg-icon="/eastore-ui/secure/home/assets/img/icons/ic_more_horiz_24px.svg" style="height: 20px;"></md-icon>' +
 			'				</md-button>' +
@@ -514,7 +575,7 @@
 			'					</md-menu-item>' +			
 			'				</md-menu-content>' +		
 			'			</md-menu>' +
-			'			<md-menu ng-if="pathResObj.resourceType === \'FILE\'">' +
+			'			<md-menu ng-if="pathResObj.resourceType === \'FILE\'  && canExecutePathResource(pathResObj)">' +
 			'				<md-button aria-label="Open phone interactions menu" class="md-icon-button" ng-click="$mdOpenMenu(); $event.stopPropagation();">' +
 			'					<md-icon md-menu-origin md-svg-icon="/eastore-ui/secure/home/assets/img/icons/ic_more_horiz_24px.svg" style="height: 20px;"></md-icon>' +
 			'				</md-button>' +
@@ -529,15 +590,19 @@
 			'        </td>' +			
 			//'		 <td><md-button class=\"md-raised\" ng-click=\"viewChildResources(pathResObj);  $event.stopPropagation();\">Download</md-button></td>' +		
 			//'      <td>{{ pathResObj.nodeId }}</td>' +
-			'        <td><a href ng-click=\"viewChildResources(storeViewObj, pathResObj);  $event.stopPropagation();\">{{ pathResObj.nodeName }}</a></td>' +
+			'        <td>' +
+			'           <a href ng-click=\"viewChildResources(storeViewObj, pathResObj);  $event.stopPropagation();\" ng-if=\"canReadPathResource(pathResObj);\">{{ pathResObj.nodeName }}</a>' +
+			'           <span ng-if=\"!canReadPathResource(pathResObj);\" ng-mouseover=\"pathResObj.showTip = true\">{{ pathResObj.nodeName }}<md-tooltip md-visible=\"pathResObj.showTip\" md-direction=\"right\">No read access</md-tooltip></span></a>' +
+			'        </td>' +
 			'        <td>{{ pathResObj.desc }}</td>' +
+			'        <td>{{ getPermissionDetails(pathResObj) }}</td>' +
 			'        <td>{{ pathResObj.resourceType === \'FILE\' ? pathResObj.mimeType : \'directory\' }}</td>' +
 			'        <td>{{ pathResObj.resourceType === \'FILE\' ? humanFileSize(pathResObj.fileSize, true) : \'\' }}</td>' +
 			'	</tr>' +
 			'	</tbody>' +
 			'	<tfoot>' +
 			'		<tr>' +		
-			'			<td colspan="5" class="text-center">' +
+			'			<td colspan="6" class="text-center">' +
 			'				<div st-pagination="" st-items-by-page="20" st-displayed-pages="15"></div>' +
 			'			</td>' +
 			'		</tr>' +

@@ -690,7 +690,10 @@
 			
 			// cut selected resources
 			this.cutSelectedResources = function(sourceStore, sourceDirectory, pathResources){
-				var items = this.getSelectedPathResources(pathResources);
+				
+				// require read and write permission on pathresources when performing a cut operation
+				var items = this.getSelectedPathResources(pathResources, true, true, false);
+				
 				resourceClipboardService.setOperation('cut');
 				resourceClipboardService.setSourceStore(sourceStore);
 				resourceClipboardService.setSourceDirectory(sourceDirectory);
@@ -699,7 +702,10 @@
 
 			// copy selected resources
 			this.copySelectedResources = function(sourceStore, sourceDirectory, pathResources){
-				var items = this.getSelectedPathResources(pathResources);
+				
+				// require read permission on pathresources when performing a copy operation
+				var items = this.getSelectedPathResources(pathResources, true, false, false);
+				
 				resourceClipboardService.setOperation('copy');
 				resourceClipboardService.setSourceStore(sourceStore);
 				resourceClipboardService.setSourceDirectory(sourceDirectory);
@@ -709,7 +715,8 @@
 			// delete selected resources
 			this.deleteSelectedResources = function(sourceStore, sourceDirectory, pathResources){
 
-				var resourcesToDelete = this.getSelectedPathResources(pathResources);
+				// require read & write on pathresources when performing a delete operation
+				var resourcesToDelete = this.getSelectedPathResources(pathResources, true, true, false);
 				
 				var thisCtrl = this;
 				
@@ -994,8 +1001,8 @@
 			
 			};		
 			
-			// get all selected items n the collection of pathResources
-			this.getSelectedPathResources = function(pathResources, type){
+			/*
+			this.getSelectedPathResources = function(pathResources){
 				var items = [];
 				for(var i = 0; i<pathResources.length; i++){
 					if(pathResources[i].isSelected){
@@ -1003,9 +1010,60 @@
 					}
 				}
 				return items;
-			};			
+			};
+			*/
 
-			// get all selected items, of the specified type, in the collection of pathResources
+			/**
+			 * Get all selected items in the collection of pathResources
+			 *
+			 * pathResources - the array of PathResources to iterate over
+			 * requireRead - resource canRead bit must also be true
+			 * requireWrite - resource canWrite bit must also be true
+			 * requireExecute - resource canExecute bit must also be true
+			 */
+			this.getSelectedPathResources = function(pathResources, requireRead, requireWrite, requireExecute){
+				var items = [];
+				for(var i = 0; i<pathResources.length; i++){
+					if(pathResources[i].isSelected){
+						if(requireRead && requireWrite && requireExecute){
+							if(pathResources[i].canRead && pathResources[i].canWrite && pathResources[i].canExecute && pathResources[i].canRead === true && pathResources[i].canWrite === true && pathResources[i].canExecute === true){
+								items.push(pathResources[i]);
+							}
+						}else if(requireRead && requireWrite){
+							if(pathResources[i].canRead && pathResources[i].canWrite && pathResources[i].canRead === true && pathResources[i].canWrite === true){
+								items.push(pathResources[i]);
+							}							
+						}else if(requireRead && requireExecute){
+							if(pathResources[i].canRead && pathResources[i].canExecute && pathResources[i].canRead === true && pathResources[i].canExecute === true){
+								items.push(pathResources[i]);
+							}							
+						}else if(requireWrite && requireExecute){
+							if(pathResources[i].canWrite && pathResources[i].canExecute && pathResources[i].canWrite === true && pathResources[i].canExecute === true){
+								items.push(pathResources[i]);
+							}							
+						}else if(requireRead){
+							if(pathResources[i].canRead && pathResources[i].canRead === true){
+								items.push(pathResources[i]);
+							}							
+						}else if(requireWrite){
+							if(pathResources[i].canWrite && pathResources[i].canWrite === true){
+								items.push(pathResources[i]);
+							}								
+						}else if(requireExecute){
+							if(pathResources[i].canExecute && pathResources[i].canExecute === true){
+								items.push(pathResources[i]);
+							}								
+						}else{
+							items.push(pathResources[i]);
+						}
+					}
+				}
+				return items;
+			};				
+
+			/**			
+			 * get all selected items, of the specified type, in the collection of pathResources
+			 */
 			this.getSelectedPathResourcesType = function(pathResources, type){
 				var items = [];
 				for(var i = 0; i<pathResources.length; i++){
@@ -1016,7 +1074,9 @@
 				return items;
 			};
 			
-			// return true if any of the resources are selected in collection of path resources
+			/**			
+			 * return true if any of the resources are selected in collection of path resources
+			 */
 			this.haveSelectedPathResource = function(pathResources){
 				for(var i = 0; i<pathResources.length; i++){
 					if(pathResources[i].isSelected){
@@ -1026,7 +1086,9 @@
 				return false;
 			};			
 			
-			// return true if any of the resources, of the specified type, are selected in collection of path resources
+			/**			
+			 * return true if any of the resources, of the specified type, are selected in collection of path resources
+			 */
 			this.haveSelectedPathResourceType = function(pathResources, type){
 				for(var i = 0; i<pathResources.length; i++){
 					if(pathResources[i].resourceType === type && pathResources[i].isSelected){
@@ -1036,7 +1098,9 @@
 				return false;
 			};
 			
-			// unselect any selected resources in the collection of path resources
+			/**			
+			 * unselect any selected resources in the collection of path resources
+			 */
 			this.unselectPathResource = function(pathResources){
 				for(var i = 0; i<pathResources.length; i++){
 					if(pathResources[i].isSelected){
@@ -1045,7 +1109,9 @@
 				}	
 			};			
 
-			// unselect any selected resources, of the specified type, in the collection of path resources
+			/**			
+			 *  unselect any selected resources, of the specified type, in the collection of path resources
+			 */
 			this.unselectPathResourceType = function(pathResources, type){
 				for(var i = 0; i<pathResources.length; i++){
 					if(pathResources[i].resourceType === type && pathResources[i].isSelected){
@@ -1054,7 +1120,9 @@
 				}	
 			};
 			
-			// iterate over the collection of path resources an return true if any of them are of the specified type
+			/**			
+			 * iterate over the collection of path resources an return true if any of them are of the specified type
+			 */
 			this.havePathResourceType = function(pathResources, type){
 				for(var i = 0; i<pathResources.length; i++){
 					if(pathResources[i].resourceType === type){
