@@ -7,6 +7,7 @@ import java.util.List;
 import javax.activation.DataHandler;
 
 import org.eamrf.core.logging.stereotype.InjectLogger;
+import org.eamrf.eastoreui.core.aop.profiler.MethodTimer;
 import org.eamrf.eastoreui.core.exception.ServiceException;
 import org.eamrf.eastoreui.core.model.file.FileResponse;
 import org.eamrf.eastoreui.core.service.security.GatekeeperService;
@@ -147,6 +148,7 @@ public class UIService {
      * @param dataHandler - interface to the binary data for the file
      * @throws ServiceException
      */
+    @MethodTimer
     public String forwardUpload(Long storeId, Long dirNodeId, String fileName, DataHandler dataHandler) throws ServiceException {
     	
     	return storeService.uploadFile(dirNodeId, fileName, dataHandler);

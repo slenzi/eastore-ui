@@ -24,6 +24,9 @@
 		<!-- logging dependencies -->
 		<version.logback>1.1.7</version.logback>
 		
+		<!-- aspectj -->
+		<version.aspectj>1.8.13</version.aspectj>
+		
 		<!-- javax dependencies -->
 		<version.javax.servlet>3.1.0</version.javax.servlet>
 		<version.javax.mail>1.5.5</version.javax.mail>
@@ -136,6 +139,13 @@
 			<version>${version.javax.servlet}</version>
 			<scope>provided</scope>
 		</dependency>
+		
+		<!-- https://mvnrepository.com/artifact/org.aspectj/aspectjweaver -->
+		<dependency>
+		    <groupId>org.aspectj</groupId>
+		    <artifactId>aspectjweaver</artifactId>
+		    <version>${version.aspectj}</version>
+		</dependency>		
 		
 		<dependency>
 			<groupId>com.sun.mail</groupId>

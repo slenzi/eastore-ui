@@ -7,6 +7,7 @@ import javax.activation.DataHandler;
 
 import org.eamrf.core.logging.stereotype.InjectLogger;
 import org.eamrf.core.util.StringUtil;
+import org.eamrf.eastoreui.core.aop.profiler.MethodTimer;
 import org.eamrf.eastoreui.core.exception.ServiceException;
 import org.eamrf.eastoreui.core.model.file.FileResponse;
 import org.eamrf.eastoreui.web.jaxrs.eastore.client.EAStoreJsonClient;
@@ -172,6 +173,7 @@ public class StoreService {
 	 * @return
 	 * @throws ServiceException
 	 */
+    @MethodTimer
 	public String uploadFile(Long dirNodeId, String fileName, DataHandler dataHandler) throws ServiceException {
 		
 		logger.info(StoreService.class.getSimpleName() + " uploadFile(...) called");
