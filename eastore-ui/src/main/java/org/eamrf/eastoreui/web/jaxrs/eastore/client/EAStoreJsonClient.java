@@ -43,15 +43,15 @@ public class EAStoreJsonClient {
 	 */
 	private void initializeClient(String url, String username, String password) {
 		
-		logger.info("Initializing " + EAStoreJsonClient.class.getSimpleName());
+		logger.debug("Initializing " + EAStoreJsonClient.class.getSimpleName());
 		
 		serviceUrl = url;
 		serviceUsr = username;
 		servicePwd = password;
 		
-		logger.info("ea-store url = " + serviceUrl);
-		logger.info("ea-store usr = " + serviceUsr);
-		logger.info("ea-store pwd = " + "*********");
+		logger.debug("ea-store url = " + serviceUrl);
+		logger.debug("ea-store usr = " + serviceUsr);
+		logger.debug("ea-store pwd = " + "*********");
 		
 		JacksonJsonProvider json = new JacksonJsonProvider();
 		
@@ -87,7 +87,7 @@ public class EAStoreJsonClient {
 	 */
 	public String echo(String message) throws WebServiceException {
 		
-		logger.info("Calling " + EAStoreJsonClient.class.getSimpleName() + " echo method");
+		logger.debug("Calling " + EAStoreJsonClient.class.getSimpleName() + " echo method");
 		
 		resetClient();
 		
@@ -117,7 +117,7 @@ public class EAStoreJsonClient {
 	 */
 	public String getPathResourceById(Long nodeId, String userId) throws WebServiceException {
 		
-		logger.info("Calling " + EAStoreJsonClient.class.getSimpleName() + " getPathResourceById method");
+		logger.debug("Calling " + EAStoreJsonClient.class.getSimpleName() + " getPathResourceById method");
 		
 		resetClient();
 		
@@ -146,7 +146,7 @@ public class EAStoreJsonClient {
 	 */
 	public String getPathResourceByPath(String storeName, String relPath, String userId) throws WebServiceException {
 
-		logger.info("Calling " + EAStoreJsonClient.class.getSimpleName() + " getPathResourceByPath method");
+		logger.debug("Calling " + EAStoreJsonClient.class.getSimpleName() + " getPathResourceByPath method");
 		
 		resetClient();
 		
@@ -177,7 +177,7 @@ public class EAStoreJsonClient {
 	 */
 	public String getStores() throws WebServiceException {
 		
-		logger.info("Calling " + EAStoreJsonClient.class.getSimpleName() + " getStores method");
+		logger.debug("Calling " + EAStoreJsonClient.class.getSimpleName() + " getStores method");
 		
 		resetClient();
 		
@@ -204,7 +204,7 @@ public class EAStoreJsonClient {
 	 */
 	public String getStoreByName(String storeName) throws WebServiceException {
 		
-		logger.info("Calling " + EAStoreJsonClient.class.getSimpleName() + " getStoreByName method");
+		logger.debug("Calling " + EAStoreJsonClient.class.getSimpleName() + " getStoreByName method");
 		
 		resetClient();
 		
@@ -212,7 +212,7 @@ public class EAStoreJsonClient {
 		client.path(path);
 		Response resp = client.get();
 		URI currentUri = client.getCurrentURI();
-		logger.info("Client URI = " + currentUri.toString());
+		logger.debug("Client URI = " + currentUri.toString());
 		
 		if(resp.getStatus() != Response.Status.OK.getStatusCode()){
 			throw new WebServiceException(WebExceptionType.CODE_IO_ERROR, 
@@ -235,7 +235,7 @@ public class EAStoreJsonClient {
 	 */
 	public String getBreadcrumbsByNodeId(Long nodeId, String userId) throws WebServiceException {
 		
-		logger.info("Calling " + EAStoreJsonClient.class.getSimpleName() + " getBreadcrumbsByNodeId method");
+		logger.debug("Calling " + EAStoreJsonClient.class.getSimpleName() + " getBreadcrumbsByNodeId method");
 		
 		resetClient();
 		
@@ -265,7 +265,7 @@ public class EAStoreJsonClient {
 	 */
 	public String getBreadcrumbsByPath(String storeName, String relPath, String userId) throws WebServiceException {
 		
-		logger.info("Calling " + EAStoreJsonClient.class.getSimpleName() + " getBreadcrumbsByPath method");
+		logger.debug("Calling " + EAStoreJsonClient.class.getSimpleName() + " getBreadcrumbsByPath method");
 		
 		resetClient();
 		
@@ -295,7 +295,7 @@ public class EAStoreJsonClient {
 	 */
 	public String getChildPathResourceByPath(String storeName, String relPath, String userId) throws WebServiceException {
 		
-		logger.info("Calling " + EAStoreJsonClient.class.getSimpleName() + " getChildPathResourceByPath method");
+		logger.debug("Calling " + EAStoreJsonClient.class.getSimpleName() + " getChildPathResourceByPath method");
 		
 		resetClient();
 		

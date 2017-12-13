@@ -49,7 +49,7 @@ public class TestResource extends BaseResourceHandler {
 	@Produces(MediaType.APPLICATION_JSON)    
     public Response echo(@QueryParam("message") String message) throws WebServiceException {
     	
-    	logger.info(TestResource.class.getSimpleName() + " echo() called");
+    	logger.debug(TestResource.class.getSimpleName() + " echo() called");
     	
     	String response;
 		try {
@@ -58,7 +58,7 @@ public class TestResource extends BaseResourceHandler {
 			throw new WebServiceException(WebExceptionType.CODE_IO_ERROR, e.getMessage(), e);
 		}
     
-    	logger.info(response);
+    	logger.debug(response);
     	
     	return Response.ok(response, MediaType.APPLICATION_JSON).build();
     	

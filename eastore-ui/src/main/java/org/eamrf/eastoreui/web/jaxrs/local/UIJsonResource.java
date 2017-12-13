@@ -48,7 +48,7 @@ public class UIJsonResource extends BaseResourceHandler {
 	@Produces(MediaType.APPLICATION_JSON)      
     public List<Category> getGatekeeperCategories() throws WebServiceException {
     	
-    	logger.info(UIJsonResource.class.getSimpleName() + " getGatekeeperCategories(...) called");
+    	logger.debug(UIJsonResource.class.getSimpleName() + " getGatekeeperCategories(...) called");
     	
     	List<Category> categories = null;
     	try {
@@ -74,7 +74,7 @@ public class UIJsonResource extends BaseResourceHandler {
 	@Produces(MediaType.APPLICATION_JSON)      
     public Category getGatekeeperCategoryForGroup(@QueryParam("groupCode") String groupCode) throws WebServiceException {
     	
-    	logger.info(UIJsonResource.class.getSimpleName() + " getGatekeeperCategoryForGroup(...) called");
+    	logger.debug(UIJsonResource.class.getSimpleName() + " getGatekeeperCategoryForGroup(...) called");
     	
     	Category cat = null;
     	try {
@@ -100,7 +100,7 @@ public class UIJsonResource extends BaseResourceHandler {
 	@Produces(MediaType.APPLICATION_JSON)    
     public Group getGroup(@QueryParam("groupCode") String groupCode) throws WebServiceException {
     	
-    	logger.info(UIJsonResource.class.getSimpleName() + " getGroup(...) called");
+    	logger.debug(UIJsonResource.class.getSimpleName() + " getGroup(...) called");
     	
     	Group group = null;
     	try {
@@ -125,7 +125,7 @@ public class UIJsonResource extends BaseResourceHandler {
 	@Produces(MediaType.APPLICATION_JSON)     
     public List<Group> getGatekeeperGroupsForCategory(@QueryParam("categoryCode") String categoryCode) throws WebServiceException {
     	
-    	logger.info(UIJsonResource.class.getSimpleName() + " getGatekeeperGroupsForCategory(...) called");
+    	logger.debug(UIJsonResource.class.getSimpleName() + " getGatekeeperGroupsForCategory(...) called");
     	
     	List<Group> groups = null;
     	try {
@@ -150,8 +150,8 @@ public class UIJsonResource extends BaseResourceHandler {
 	@Produces(MediaType.APPLICATION_JSON)    
     public Response getStoreByName(@QueryParam("storeName") String storeName) throws WebServiceException {
     	
-    	logger.info(UIJsonResource.class.getSimpleName() + " getStoreByName(...) called");
-    	logger.info("storeName = "+storeName);
+    	logger.debug(UIJsonResource.class.getSimpleName() + " getStoreByName(...) called");
+    	logger.debug("storeName = "+storeName);
     	
     	// TODO - should stores have their own access group? Perhaps we can simply use the access group on the root
     	// not of the store to decide whether or not a user as permission to access the store. If the user is a member
@@ -180,7 +180,7 @@ public class UIJsonResource extends BaseResourceHandler {
 	@Produces(MediaType.APPLICATION_JSON)    
     public Response stores() throws WebServiceException {
     	
-    	logger.info(UIJsonResource.class.getSimpleName() + " stores() called");
+    	logger.debug(UIJsonResource.class.getSimpleName() + " stores() called");
     	
     	// TODO - should stores have their own access group? Perhaps we can simply use the access group on the root
     	// not of the store to decide whether or not a user as permission to access the store. If the user is a member
@@ -212,7 +212,7 @@ public class UIJsonResource extends BaseResourceHandler {
 	@Produces(MediaType.APPLICATION_JSON) 
     public Response getPathResourceById(@QueryParam("nodeId") Long nodeId) throws WebServiceException {
     	
-    	logger.info(UIJsonResource.class.getSimpleName() + " stores() called");
+    	logger.debug(UIJsonResource.class.getSimpleName() + " stores() called");
     	
     	// TODO - no access restriction on fetching the meta data for a path resource. 
     	
@@ -242,7 +242,7 @@ public class UIJsonResource extends BaseResourceHandler {
     public Response getPathResourceByPath(
     		@QueryParam("storeName") String storeName, @QueryParam("relPath") String relPath) throws WebServiceException {
     	
-    	logger.info(UIJsonResource.class.getSimpleName() + " stores() called");
+    	logger.debug(UIJsonResource.class.getSimpleName() + " stores() called");
     	
     	// TODO - no access restriction on fetching the meta data for a path resource. 
     	
@@ -270,7 +270,7 @@ public class UIJsonResource extends BaseResourceHandler {
 	@Produces(MediaType.APPLICATION_JSON)    
     public Response breadcrumb(@QueryParam("nodeId") Long nodeId) throws WebServiceException {
     	
-    	logger.info(UIJsonResource.class.getSimpleName() + " breadcrumb() called");
+    	logger.debug(UIJsonResource.class.getSimpleName() + " breadcrumb() called");
     	
     	// TODO - no access restriction on fetching breadcrumb data
     	
@@ -300,9 +300,9 @@ public class UIJsonResource extends BaseResourceHandler {
     public Response breadcrumb(
     		@QueryParam("storeName") String storeName, @QueryParam("relPath") String relPath) throws WebServiceException {
     	
-    	logger.info(UIJsonResource.class.getSimpleName() + " breadcrumb() called");
+    	logger.debug(UIJsonResource.class.getSimpleName() + " breadcrumb() called");
     	
-    	logger.info("relPath = " + relPath);
+    	logger.debug("relPath = " + relPath);
     	
     	// TODO - no access restriction on fetching breadcrumb data
     	
@@ -332,9 +332,9 @@ public class UIJsonResource extends BaseResourceHandler {
     public Response loadRelativePath(
     		@QueryParam("storeName") String storeName, @QueryParam("relPath") String relPath) throws WebServiceException {
     	
-    	logger.info(UIJsonResource.class.getSimpleName() + " loadRelativePath() called");
+    	logger.debug(UIJsonResource.class.getSimpleName() + " loadRelativePath() called");
     	
-    	logger.info("relPath = " + relPath);
+    	logger.debug("relPath = " + relPath);
     	
     	String jsonReponse = null;
 		try {

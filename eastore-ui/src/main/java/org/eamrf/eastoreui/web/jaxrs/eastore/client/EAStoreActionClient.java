@@ -44,15 +44,15 @@ public class EAStoreActionClient {
 	
 	private void initializeClient(String url, String username, String password) {
 		
-		logger.info("Initializing " + EAStoreJsonClient.class.getSimpleName());
+		logger.debug("Initializing " + EAStoreJsonClient.class.getSimpleName());
 		
 		serviceUrl = url;
 		serviceUsr = username;
 		servicePwd = password;
 		
-		logger.info("ea-store url = " + serviceUrl);
-		logger.info("ea-store usr = " + serviceUsr);
-		logger.info("ea-store pwd = " + "*********");
+		logger.debug("ea-store url = " + serviceUrl);
+		logger.debug("ea-store usr = " + serviceUsr);
+		logger.debug("ea-store pwd = " + "*********");
 		
 		MultipartProvider multi = new MultipartProvider();
 		
@@ -94,7 +94,7 @@ public class EAStoreActionClient {
 	 */
 	public String uploadFile(Long dirNodeId, String fileName, DataHandler dataHandler, String userId) throws WebServiceException {
 		
-		logger.info("Calling " + EAStoreJsonClient.class.getSimpleName() + " uploadFile method");
+		logger.debug("Calling " + EAStoreJsonClient.class.getSimpleName() + " uploadFile method");
 		
 		resetClient();
 		
@@ -172,7 +172,7 @@ public class EAStoreActionClient {
 			String executeGroup1, 
 			String userId) throws WebServiceException {
 		
-		logger.info("Calling " + EAStoreActionClient.class.getSimpleName() + " addDirectory method");
+		logger.debug("Calling " + EAStoreActionClient.class.getSimpleName() + " addDirectory method");
 		
 		resetClient();
 		
@@ -226,7 +226,7 @@ public class EAStoreActionClient {
 			String fileDesc, 
 			String userId) throws WebServiceException {
 		
-		logger.info("Calling " + EAStoreActionClient.class.getSimpleName() + " updateFile method");
+		logger.debug("Calling " + EAStoreActionClient.class.getSimpleName() + " updateFile method");
 		
 		resetClient();
 		
@@ -273,7 +273,7 @@ public class EAStoreActionClient {
 			String executeGroup1, 
 			String userId) throws WebServiceException {
 		
-		logger.info("Calling " + EAStoreActionClient.class.getSimpleName() + " updateDirectory method");
+		logger.debug("Calling " + EAStoreActionClient.class.getSimpleName() + " updateDirectory method");
 		
 		resetClient();
 		
@@ -321,7 +321,7 @@ public class EAStoreActionClient {
 	 */
 	public String copyFile(Long fileNodeId, Long dirNodeId, Boolean replaceExisting, String userId) throws WebServiceException {
 		
-		logger.info("Calling " + EAStoreActionClient.class.getSimpleName() + " copyFile(...) method");
+		logger.debug("Calling " + EAStoreActionClient.class.getSimpleName() + " copyFile(...) method");
 		
 		resetClient();
 		
@@ -359,7 +359,7 @@ public class EAStoreActionClient {
 	 */
 	public String copyDirectory(Long copyDirNodeId, Long destDirNodeId, Boolean replaceExisting, String userId) throws WebServiceException {
 		
-		logger.info("Calling " + EAStoreActionClient.class.getSimpleName() + " copyDirectory(...) method");
+		logger.debug("Calling " + EAStoreActionClient.class.getSimpleName() + " copyDirectory(...) method");
 		
 		resetClient();
 		
@@ -397,7 +397,7 @@ public class EAStoreActionClient {
 	 */
 	public String moveFile(Long fileNodeId, Long dirNodeId, Boolean replaceExisting, String userId) throws WebServiceException {
 		
-		logger.info("Calling " + EAStoreActionClient.class.getSimpleName() + " moveFile(...) method");
+		logger.debug("Calling " + EAStoreActionClient.class.getSimpleName() + " moveFile(...) method");
 		
 		resetClient();
 		
@@ -435,7 +435,7 @@ public class EAStoreActionClient {
 	 */
 	public String moveDirectory(Long moveDirNodeId, Long destDirNodeId, Boolean replaceExisting, String userId) throws WebServiceException {
 		
-		logger.info("Calling " + EAStoreActionClient.class.getSimpleName() + " moveDirectory(...) method");
+		logger.debug("Calling " + EAStoreActionClient.class.getSimpleName() + " moveDirectory(...) method");
 		
 		resetClient();
 		
@@ -471,7 +471,7 @@ public class EAStoreActionClient {
 	 */
 	public String removeFile(Long fileNodeId, String userId) throws WebServiceException {
 		
-		logger.info("Calling " + EAStoreActionClient.class.getSimpleName() + " removeFile(...) method");
+		logger.debug("Calling " + EAStoreActionClient.class.getSimpleName() + " removeFile(...) method");
 		
 		resetClient();
 		
@@ -505,7 +505,7 @@ public class EAStoreActionClient {
 	 */
 	public String removeDirectory(Long dirNodeId, String userId) throws WebServiceException {
 		
-		logger.info("Calling " + EAStoreActionClient.class.getSimpleName() + " removeDirectory(...) method");
+		logger.debug("Calling " + EAStoreActionClient.class.getSimpleName() + " removeDirectory(...) method");
 		
 		resetClient();
 		
@@ -538,7 +538,7 @@ public class EAStoreActionClient {
 	 */
 	public FileResponse getFileReponse(Long fileId, String userId) throws WebServiceException {
 		
-		logger.info("Calling " + EAStoreJsonClient.class.getSimpleName() + " getFile method");
+		logger.debug("Calling " + EAStoreJsonClient.class.getSimpleName() + " getFile method");
 		
 		resetClient();
 		
@@ -591,7 +591,7 @@ public class EAStoreActionClient {
 			String writeGroup1, 
 			String executeGroup1) throws WebServiceException {
 
-		logger.info("Calling " + EAStoreActionClient.class.getSimpleName() + " addStore method");
+		logger.debug("Calling " + EAStoreActionClient.class.getSimpleName() + " addStore method");
 		
 		resetClient();
 		

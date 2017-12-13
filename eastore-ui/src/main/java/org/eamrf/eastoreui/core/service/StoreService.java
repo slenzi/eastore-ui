@@ -69,7 +69,7 @@ public class StoreService {
 	 */
 	public String echo(String message) throws ServiceException {
 		
-		logger.info(StoreService.class.getSimpleName() + " echo() called");
+		logger.debug(StoreService.class.getSimpleName() + " echo() called");
 		
 		EAStoreJsonClient client = eaStoreClientProvider.getJsonClient();
 		
@@ -95,7 +95,7 @@ public class StoreService {
 	 */
     public String addDirectory(Long dirNodeId, String dirName, String dirDesc, String readGroup1, String writeGroup1, String executeGroup1) throws ServiceException {
     	
-    	logger.info(StoreService.class.getSimpleName() + " addDirectory(...) called");
+    	logger.debug(StoreService.class.getSimpleName() + " addDirectory(...) called");
     	
 		EAStoreActionClient client = eaStoreClientProvider.getActionClient();
 		
@@ -120,7 +120,7 @@ public class StoreService {
      */
     public String updateFile(Long fileNodeId, String fileName, String fileDesc) throws ServiceException {
     	
-    	logger.info(StoreService.class.getSimpleName() + " updateFile(...) called");
+    	logger.debug(StoreService.class.getSimpleName() + " updateFile(...) called");
     	
 		EAStoreActionClient client = eaStoreClientProvider.getActionClient();
 		
@@ -148,7 +148,7 @@ public class StoreService {
      */
     public String updateDirectory(Long dirNodeId, String dirName, String dirDesc, String readGroup1, String writeGroup1, String executeGroup1) throws ServiceException {
     	
-    	logger.info(StoreService.class.getSimpleName() + " updateDirectory(...) called");
+    	logger.debug(StoreService.class.getSimpleName() + " updateDirectory(...) called");
     	
 		EAStoreActionClient client = eaStoreClientProvider.getActionClient();
 		
@@ -176,7 +176,7 @@ public class StoreService {
     @MethodTimer
 	public String uploadFile(Long dirNodeId, String fileName, DataHandler dataHandler) throws ServiceException {
 		
-		logger.info(StoreService.class.getSimpleName() + " uploadFile(...) called");
+		logger.debug(StoreService.class.getSimpleName() + " uploadFile(...) called");
 		
 		EAStoreActionClient client = eaStoreClientProvider.getActionClient();
 		
@@ -200,7 +200,7 @@ public class StoreService {
 	 */
 	public String getPathResourceById(Long nodeId) throws ServiceException {
 		
-		logger.info(StoreService.class.getSimpleName() + " getPathResourceById(...) called");
+		logger.debug(StoreService.class.getSimpleName() + " getPathResourceById(...) called");
 		
 		EAStoreJsonClient client = eaStoreClientProvider.getJsonClient();
 		
@@ -223,7 +223,7 @@ public class StoreService {
 	 */
 	public String getPathResourceByPath(String storeName, String relPath) throws ServiceException {
 
-		logger.info(StoreService.class.getSimpleName() + " getPathResourceByPath(...) called");
+		logger.debug(StoreService.class.getSimpleName() + " getPathResourceByPath(...) called");
 		
 		EAStoreJsonClient client = eaStoreClientProvider.getJsonClient();
 		
