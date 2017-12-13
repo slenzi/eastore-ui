@@ -125,6 +125,12 @@ public class UIActionResource extends BaseResourceHandler {
     @Consumes(MediaType.MULTIPART_FORM_DATA)
     public Response addFile(MultipartBody body) throws WebServiceException {
     	
+    	// TODO
+    	// Consider creating a set of thread executors and run the upload code on another thread so
+    	// the method can return right away. If there is any error for the upload code we'll have
+    	// to somehow communicate that back to the client (socks messaging?)
+    	//
+    	
     	logger.info("Processing incoming upload");
     	
     	List<Attachment> attachments = body.getAllAttachments();
