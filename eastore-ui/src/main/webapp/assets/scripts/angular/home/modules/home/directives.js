@@ -69,6 +69,10 @@
 					getDateCreated: function (storeObj) {
 						var dateCreated = new Date(storeObj.dateCreated);
 						return dateCreated.toString("MM/dd/yyyy hh:mm:ss tt");
+					},
+					getDateUpdated: function (storeObj) {
+						var dateUpdated = new Date(storeObj.dateUpdated);
+						return dateUpdated.toString("MM/dd/yyyy hh:mm:ss tt");
 					}						
 				}
 			};
@@ -92,7 +96,7 @@
 			'		 <th st-ratio="5">Menu</th>' +
 			'        <th st-ratio="50" st-sort="tableGetters().getStoreName">Name</th>' +
 			'        <th st-ratio="30" st-sort="tableGetters().getStoreDescription">Description</th>' +
-			'        <th st-ratio="15" st-sort="tableGetters().getDateCreated">Created</th>' +		
+			'        <th st-ratio="15" st-sort="tableGetters().getDateCreated">Created</th>' +
 			'	</tr>' +
 			'	<tr>' +
 			'		<th></th>' +
@@ -422,6 +426,14 @@
 					},
 					getPermissions: function(pathResObj){
 						return $scope.getPermissionDetails(pathResObj);
+					},
+					getDateCreated: function (pathResObj) {
+						var dateCreated = new Date(pathResObj.dateCreated);
+						return dateCreated.toString("MM/dd/yyyy hh:mm:ss tt");
+					},
+					getDateUpdated: function (pathResObj) {
+						var dateUpdated = new Date(pathResObj.dateUpdated);
+						return dateUpdated.toString("MM/dd/yyyy hh:mm:ss tt");
 					}
 				}
 			};
@@ -544,11 +556,12 @@
 			'	<tr>' +
 			'		 <th st-ratio="5">Menu</th>' +
 			//'     <th st-sort="tableGetters().getNodeId">ID</th>' +
-			'        <th st-ratio="40" st-sort="tableGetters().getNodeName">Name</th>' +
-			'        <th st-ratio="30" st-sort="tableGetters().getDescription">Description</th>' +
-			'        <th st-ratio="30" st-sort="tableGetters().getPermissions">Permissions</th>' +
+			'        <th st-ratio="25" st-sort="tableGetters().getNodeName">Name</th>' +
+			'        <th st-ratio="20" st-sort="tableGetters().getDescription">Description</th>' +
+			'        <th st-ratio="20" st-sort="tableGetters().getPermissions">Permissions</th>' +
 			'        <th st-ratio="10" st-sort="tableGetters().getMimeType">Type</th>' +
-			'        <th st-ratio="15" st-sort="tableGetters().getSize">Size</th>' +
+			'        <th st-ratio="10" st-sort="tableGetters().getSize">Size</th>' +
+			'        <th st-ratio="10" st-sort="tableGetters().getDateUpdated">Updated Date</th>' +
 			'	</tr>' +
 			'	<tr>' +
 			'		<th></th>' +
@@ -558,6 +571,7 @@
 			'		<th></th>' +
 			'		<th><input st-search="mimeType" placeholder="search by type" class="input-sm form-control" type="search"/></th>' +
 			'		<th><input st-search="fileSize" placeholder="search by size" class="input-sm form-control" type="search"/></th>' +
+			'		<th><input st-search="dateUpdated" placeholder="search by updated date" class="input-sm form-control" type="search"/></th>' +
 			'	</tr>' +			
 			'	</thead>' +
 			'	<tbody>' +
@@ -594,15 +608,16 @@
 			'           <a href ng-click=\"viewChildResources(storeViewObj, pathResObj);  $event.stopPropagation();\" ng-if=\"canReadPathResource(pathResObj);\">{{ pathResObj.nodeName }}</a>' +
 			'           <span ng-if=\"!canReadPathResource(pathResObj);\" ng-mouseover=\"pathResObj.showTip = true\">{{ pathResObj.nodeName }}<md-tooltip md-visible=\"pathResObj.showTip\" md-direction=\"right\">No read access</md-tooltip></span></a>' +
 			'        </td>' +
-			'        <td>{{ pathResObj.desc }}</td>' +
+			'        <td style="min-width: 200px;">{{ pathResObj.desc }}</td>' +
 			'        <td>{{ getPermissionDetails(pathResObj) }}</td>' +
 			'        <td>{{ pathResObj.resourceType === \'FILE\' ? pathResObj.mimeType : \'directory\' }}</td>' +
-			'        <td>{{ pathResObj.resourceType === \'FILE\' ? humanFileSize(pathResObj.fileSize, true) : \'\' }}</td>' +
+			'        <td style="white-space: nowrap;">{{ pathResObj.resourceType === \'FILE\' ? humanFileSize(pathResObj.fileSize, true) : \'\' }}</td>' +
+			'        <td style="white-space: nowrap;">{{tableGetters().getDateUpdated(pathResObj)}}</td>' +
 			'	</tr>' +
 			'	</tbody>' +
 			'	<tfoot>' +
 			'		<tr>' +		
-			'			<td colspan="6" class="text-center">' +
+			'			<td colspan="7" class="text-center">' +
 			'				<div st-pagination="" st-items-by-page="20" st-displayed-pages="15"></div>' +
 			'			</td>' +
 			'		</tr>' +
