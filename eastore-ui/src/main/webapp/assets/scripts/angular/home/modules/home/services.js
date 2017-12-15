@@ -423,7 +423,7 @@
 			
 			$log.debug('Calling jax-rs _moveDirectory service method');
 			
-			return eastoreUiActionService.copyDirectory(
+			return eastoreUiActionService.moveDirectory(
 					{
 						moveDirNodeId : moveDirNodeId,
 						destDirNodeId : destDirNodeId,

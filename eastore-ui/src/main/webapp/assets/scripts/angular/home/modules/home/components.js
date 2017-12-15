@@ -794,7 +794,7 @@
 
 			};			
 			
-			// return tre/false if the clipboard has resources
+			// return true/false if the clipboard has resources
 			this.haveResourcesOnClipboard = function(){
 				return resourceClipboardService.haveResources();
 			};
