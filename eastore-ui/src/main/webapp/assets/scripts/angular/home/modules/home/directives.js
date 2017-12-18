@@ -82,8 +82,22 @@
 			};
 			
 			$scope.editStore = function(storeObj){
-				alert('Edit functionality coming soon!');
+				$scope.storeEditClickHandler( {theStore: storeObj} );
 			};
+			
+			$scope.canReadStore = function(storeObj){
+				if(storeObj && storeObj.rootDir && storeObj.rootDir.canRead === true){
+					return true;
+				}
+				return false;
+			};
+			
+			$scope.canExecuteStore = function(storeObj){
+				if(storeObj && storeObj.rootDir && storeObj.rootDir.canExecute === true){
+					return true;
+				}
+				return false;
+			};			
 			
 		}];
 		
@@ -108,7 +122,7 @@
 			'	<tbody>' +
 			'	<tr st-select-row="storeObj" st-select-mode="multiple" ng-repeat="storeObj in storeListView">' +	
 			'        <td>' +
-			'			<md-menu >' +
+			'			<md-menu ng-if=\"canExecuteStore(storeObj);\">' +
 			'				<md-button aria-label="Open phone interactions menu" class="md-icon-button" ng-click="$mdOpenMenu(); $event.stopPropagation();">' +
 			'					<md-icon md-menu-origin md-svg-icon="/eastore-ui/secure/home/assets/img/icons/ic_more_horiz_24px.svg" style="height: 20px;"></md-icon>' +
 			'				</md-button>' +
@@ -121,7 +135,10 @@
 			'				</md-menu-content>' +		
 			'			</md-menu>' +
 			'        </td>' +			
-			'        <td><a href ng-click=\"viewStore(storeObj);  $event.stopPropagation();\">{{storeObj.name}}</a></td>' +
+			'        <td>' +
+			'           <a href ng-click=\"viewStore(storeObj);  $event.stopPropagation();\"  ng-if=\"canReadStore(storeObj);\">{{ storeObj.name }}</a>' +
+			'           <span ng-if=\"!canReadStore(storeObj);\" ng-mouseover=\"storeObj.showTip = true\">{{ storeObj.name }}<md-tooltip md-visible=\"storeObj.showTip\" md-direction=\"right\">No read access</md-tooltip></span>' +
+			'        </td>' +
 			'        <td>{{storeObj.description}}</td>' +
 			'        <td>{{tableGetters().getDateCreated(storeObj)}}</td>' +
 			'	</tr>' +
@@ -139,7 +156,8 @@
 			restrict: 'AE',
 			scope: {
 				storeList: '=',
-				storeClickHandler: '&'
+				storeClickHandler: '&',
+				storeEditClickHandler: '&'
 			},
 			controller: controller,
 			template: template
@@ -606,7 +624,7 @@
 			//'      <td>{{ pathResObj.nodeId }}</td>' +
 			'        <td>' +
 			'           <a href ng-click=\"viewChildResources(storeViewObj, pathResObj);  $event.stopPropagation();\" ng-if=\"canReadPathResource(pathResObj);\">{{ pathResObj.nodeName }}</a>' +
-			'           <span ng-if=\"!canReadPathResource(pathResObj);\" ng-mouseover=\"pathResObj.showTip = true\">{{ pathResObj.nodeName }}<md-tooltip md-visible=\"pathResObj.showTip\" md-direction=\"right\">No read access</md-tooltip></span></a>' +
+			'           <span ng-if=\"!canReadPathResource(pathResObj);\" ng-mouseover=\"pathResObj.showTip = true\">{{ pathResObj.nodeName }}<md-tooltip md-visible=\"pathResObj.showTip\" md-direction=\"right\">No read access</md-tooltip></span>' +
 			'        </td>' +
 			'        <td style="min-width: 200px;">{{ pathResObj.desc }}</td>' +
 			'        <td>{{ getPermissionDetails(pathResObj) }}</td>' +

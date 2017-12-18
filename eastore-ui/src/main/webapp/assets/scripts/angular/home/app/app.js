@@ -119,6 +119,9 @@
 			// the current working store
 			store : null,
 			
+			// store for edit (probably could have used 'store' attribute)
+			editStore : null,
+			
 			// the current working directory path resource within the current working store
 			currDirResource : null,
 			
@@ -748,10 +751,154 @@
 				}					
 			}				
 			
+		);
+
+		//
+		// edit store state - show edit store form
+		//
+		$stateProvider.state(
+		
+			'editstore', {
+				parent: 'root',
+				url: '/editstore{urlPath:any}', // don't really need the 'urlPath:any' part. Remove and test later.
+				views : {
+					uicontent : {
+						component : 'editStoreContentComponent' // when 'editstore' state is active, render 'editStoreContentComponent' into view with name 'uicontent'
+					},
+					uiheader : {
+						component : 'editStoreHeaderComponent' // when 'editstore' state is active, render 'editStoreHeaderComponent' into view with name 'uiheader'
+					},
+					uititle : {
+						//template : 'Protocol Listing'
+						component : 'titleHeaderComponent' // when 'editstore' state is active, render 'titleHeaderComponent' into view with name 'uititle'
+					},
+					uileftmenu : {
+						//template : 'Protocol Listing'
+						component : 'leftMenuComponent' // when 'editstore' state is active, render 'leftMenuComponent' into view with name 'uileftmenu'
+					}
+				},
+				params : defaultStateParams,
+				resolve : {
+					headerTitle : function ($log, $stateParams){
+						
+						$log.debug('------------ [editstore state] resolving headerTitle');					
+						
+						return 'Edit Store Form';
+						
+					},
+					
+					// the store the user is editing
+					storeToEdit : function($log, $stateParams, resolveService) {
+						
+						$log.debug('------------ [editstore state] resolving store to edit');
+					
+						return resolveService.resolveEditStore($stateParams);
+					
+					},						
+					
+					gatekeeperCategories : function ($log, $stateParams, resolveService) {
+						
+						$log.debug('------------ [editstore state] resolving gatekeeper categories');
+						
+						return resolveService.resolveGatekeeperCategories();
+						
+					},
+					
+					editStoreModel : function ($log, $stateParams, resolveService, storeToEdit) {
+						
+						$log.debug('------------ [editstore state] resolving edit store model for display');
+
+						var editStoreModel = {
+								
+							storeId: storeToEdit.id,
+							storeName: storeToEdit.name,
+							storeDesc: storeToEdit.description,
+							storePath: storeToEdit.path,
+							
+							rootDir : {
+								
+								dirId : storeToEdit.rootDir.nodeId,
+								dirName : storeToEdit.rootDir.nodeName,
+								dirDescription: storeToEdit.rootDir.desc,
+								
+								readCat1: '',
+								readGroup1: '',
+								
+								writeCat1: '',
+								writeGroup1: '',
+								
+								executeCat1: '',
+								executeGroup1: '',
+
+								groupsForReadCat1: [],
+								groupsForWriteCat1: [],
+								groupsForExecuteCat1: []							
+								
+							}
+							
+						}
+
+						// get read group, category for read group, and all groups for the category
+						if(storeToEdit.rootDir.readGroup1){
+							
+							resolveService.resolveGatekeeperGroupByGroupCode(storeToEdit.rootDir.readGroup1).then(function (data){
+								editStoreModel.rootDir.readGroup1 = data;
+							});							
+							resolveService.resolveGatekeeperCategoryByGroupCode(storeToEdit.rootDir.readGroup1).then(function (data){
+								editStoreModel.rootDir.readCat1 = data;
+							}).then(function(){
+								// run in another 'then' block because we have to wait for value 'editStoreModel.rootDir.readCat1' to resolve
+								resolveService.resolveGatekeeperGroupsForCategory(editStoreModel.rootDir.readCat1.categoryCode).then(function (data){
+									editStoreModel.rootDir.groupsForReadCat1 = data;
+								});								
+								
+							});							
+						}
+						
+						// get write group, category for write group, and all groups for the category
+						if(storeToEdit.rootDir.writeGroup1){
+							
+							resolveService.resolveGatekeeperGroupByGroupCode(storeToEdit.rootDir.writeGroup1).then(function (data){
+								editStoreModel.rootDir.writeGroup1 = data;
+							});							
+							resolveService.resolveGatekeeperCategoryByGroupCode(storeToEdit.rootDir.writeGroup1).then(function (data){
+								editStoreModel.rootDir.writeCat1 = data;
+							}).then(function(){
+								// run in another 'then' block because we have to wait for value 'editStoreModel.rootDir.writeCat1' to resolve
+								resolveService.resolveGatekeeperGroupsForCategory(editStoreModel.rootDir.writeCat1.categoryCode).then(function (data){
+									editStoreModel.rootDir.groupsForWriteCat1 = data;
+								});								
+								
+							});							
+						}
+						
+						// get execute group, category for execute group, and all groups for the category
+						if(storeToEdit.rootDir.executeGroup1){
+							resolveService.resolveGatekeeperGroupByGroupCode(storeToEdit.rootDir.executeGroup1).then(function (data){
+								editStoreModel.rootDir.executeGroup1 = data;
+							});								
+							resolveService.resolveGatekeeperCategoryByGroupCode(storeToEdit.rootDir.executeGroup1).then(function (data){
+								editStoreModel.rootDir.executeCat1 = data;
+							}).then(function(){
+								// run in another 'then' block because we have to wait for value 'editStoreModel.rootDir.executeCat1' to resolve
+								resolveService.resolveGatekeeperGroupsForCategory(editStoreModel.rootDir.executeCat1.categoryCode).then(function (data){
+									editStoreModel.rootDir.groupsForExecuteCat1 = data;
+								});								
+								
+							});							
+						}
+
+						return editStoreModel;
+						
+					}
+					
+				}					
+			}				
+			
 		);		
 	
 
-	};
+	};	
 	
 	// not sure why we call run() on our app. It was in the angular1 'hello galaxy' example
 	// https://ui-router.github.io/ng1/tutorial/hellogalaxy

@@ -178,7 +178,24 @@
 							writeGroup1 : '@writeGroup1',
 							executeGroup1 : '@executeGroup1'
 						}						
-					}
+					},
+					
+					// call update store service method
+					updateStore : {
+						url: appConstants.eastoreUiActionJaxrsService + '/updateStore',
+						method: 'POST',
+						isArray: false,
+						params: {
+							storeId : '@storeId',
+							storeName : '@storeName',
+							storeDesc : '@storeDesc',
+							rootDirName : '@rootDirName',
+							rootDirDesc : '@rootDirDesc',
+							rootDirReadGroup1 : '@rootDirReadGroup1',
+							rootDirWriteGroup1 : '@rootDirWriteGroup1',
+							rootDirExecuteGroup1 : '@rootDirExecuteGroup1'
+						}						
+					}					
 				
 				});		
 		
@@ -375,6 +392,25 @@
 					}).$promise;			
 			
 		}
+		
+		// update store
+		function _updateStore(storeId, storeName, storeDesc, rootDirName, rootDirDesc, rootDirReadGroup1, rootDirWriteGroup1, rootDirExecuteGroup1){
+			
+			$log.debug('Calling jax-rs _updateStore service method');
+			
+			return eastoreUiActionService.updateStore(
+					{
+						storeId : storeId,
+						storeName : storeName,
+						storeDesc : storeDesc,
+						rootDirName : rootDirName,
+						rootDirDesc : rootDirDesc,
+						rootDirReadGroup1: rootDirReadGroup1,
+						rootDirWriteGroup1: rootDirWriteGroup1,
+						rootDirExecuteGroup1: rootDirExecuteGroup1
+					}).$promise;			
+			
+		}		
 		
 		// copy a file
 		function _copyFile(fileNodeId, dirNodeId, replaceExisting){
@@ -574,6 +610,7 @@
 			echo : _echo,
 			
 			addStore : _addStore,
+			updateStore : _updateStore,
 			
 			addDirectory : _addDirectory,
 			updateDirectory : _updateDirectory,
@@ -904,6 +941,24 @@
 			
 		}
 		
+		function _resolveEditStore($stateParams){
+			
+			// use name of the store being edited
+			if($stateParams.editStore && $stateParams.editStore.name){
+				var storeName = $stateParams.editStore.name;
+				return homeRestService
+					.storeByName(storeName)
+					.then( function ( jsonData ){
+						//$log.debug('resolved prots');
+						//$log.debug(JSON.stringify(jsonData));
+						return jsonData;
+					}, function( error ){
+						alert('Error calling storeByName() service method' + JSON.stringify(error));
+					});				
+			}
+			
+		}
+		
 		//
 		// get new instance of EAUploader
 		//
@@ -1067,6 +1122,7 @@
 			resolveBreadcrumb : _resolveBreadcrumb,
 			
 			resolveStores : _resolveStores,
+			resolveEditStore : _resolveEditStore,
 			
 			resolveEAUploader : _resolveEAUploader,
 			

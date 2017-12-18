@@ -619,6 +619,62 @@ public class EAStoreActionClient {
 		
 		return responseString;		
 		
+	}
+	
+	/**
+     * Call E-A store /fsys/action/updateStore
+     * 
+     * @param storeId - id of the store to update
+     * @param storeName - store name must be unique. an exception will be thrown if a store with
+     * the provided name already exists.
+     * @param storeDesc - store description
+     * @param rootDirName - directory name for the root directory for the store.
+     * @param rootDirDesc - description for the root directory
+     * @param readGroup1 - required read access group
+     * @param writeGroup1 - required write access group
+     * @param executeGroup1 - required execute access group
+     * @param userId - id of user performing action
+	 * @return
+	 */
+	public String updateStore(
+			Long storeId,
+			String storeName,
+			String storeDesc, 
+			String rootDirName, 
+			String rootDirDesc,
+			String rootDirReadGroup1, 
+			String rootDirWriteGroup1, 
+			String rootDirExecuteGroup1,
+			String userId) throws WebServiceException {
+
+		logger.debug("Calling " + EAStoreActionClient.class.getSimpleName() + " updateStore method");
+		
+		resetClient();
+		
+		String path = "/fsys/action/updateStore";
+		client
+			.path(path)
+			.query("storeId", storeId)
+			.query("storeName", storeName)
+			.query("storeDesc", storeDesc)
+			.query("rootDirName", rootDirName)
+			.query("rootDirDesc", rootDirDesc)
+			.query("rootDirReadGroup1", rootDirReadGroup1)
+			.query("rootDirWriteGroup1", rootDirWriteGroup1)
+			.query("rootDirExecuteGroup1", rootDirExecuteGroup1)
+			.query("userId", userId);
+		
+		Response resp = client.post("");
+		
+		if(resp.getStatus() != Response.Status.OK.getStatusCode()){
+			throw new WebServiceException(WebExceptionType.CODE_IO_ERROR, 
+					"Response error from " + client.getCurrentURI().toString() + ", response code = " + resp.getStatus());
+		}
+		
+		String responseString = resp.readEntity(String.class);
+		
+		return responseString;		
+		
 	}	
 	
 	/**

@@ -110,7 +110,60 @@ public class UIActionResource extends BaseResourceHandler {
 		
 		return Response.ok(jsonResponse, MediaType.APPLICATION_JSON).build();
     	
-    } 	
+    }
+    
+    /**
+     * Update a store
+     * 
+     * @param storeId - id of store to update
+     * @param storeName - store name must be unique. an exception will be thrown if a store with
+     * the provided name already exists.
+     * @param storeDesc - store description
+     * @param rootDirName - directory name for the root directory for the store.
+     * @param rootDirDesc - description for the root directory
+     * @param rootDirReadGroup1 - required read access group
+     * @param rootDirWriteGroup1 - required write access group
+     * @param rootDirExecuteGroup1 - required execute access group
+     * @return
+     * @throws WebServiceException
+     */
+    @POST
+    @Path("/updateStore")
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response updateStore(
+    		@QueryParam("storeId") Long storeId,
+    		@QueryParam("storeName") String storeName,
+    		@QueryParam("storeDesc") String storeDesc,
+    		@QueryParam("rootDirName") String rootDirName,
+    		@QueryParam("rootDirDesc") String rootDirDesc,
+    		@QueryParam("rootDirReadGroup1") String rootDirReadGroup1,
+    		@QueryParam("rootDirWriteGroup1") String rootDirWriteGroup1,
+    		@QueryParam("rootDirExecuteGroup1") String rootDirExecuteGroup1) throws WebServiceException {
+    	
+    	if(storeId == null || StringUtil.isNullEmpty(storeName) || StringUtil.isNullEmpty(storeDesc)
+    			|| StringUtil.isNullEmpty(rootDirName) ||
+    			StringUtil.isNullEmpty(rootDirDesc) || StringUtil.isNullEmpty(rootDirReadGroup1) ||
+    			StringUtil.isNullEmpty(rootDirWriteGroup1) || StringUtil.isNullEmpty(rootDirExecuteGroup1)){
+    		
+    		handleError("Missing required params to update store", WebExceptionType.CODE_IO_ERROR);
+    		
+    	}
+    	
+    	// needs to be lowercase
+    	//storePath = storePath.toLowerCase();
+    	
+    	String jsonResponse = null;
+    	try {
+	    	jsonResponse = uiService.updateStore(storeId, storeName, storeDesc, rootDirName, rootDirDesc, 
+	    			rootDirReadGroup1, rootDirWriteGroup1, rootDirExecuteGroup1);
+		} catch (ServiceException e) {
+			logger.error(e.getMessage(), e);
+			throw new WebServiceException(WebExceptionType.CODE_IO_ERROR, e.getMessage(), e);
+		}
+		
+		return Response.ok(jsonResponse, MediaType.APPLICATION_JSON).build();
+    	
+    }    
 	
 	/**
 	 * Processes the uploaded file and forwards it to eastore

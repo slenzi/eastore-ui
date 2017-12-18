@@ -6,6 +6,6 @@
 	List of all E-A Stores!
 	</p>
 	
-	<div smart-table-store-list  store-list="storeCtrl.stores"   store-click-handler="storeCtrl.clickStoreHandler(theStore)"></div>
+	<div smart-table-store-list  store-list="storeCtrl.stores"   store-click-handler="storeCtrl.clickStoreHandler(theStore)"   store-edit-click-handler="storeCtrl.clickEditStoreHandler(theStore)"></div>
 		
 </md-content>

@@ -172,16 +172,17 @@ public class EAStoreJsonClient {
 	/**
 	 * Call E-A Store /fsys/json/store
 	 * 
+	 * @param userId - is of user completing the action
 	 * @return
 	 * @throws WebServiceException
 	 */
-	public String getStores() throws WebServiceException {
+	public String getStores(String userId) throws WebServiceException {
 		
 		logger.debug("Calling " + EAStoreJsonClient.class.getSimpleName() + " getStores method");
 		
 		resetClient();
 		
-		String path = "/fsys/json/store";
+		String path = "/fsys/json/store/userId/" + userId;
 		client.path(path);
 		Response resp = client.get();
 		
@@ -197,18 +198,19 @@ public class EAStoreJsonClient {
 	}
 	
 	/**
-	 * Call E-A Store /fsys/json/store/name/{storeName}
+	 * Call E-A Store /fsys/json/store/userId/{userId}/name/{storeName}
 	 * 
+	 * @param userId - id of user completing the action.
 	 * @return
 	 * @throws WebServiceException
 	 */
-	public String getStoreByName(String storeName) throws WebServiceException {
+	public String getStoreByName(String storeName, String userId) throws WebServiceException {
 		
 		logger.debug("Calling " + EAStoreJsonClient.class.getSimpleName() + " getStoreByName method");
 		
 		resetClient();
 		
-		String path = "/fsys/json/store/name/" + storeName;
+		String path = "/fsys/json/store/userId/" + userId + "/name/" + storeName;
 		client.path(path);
 		Response resp = client.get();
 		URI currentUri = client.getCurrentURI();

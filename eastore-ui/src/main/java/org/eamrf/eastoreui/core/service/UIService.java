@@ -158,6 +158,7 @@ public class UIService {
     /**
      * Calls E-A Store JSON service, getStoreByName
      * 
+     * @param storeName
      * @return
      * @throws ServiceException
      */
@@ -169,7 +170,7 @@ public class UIService {
     
     /**
      * Calls E-A Store JSON service, getStores
-     * 
+     *
      * @return
      * @throws ServiceException
      */
@@ -397,5 +398,31 @@ public class UIService {
 				maxFileSizeBytes, readGroup1, writeGroup1, executeGroup1);
 		
 	}
+	
+    /**
+     * Update a store
+     * 
+     * @param storeId - id of store to update
+     * @param storeName - store name must be unique. an exception will be thrown if a store with
+     * the provided name already exists.
+     * @param storeDesc - store description
+     * @param storePath - store path on the local file system. This application must have read/write
+     * permission to create the directory.
+     * @param maxFileSizeBytes - max file size in bytes allowed by the store for file storage in the
+     * database in blob format (file will still be saved to the local file system.)
+     * @param rootDirName - directory name for the root directory for the store.
+     * @param rootDirDesc - description for the root directory
+     * @param rootDirReadGroup1 - required read access group
+     * @param rootDirWriteGroup1 - required write access group
+     * @param rootDirExecuteGroup1 - required execute access group
+     * @return
+     */
+	public String updateStore(Long storeId, String storeName, String storeDesc, String rootDirName, String rootDirDesc,
+			String rootDirReadGroup1, String rootDirWriteGroup1, String rootDirExecuteGroup1) throws ServiceException {
+		
+		return storeService.updateStore(storeId, storeName, storeDesc, rootDirName, 
+				rootDirDesc, rootDirReadGroup1, rootDirWriteGroup1, rootDirExecuteGroup1);
+		
+	}	
 
 }

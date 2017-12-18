@@ -247,9 +247,11 @@ public class StoreService {
 		
 		EAStoreJsonClient client = eaStoreClientProvider.getJsonClient();
 		
+		String userId = getLoggedInUserId();
+		
     	String jsonResponse = null;
     	try {
-    		jsonResponse = client.getStoreByName(storeName);
+    		jsonResponse = client.getStoreByName(storeName, userId);
 		} catch (WebServiceException e) {
 			throw new ServiceException("Error fetching store with name '" + storeName + "', " + e.getMessage(), e);
 		}
@@ -268,9 +270,11 @@ public class StoreService {
 		
 		EAStoreJsonClient client = eaStoreClientProvider.getJsonClient();
 		
+		String userId = getLoggedInUserId();
+		
     	String jsonResponse = null;
     	try {
-    		jsonResponse = client.getStores();
+    		jsonResponse = client.getStores(userId);
 		} catch (WebServiceException e) {
 			throw new ServiceException("Error fetching stores, " + e.getMessage(), e);
 		}
@@ -551,5 +555,44 @@ public class StoreService {
 		} 		
 		
 	}
+	
+    /**
+     * Call E-A store /fsys/action/updateStore
+     * 
+     * @param storeId - id of store to update
+     * @param storeName - store name must be unique. an exception will be thrown if a store with
+     * the provided name already exists.
+     * @param storeDesc - store description
+     * @param rootDirName - directory name for the root directory for the store.
+     * @param rootDirDesc - description for the root directory
+     * @param rootDirReadGroup1 - required read access group
+     * @param rootDirWriteGroup1 - required write access group
+     * @param rootDirExecuteGroup1 - required execute access group
+     * @return
+     */
+	public String updateStore(
+			Long storeId,
+			String storeName,
+			String storeDesc,
+			String rootDirName,
+			String rootDirDesc,
+			String rootDirReadGroup1,
+			String rootDirWriteGroup1,
+			String rootDirExecuteGroup1) throws ServiceException {
+
+    	EAStoreActionClient client = eaStoreClientProvider.getActionClient();
+    	
+    	String userId = getLoggedInUserId();
+    	
+    	// TODO - check for user permission to add store?
+    	
+		try {
+			return client.updateStore(storeId, storeName, storeDesc, rootDirName, rootDirDesc, 
+					rootDirReadGroup1, rootDirWriteGroup1, rootDirExecuteGroup1, userId);
+		} catch (WebServiceException e) {
+			throw new ServiceException("Error calling eastore addStore(...), " + e.getMessage(), e);
+		} 		
+		
+	}	
     
 }
