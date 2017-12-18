@@ -1518,8 +1518,11 @@
 			this.read1CatChange = function(){
 				
 				this.clearSelectedRead1Group();
-			
 				var categoryCode = this._newDir.readCat1;
+				
+				if(categoryCode === 'None'){ // 'None' value set in select box in create_directory_content.jsp
+					return;
+				}				
 				
 				homeRestService
 					.fetchGatekeeperGroupsForCategory(categoryCode)
@@ -1545,8 +1548,11 @@
 			this.write1CatChange = function(){
 		
 				this.clearSelectedWrite1Group();
-			
 				var categoryCode = this._newDir.writeCat1;
+				
+				if(categoryCode === 'None'){ // 'None' value set in select box in create_directory_content.jsp
+					return;
+				}				
 				
 				homeRestService
 					.fetchGatekeeperGroupsForCategory(categoryCode)
@@ -1572,8 +1578,11 @@
 			this.execute1CatChange = function(){
 
 				this.clearSelectedExecute1Group();
-			
 				var categoryCode = this._newDir.executeCat1;
+				
+				if(categoryCode === 'None'){ // 'None' value set in select box in create_directory_content.jsp
+					return;
+				}				
 				
 				homeRestService
 					.fetchGatekeeperGroupsForCategory(categoryCode)
@@ -1810,6 +1819,10 @@
 				this.clearSelectedRead1Group();
 				var categoryCode = this.editDirModel.readCat1.categoryCode;
 				
+				if(categoryCode === 'None'){ // 'None' value set in select box in edit_directory_content.jsp
+					return;
+				}
+				
 				homeRestService
 					.fetchGatekeeperGroupsForCategory(categoryCode)
 					.then( function ( jsonData ){
@@ -1831,6 +1844,10 @@
 				this.clearSelectedWrite1Group();
 				var categoryCode = this.editDirModel.writeCat1.categoryCode;
 				
+				if(categoryCode === 'None'){ // 'None' value set in select box in edit_directory_content.jsp
+					return;
+				}				
+				
 				homeRestService
 					.fetchGatekeeperGroupsForCategory(categoryCode)
 					.then( function ( jsonData ){
@@ -1851,6 +1868,10 @@
 				
 				this.clearSelectedExecute1Group();
 				var categoryCode = this.editDirModel.executeCat1.categoryCode;
+				
+				if(categoryCode === 'None'){ // 'None' value set in select box in edit_directory_content.jsp
+					return;
+				}				
 				
 				homeRestService
 					.fetchGatekeeperGroupsForCategory(categoryCode)
@@ -2200,6 +2221,10 @@
 				this.clearSelectedRead1Group();
 				var categoryCode = this.editStoreModel.rootDir.readCat1.categoryCode;
 				
+				if(categoryCode === 'None'){ // 'None' value set in select box in edit_store_content.jsp
+					return;
+				}
+				
 				homeRestService
 					.fetchGatekeeperGroupsForCategory(categoryCode)
 					.then( function ( jsonData ){
@@ -2207,7 +2232,6 @@
 					}, function( error ){
 						alert('Error calling fetchGatekeeperCategories() service method' + JSON.stringify(error));
 					
-					//});
 					})
 					.then( function(data) {
 						thisCtrl.setRead1Groups(data);
@@ -2220,6 +2244,10 @@
 				
 				this.clearSelectedWrite1Group();
 				var categoryCode = this.editStoreModel.rootDir.writeCat1.categoryCode;
+
+				if(categoryCode === 'None'){ // 'None' value set in select box in edit_store_content.jsp
+					return;
+				}				
 				
 				homeRestService
 					.fetchGatekeeperGroupsForCategory(categoryCode)
@@ -2228,7 +2256,6 @@
 					}, function( error ){
 						alert('Error calling fetchGatekeeperCategories() service method' + JSON.stringify(error));
 					
-					//});
 					})
 					.then( function(data) {
 						thisCtrl.setWrite1Groups(data);
@@ -2241,6 +2268,10 @@
 				
 				this.clearSelectedExecute1Group();
 				var categoryCode = this.editStoreModel.rootDir.executeCat1.categoryCode;
+
+				if(categoryCode === 'None'){ // 'None' value set in select box in edit_store_content.jsp
+					return;
+				}				
 				
 				homeRestService
 					.fetchGatekeeperGroupsForCategory(categoryCode)
@@ -2249,7 +2280,6 @@
 					}, function( error ){
 						alert('Error calling fetchGatekeeperCategories() service method' + JSON.stringify(error));
 					
-					//});
 					})
 					.then( function(data) {
 						thisCtrl.setExecute1Groups(data);
