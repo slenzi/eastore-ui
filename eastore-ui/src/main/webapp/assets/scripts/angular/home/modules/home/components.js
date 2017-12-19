@@ -83,8 +83,8 @@
 				thisCtrl.stompClient = new EAStomp({
                     sockJsUrl: appConstants.eastoreStompSockJsUrl
                 });
-                stompClient.setDebug(thisCtrl._stompSocketDebug);
-                stompClient.connect(thisCtrl._myStompConnect, thisCtrl._myStompConnectError);				
+				thisCtrl.stompClient.setDebug(thisCtrl._stompSocketDebug);
+				thisCtrl.stompClient.connect(thisCtrl._myStompConnect, thisCtrl._myStompConnectError);				
 				
 			};
 			
@@ -92,9 +92,9 @@
 		        $log.debug('STOMP Debug = ' + str);
 			};
 			this._myStompConnect = function(frame){
-		        var subscriptTest = stompClient.subscribe(
+		        var subscriptTest = thisCtrl.stompClient.subscribe(
 		        		'/topic/test', thisCtrl._myStompReceiveTestMessages);
-		        var subscriptResourceChange = stompClient.subscribe(
+		        var subscriptResourceChange = thisCtrl.stompClient.subscribe(
 		        		'/topic/resource/change', thisCtrl._myStompReceiveResourceChangeMessages);
 			};
 			this._myStompConnectError = function(error){
@@ -112,11 +112,7 @@
 				if($state){
 			        $log.info('Current state = ' + $state.current.name);
 			        
-			        //
-			        // $state is not defined. Can we simply inject it into our resolve service?
-			        // in fact can we inject all other items we need, (i.e. $stateParams)
-			        //
-			        if($state.current.name == 'path'){
+			        if($state.current.name === 'path'){
 			                // reload the 'path' state so user sees updated data that changed on server                                                                                                                                                                     
 			                $state.reload();
 			        }					
