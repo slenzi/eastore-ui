@@ -45,7 +45,20 @@ application scripts
 <!-- specific to report app -->
 <script type="text/javascript" src="<%=request.getContextPath()%>/assets/scripts/angular/home/modules/home/modules.js"></script>
 <script type="text/javascript" src="<%=request.getContextPath()%>/assets/scripts/angular/home/modules/home/directives.js"></script>
-<script type="text/javascript" src="<%=request.getContextPath()%>/assets/scripts/angular/home/modules/home/components.js"></script>
+<script type="text/javascript" src="<%=request.getContextPath()%>/assets/scripts/angular/home/modules/home/components/root_component.js"></script>
+<script type="text/javascript" src="<%=request.getContextPath()%>/assets/scripts/angular/home/modules/home/components/left_menu_component.js"></script>
+<script type="text/javascript" src="<%=request.getContextPath()%>/assets/scripts/angular/home/modules/home/components/title_header_component.js"></script>
+<script type="text/javascript" src="<%=request.getContextPath()%>/assets/scripts/angular/home/modules/home/components/store_list_component.js"></script>
+<script type="text/javascript" src="<%=request.getContextPath()%>/assets/scripts/angular/home/modules/home/components/create_store_component.js"></script>
+<script type="text/javascript" src="<%=request.getContextPath()%>/assets/scripts/angular/home/modules/home/components/path_resource_component.js"></script>
+<script type="text/javascript" src="<%=request.getContextPath()%>/assets/scripts/angular/home/modules/home/components/upload_component.js"></script>
+<script type="text/javascript" src="<%=request.getContextPath()%>/assets/scripts/angular/home/modules/home/components/create_directory_component.js"></script>
+<script type="text/javascript" src="<%=request.getContextPath()%>/assets/scripts/angular/home/modules/home/components/edit_directory_component.js"></script>
+<script type="text/javascript" src="<%=request.getContextPath()%>/assets/scripts/angular/home/modules/home/components/edit_file_component.js"></script>
+<script type="text/javascript" src="<%=request.getContextPath()%>/assets/scripts/angular/home/modules/home/components/edit_store_component.js"></script>
 <script type="text/javascript" src="<%=request.getContextPath()%>/assets/scripts/angular/home/modules/home/controllers.js"></script>
-<script type="text/javascript" src="<%=request.getContextPath()%>/assets/scripts/angular/home/modules/home/services.js"></script>
+<script type="text/javascript" src="<%=request.getContextPath()%>/assets/scripts/angular/home/modules/home/services/home_service.js"></script>
+<script type="text/javascript" src="<%=request.getContextPath()%>/assets/scripts/angular/home/modules/home/services/resolve_service.js"></script>
+<script type="text/javascript" src="<%=request.getContextPath()%>/assets/scripts/angular/home/modules/home/services/url_parse_service.js"></script>
+<script type="text/javascript" src="<%=request.getContextPath()%>/assets/scripts/angular/home/modules/home/services/resource_clipboard_service.js"></script>
 <script type="text/javascript" src="<%=request.getContextPath()%>/assets/scripts/angular/home/app/app.js"></script>
