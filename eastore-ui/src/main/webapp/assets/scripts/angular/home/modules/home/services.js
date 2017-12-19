@@ -1045,6 +1045,7 @@
 		//
 		// resolve singleton instance of EAStomp client
 		//
+		/*
         function _resolveStompSocketClient($state, $stateParams){
 
             if(!stompClient){
@@ -1104,7 +1105,8 @@
 		                // reload the 'path' state so user sees updated data that changed on server                                                                                                                                                                     
 		                $state.reload();
 		        }
-		}		
+		}
+		*/	
 		
 		// *********************************
 		// External API
@@ -1126,7 +1128,7 @@
 			
 			resolveEAUploader : _resolveEAUploader,
 			
-			resolveStompSocketClient : _resolveStompSocketClient,
+			//resolveStompSocketClient : _resolveStompSocketClient,
 			
 			resolveGatekeeperCategories : _resolveGatekeeperCategories,
 			resolveGatekeeperGroupsForCategory : _resolveGatekeeperGroupsForCategory,

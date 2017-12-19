@@ -171,15 +171,19 @@
 						$log.debug('------------ [root state] resolving left nav id');
 						return appConstants.leftNavComponentId;
 						
-					},
+					}
+					
+					//,
 
 					// resolve EAStomp websocket client
+					/*
 					eastomp : function ($log, $state, $stateParams, resolveService){
 						
 						$log.debug('------------ [root state] resolving EAStomp websocket client');
 						return resolveService.resolveStompSocketClient($state, $stateParams);							
 						
 					}
+					*/
 					
 				}
 				

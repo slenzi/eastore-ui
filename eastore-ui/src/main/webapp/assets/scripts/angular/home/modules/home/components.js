@@ -10,16 +10,27 @@
 	//
 	mainModule.component('rootComponent', {
 		
-		bindings: { leftnavid : '<' },
+		bindings: {
+			leftnavid : '<',
+			eastomp : '<'
+		},
 		
 		templateUrl : function (appConstants){
 			return appConstants.contextPath + '/assets/scripts/angular/home/modules/home/views/root.jsp'
 		},
 
-		controller : function(appConstants, $log, $mdSidenav, $mdUtil, $state){
+		controller : function(appConstants, $log, $mdSidenav, $mdUtil, $state, EAStomp){
+			
+			var thisCtrl = this;
+			
+			var stompClient;
 			
 			this.$onInit = function() {
+				
 				$log.debug('rootComponent controller');
+				
+				thisCtrl.initializeStompMessaging();
+				
 			};
 			
 			this.leftNavComponentId = appConstants.leftNavComponentId;
@@ -63,6 +74,56 @@
 				.then(function () {
 					//$log.debug("close MyLeftNav is done");
 				});
+			};
+			
+			this.initializeStompMessaging = function(){
+				
+				$log.debug('initializing Stomp messaging');
+				
+				thisCtrl.stompClient = new EAStomp({
+                    sockJsUrl: appConstants.eastoreStompSockJsUrl
+                });
+                stompClient.setDebug(thisCtrl._stompSocketDebug);
+                stompClient.connect(thisCtrl._myStompConnect, thisCtrl._myStompConnectError);				
+				
+			};
+			
+			this._stompSocketDebug = function(str){
+		        $log.debug('STOMP Debug = ' + str);
+			};
+			this._myStompConnect = function(frame){
+		        var subscriptTest = stompClient.subscribe(
+		        		'/topic/test', thisCtrl._myStompReceiveTestMessages);
+		        var subscriptResourceChange = stompClient.subscribe(
+		        		'/topic/resource/change', thisCtrl._myStompReceiveResourceChangeMessages);
+			};
+			this._myStompConnectError = function(error){
+		        $log.debug('_onStompConnectError...');
+		        //$log.debug(error.headers.message);                                                                                                                                                                                                                    
+		        $log.debug('STOMP Error = ' + JSON.stringify(error));
+			};
+			this._myStompReceiveTestMessages = function(socketMessage){
+		        $log.info('STOMP Received = ' + JSON.stringify(socketMessage));
+			};
+			this._myStompReceiveResourceChangeMessages = function(socketMessage){
+		        
+				$log.info('STOMP Resource Changed = ' + JSON.stringify(socketMessage));
+				
+				if($state){
+			        $log.info('Current state = ' + $state.current.name);
+			        
+			        //
+			        // $state is not defined. Can we simply inject it into our resolve service?
+			        // in fact can we inject all other items we need, (i.e. $stateParams)
+			        //
+			        if($state.current.name == 'path'){
+			                // reload the 'path' state so user sees updated data that changed on server                                                                                                                                                                     
+			                $state.reload();
+			        }					
+				}else{
+					$log.debug('Cannot refresh state, no $state defined');
+				}
+				
 			};			
 					
 		},

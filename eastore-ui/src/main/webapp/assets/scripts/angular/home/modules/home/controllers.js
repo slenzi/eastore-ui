@@ -72,6 +72,7 @@
 			
 		}
 		
+		/*
 		function _doWebSocketTest(){
 			$log.debug('peforming websocket test');
 			_initSocket();	
@@ -107,7 +108,8 @@
 			// reload current state (will re-resolve data)
 			$state.reload();
 			
-		}	
+		}
+		*/
 	
 		var self = this;
 		
