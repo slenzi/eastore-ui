@@ -104,42 +104,56 @@
 			this._myStompReceiveTestMessages = function(socketMessage){
 		        $log.info('STOMP Received = ' + JSON.stringify(socketMessage));
 			};
-			this._myStompReceiveResourceChangeMessages = function(socketMessage){
-		        
-				$log.info('STOMP Resource Changed = ' + JSON.stringify(socketMessage));
-				
-				if($state && $stateParams && thisCtrl.$transition$){
-			        
-					$log.debug('Current state = ' + $state.current.name);
-					
-					var resourceNodeChangeId = 0;
-			        
-					// Don't really want to re-load the entire state because that will re-fetch all resolves, including the resolves
-					// for the parent 'root' state which contains the stomp web socket component, essentially closing and
-					// re-establishing the web socket connection. Instead we'll try to re-resolve just the path resources for
-					// the 'path' state				
-					
-					// $state.reload();
-					
-					//
-					// Re-resolve the 'pathresources' for the 'path' state (see app.js setup for states & resolves)
-					// Only re-resolve if the current state is 'path' and the current working directory stored in
-					// the $stateParams object matches the directory ID in the STOMP directory change message
-					//
-			        if($state.current.name === 'path' && $stateParams.currDirResource && currDirResource.currDirResource.nodeId === resourceNodeChangeId){
-						
-			        	//
-			        	//   FIX - currDirResource is not defined.  Can probably resolve it using that data from the URL path
-			        	// since the upload state contains the 'relPath' data (i.e. Store name and relative path of current directory)
-			        	//
-			        	
-						// https://github.com/angular-ui/ui-router/issues/3399
-						// https://github.com/angular-ui/ui-router/issues/3210
-			                
-						
-							
-			        }
+            this._myStompReceiveResourceChangeMessages = function(socketMessage){
 
+                $log.info('STOMP Resource Changed = ' + JSON.stringify(socketMessage));
+
+                var messageData = JSON.parse(socketMessage.body);
+                $log.info('messageData = ' + JSON.stringify(messageData));
+
+                    if($state && $stateParams && thisCtrl.$transition$ && messageData && $stateParams.currDirResource){
+
+                        $log.debug('Current state = ' + $state.current.name);
+
+                        var messageCode = messageData.code;
+                        var messageNodeId = messageData.nodeId;
+                        var currDirId = $stateParams.currDirResource.nodeId;
+
+                        $log.debug('messageCode = ' + messageCode + ', messageNodeId = ' + messageNodeId + ', currDirId = ' + currDirId);
+
+                        // Don't really want to re-load the entire state because that will re-fetch all resolves, including the resolves
+                        // for the parent 'root' state which contains the stomp web socket component, essentially closing and
+                        // re-establishing the web socket connection. Instead we'll try to re-resolve just the path resources for
+                        // the 'path' state
+
+                        // $state.reload();
+
+                        //
+                        // Re-resolve the 'pathresources' for the 'path' state (see app.js setup for states & resolves)
+                        // Only re-resolve if the current state is 'path' and the current working directory stored in
+                        // the $stateParams object matches the directory ID in the STOMP directory change message
+                        //
+
+                        if($state.current.name === 'path' && messageCode == 'DIRECTORY_CONTENTS_CHANGED' && currDirId === messageNodeId){
+
+                            $log.debug('reload path resources!');
+
+                            // https://github.com/angular-ui/ui-router/issues/3399
+                            // https://github.com/angular-ui/ui-router/issues/3210
+
+                            var path = $transition$.treeChanges('path'); // defined in app.js ui-router state setup
+                            var context = new ResolveContext(path);
+                            var myResolve = context.getResolvable('pathresources'); // 'pathresources' resolved defined in app.js 'path' state
+
+                            // Reset the internal state
+                            myResolve.resolved = false;
+                            myResolve.data = undefined;
+                            myResolve.promise = undefined;
+
+                            // re-fetch
+                            myResolve.get(context).then(result => this.result = result);
+
+                        }
 					
 				}else{
 					

@@ -132,7 +132,11 @@
 					// similar to $state.reload(), but we want to change one of our stateparams so we use transition to instead
 					$state.transitionTo($state.current, $stateParams, { 
 					  reload: true, inherit: false, notify: true
-					});				
+					});
+					
+					//
+					// TODO - rather than reloading the entire state we should just re-fetch our 'pathresource' resolve
+					//
 					
 				}else{
 
@@ -254,7 +258,11 @@
 											$log.debug('file resource deleted, reload path state to update view');
 											
 											thisCtrl.setCalculatedProgress((i+1), resourcesToDelete.length);
-											thisCtrl.reloadCurrentState();
+											
+											// reloading of pathresources should be handled in out root component which watches for
+											// directory resource change events from our websocket connection
+											//											
+											//thisCtrl.reloadCurrentState();
 										
 									});									
 								
@@ -276,7 +284,11 @@
 											$log.debug('directory resource deleted, reload path state to update view');
 											
 											thisCtrl.setCalculatedProgress((i+1), resourcesToDelete.length);
-											thisCtrl.reloadCurrentState();
+											
+											// reloading of pathresources should be handled in out root component which watches for
+											// directory resource change events from our websocket connection
+											//											
+											//thisCtrl.reloadCurrentState();
 										
 									});							
 
@@ -364,8 +376,11 @@
 											$log.debug('file resource copied, reload path state to update view');
 											
 											thisCtrl.setCalculatedProgress((i+1), pathResources.length);
-											thisCtrl.reloadCurrentState();
 											
+											// reloading of pathresources should be handled in out root component which watches for
+											// directory resource change events from our websocket connection
+											//											
+											//thisCtrl.reloadCurrentState();
 											//thisCtrl.loadPathState(destinationStore, destinationDirectory);
 										
 									});
@@ -388,8 +403,11 @@
 											$log.debug('directory resource copied, reload path state to update view');
 											
 											thisCtrl.setCalculatedProgress((i+1), pathResources.length);
-											thisCtrl.reloadCurrentState();
 											
+											// reloading of pathresources should be handled in out root component which watches for
+											// directory resource change events from our websocket connection
+											//
+											//thisCtrl.reloadCurrentState();
 											//thisCtrl.loadPathState(destinationStore, destinationDirectory);
 
 										
@@ -454,8 +472,11 @@
 											$log.debug('file resource moved, reload path state to update view');
 											
 											thisCtrl.setCalculatedProgress((i+1), pathResources.length);
-											thisCtrl.reloadCurrentState();
 											
+											// reloading of pathresources should be handled in out root component which watches for
+											// directory resource change events from our websocket connection
+											//											
+											//thisCtrl.reloadCurrentState();
 											//thisCtrl.loadPathState(destinationStore, destinationDirectory);
 										
 									});
@@ -478,8 +499,11 @@
 											$log.debug('directory resource moved, reload path state to update view');
 											
 											thisCtrl.setCalculatedProgress((i+1), pathResources.length);
-											thisCtrl.reloadCurrentState();
 											
+											// reloading of pathresources should be handled in out root component which watches for
+											// directory resource change events from our websocket connection
+											//											
+											//thisCtrl.reloadCurrentState();
 											//thisCtrl.loadPathState(destinationStore, destinationDirectory);
 
 										
