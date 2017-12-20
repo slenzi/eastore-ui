@@ -108,7 +108,7 @@
 		        
 				$log.info('STOMP Resource Changed = ' + JSON.stringify(socketMessage));
 				
-				if($state && $stateParams && $transition$){
+				if($state && $stateParams && thisCtrl.$transition$){
 			        
 					$log.debug('Current state = ' + $state.current.name);
 					
@@ -128,6 +128,11 @@
 					//
 			        if($state.current.name === 'path' && $stateParams.currDirResource && currDirResource.currDirResource.nodeId === resourceNodeChangeId){
 						
+			        	//
+			        	//   FIX - currDirResource is not defined.  Can probably resolve it using that data from the URL path
+			        	// since the upload state contains the 'relPath' data (i.e. Store name and relative path of current directory)
+			        	//
+			        	
 						// https://github.com/angular-ui/ui-router/issues/3399
 						// https://github.com/angular-ui/ui-router/issues/3210
 			                
