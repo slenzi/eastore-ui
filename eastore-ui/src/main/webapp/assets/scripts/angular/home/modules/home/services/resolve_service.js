@@ -32,16 +32,16 @@
 			// otherwise parse store name from urlPath, then fetch from server
 			}else{
 				
-				$log.debug('parse store name and relpath from urlPath');
+				//$log.debug('parse store name and relpath from urlPath');
 				
 				var parseData = urlParseService.parseStoreAndRelpath($stateParams.urlPath);
 				
-				$log.debug('storeName = ' + parseData.storeName + ', relPathToLoad = ' + parseData.relPath);
+				//$log.debug('storeName = ' + parseData.storeName + ', relPathToLoad = ' + parseData.relPath);
 
 				return homeRestService
 					.storeByName(parseData.storeName, parseData.relPath)
 					.then( function ( jsonData ){
-						$log.debug('resolved store with name ' + parseData.storeName);
+						//$log.debug('resolved store with name ' + parseData.storeName);
 						//$log.debug(JSON.stringify(jsonData))
 						return jsonData;
 					}, function( error ){
@@ -73,11 +73,11 @@
 			// otherwise parse store name and relative path from urlPath value
 			}else{
 				
-				$log.debug('parse store name and relpath from urlPath');
+				//$log.debug('parse store name and relpath from urlPath');
 				
 				var parseData = urlParseService.parseStoreAndRelpath($stateParams.urlPath);
 				
-				$log.debug('storeName = ' + parseData.storeName + ', relPathToLoad = ' + parseData.relPath);
+				//$log.debug('storeName = ' + parseData.storeName + ', relPathToLoad = ' + parseData.relPath);
 				
 				storeName = parseData.storeName;
 				relPathToLoad = parseData.relPath;
@@ -88,7 +88,7 @@
 			return homeRestService
 				.pathResourceByPath(storeName, relPathToLoad)
 				.then( function ( jsonData ){
-					$log.debug('resolved current directory, storeName = ' + storeName + ', relPathToLoad = ' + relPathToLoad);
+					//$log.debug('resolved current directory, storeName = ' + storeName + ', relPathToLoad = ' + relPathToLoad);
 					//$log.debug(JSON.stringify(jsonData))
 					return jsonData;
 				}, function( error ){
@@ -102,7 +102,7 @@
 		//
 		function _resolveCurrentEditResource($stateParams){
 			
-			$log.debug('Resolving current edit resource');
+			//$log.debug('Resolving current edit resource');
 			
 			//$log.debug(JSON.stringify($stateParams));
 
@@ -143,8 +143,8 @@
 			return homeRestService
 				.pathResourceByPath(storeName, relPathToLoad)
 				.then( function ( jsonData ){
-					$log.debug('resolved current edit resource, storeName = ' + storeName + ', relPathToLoad = ' + relPathToLoad);
-					$log.debug(JSON.stringify(jsonData))
+					//$log.debug('resolved current edit resource, storeName = ' + storeName + ', relPathToLoad = ' + relPathToLoad);
+					//$log.debug(JSON.stringify(jsonData))
 					return jsonData;
 				}, function( error ){
 					alert('Error calling pathResourceByPath(...) service method' + JSON.stringify(error));
@@ -173,11 +173,11 @@
 			// otherwise parse store name and relative path from urlPath value
 			}else{
 				
-				$log.debug('parse store name and relpath from urlPath');
+				//$log.debug('parse store name and relpath from urlPath');
 				
 				var parseData = urlParseService.parseStoreAndRelpath($stateParams.urlPath);
 				
-				$log.debug('storeName = ' + parseData.storeName + ', relPathToLoad = ' + parseData.relPath);
+				//$log.debug('storeName = ' + parseData.storeName + ', relPathToLoad = ' + parseData.relPath);
 				
 				storeName = parseData.storeName;
 				relPathToLoad = parseData.relPath;
@@ -191,7 +191,7 @@
 			return homeRestService
 				.loadRelPath(storeName, relPathToLoad)
 				.then( function ( jsonData ){
-					$log.debug('resolved path resources for storeName = ' + storeName + ', relPathToLoad = ' + relPathToLoad);
+					//$log.debug('resolved path resources for storeName = ' + storeName + ', relPathToLoad = ' + relPathToLoad);
 					//$log.debug(JSON.stringify(jsonData))
 					return jsonData;
 				}, function( error ){
@@ -221,11 +221,11 @@
 			// otherwise parse store name and relative path from urlPath value
 			}else{
 
-				$log.debug('parse store name and relpath from urlPath');
+				//$log.debug('parse store name and relpath from urlPath');
 				
 				var parseData = urlParseService.parseStoreAndRelpath($stateParams.urlPath);
 				
-				$log.debug('storeName = ' + parseData.storeName + ', relPathToLoad = ' + parseData.relPath);
+				//$log.debug('storeName = ' + parseData.storeName + ', relPathToLoad = ' + parseData.relPath);
 				
 				storeName = parseData.storeName;
 				relPathToLoad = parseData.relPath;
@@ -236,7 +236,7 @@
 			return homeRestService
 				.breadcrumbPath(storeName, relPathToLoad)
 				.then( function ( jsonData ){
-					$log.debug('resolved breadcrumb tree for storeName = ' + storeName + ', relPathToLoad = ' + relPathToLoad);
+					//$log.debug('resolved breadcrumb tree for storeName = ' + storeName + ', relPathToLoad = ' + relPathToLoad);
 					//$log.debug(JSON.stringify(jsonData))
 					return jsonData;
 				}, function( error ){
@@ -289,7 +289,7 @@
 				url: appConstants.httpUploadHandler
 			});
 			
-			$log.debug(eaUploader.hello());
+			//$log.debug(eaUploader.hello());
 			
 			return eaUploader;			
 			
@@ -332,7 +332,7 @@
 		//
 		function _resolveGatekeeperCategoryByGroupCode(groupCode){
 			
-			$log.debug('resolving gatekeeper category for group code ' + groupCode);
+			//$log.debug('resolving gatekeeper category for group code ' + groupCode);
 			
 			return homeRestService
 				.fetchGatekeeperCategoryByGroupCode(groupCode)
@@ -350,7 +350,7 @@
 		//
 		function _resolveGatekeeperGroupByGroupCode(groupCode){
 			
-			$log.debug('resolving gatekeeper group for group code ' + groupCode);
+			//$log.debug('resolving gatekeeper group for group code ' + groupCode);
 			
 			return homeRestService
 				.fetchGatekeeperGroupByGroupCode(groupCode)

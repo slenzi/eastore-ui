@@ -21,13 +21,13 @@
 	function NavController(appConstants, $mdSidenav, $mdUtil, $log){
 		
 		function _buildTheToggle(navId) {
-			$log.debug('_buildTheToggle for nav ' + navId);
+			//$log.debug('_buildTheToggle for nav ' + navId);
 			return $mdUtil.debounce(function(){
-				$log.debug('here');
+				//$log.debug('here');
 				$mdSidenav(navId)
 					.toggle()
 					.then(function () {
-						$log.debug("toggle " + navId + " is done");
+						//$log.debug("toggle " + navId + " is done");
 					});
 			},300);
 		};		

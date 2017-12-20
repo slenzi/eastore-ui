@@ -59,13 +59,13 @@
 		
 		controller : function($log, $scope, $state, $stateParams, EAFileUploader, appConstants, $mdDialog){
 			
-			$log.debug('uploadContentComponent controller');
+			//$log.debug('uploadContentComponent controller');
 			
 			//$log.debug(JSON.stringify($stateParams));
 			
 			this.startUpload = function(uploader, store, directoryResource){
 				
-				$log.debug('store = ' + store.name + ', directory = ' + directoryResource.relativePath);
+				//$log.debug('store = ' + store.name + ', directory = ' + directoryResource.relativePath);
 				
 				var confirm = $mdDialog.confirm()
 					.parent(angular.element(document.body))
@@ -95,17 +95,17 @@
 						// callback for handling updated progress event from eaUploader
 						function(event){
 							var progressValue = Math.round(event.lengthComputable ? event.loaded * 100 / event.total : 0);
-							$log.debug('main progress = ' + progressValue);
+							//$log.debug('main progress = ' + progressValue);
 							$scope.$apply();							
 						},
 						// callback for handling completion of single file upload event from eaUploader
 						function (event){
-							$log.debug('Upload of single file complete.');
+							//$log.debug('Upload of single file complete.');
 						},
 						// callback for handling completion of all uploads event from eaUploader
 						function(event){
 							
-							$log.debug('Upload complete');
+							//$log.debug('Upload complete');
 							
 							var newUrlPath = '/' + store.name + directoryResource.relativePath;
 							
@@ -120,7 +120,7 @@
 						
 				}, function() {
 					
-					$log.debug('Uploade operation canceled.');
+					//$log.debug('Uploade operation canceled.');
 					
 				});				
 				

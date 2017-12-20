@@ -26,7 +26,7 @@
 			
 			this.cancelEdit = function(store, directoryResource){
 				
-				$log.debug('cancel edit file');
+				//$log.debug('cancel edit file');
 				
 				var newUrlPath = '/' + store.name + directoryResource.relativePath;
 				
@@ -67,7 +67,7 @@
 			
 			this.cancelEdit = function(store, directoryResource){
 				
-				$log.debug('cancel edit file');
+				//$log.debug('cancel edit file');
 				
 				var newUrlPath = '/' + store.name + directoryResource.relativePath;
 				
@@ -105,9 +105,9 @@
 								this.editFileModel.fileDescription)
 						.then( function ( jsonData ){
 							
-							$log.debug('completed updateFile service call');
+							//$log.debug('completed updateFile service call');
 							
-							$log.debug(JSON.stringify(jsonData))
+							//$log.debug(JSON.stringify(jsonData))
 							//return jsonData;
 							thisCtrl.loadPathState(store, directoryResource);
 							

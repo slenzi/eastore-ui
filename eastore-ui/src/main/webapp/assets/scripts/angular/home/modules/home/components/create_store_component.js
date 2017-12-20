@@ -276,9 +276,9 @@
 								this._newStore.rootDir.executeGroup1.groupCode)
 						.then( function ( jsonData ){
 							
-							$log.debug('completed addStore service call');
+							//$log.debug('completed addStore service call');
 							
-							$log.debug(JSON.stringify(jsonData))
+							//$log.debug(JSON.stringify(jsonData))
 							//return jsonData;
 							
 							$state.go('stores');

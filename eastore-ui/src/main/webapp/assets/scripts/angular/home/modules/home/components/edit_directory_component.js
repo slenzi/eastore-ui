@@ -24,7 +24,7 @@
 			
 			this.cancelEdit = function(store, directoryResource){
 				
-				$log.debug('cancel edit directory');
+				//$log.debug('cancel edit directory');
 				
 				var newUrlPath = '/' + store.name + directoryResource.relativePath;
 				
@@ -232,7 +232,7 @@
 
 			this.cancelEdit = function(store, directoryResource){
 				
-				$log.debug('cancel edit directory');
+				//$log.debug('cancel edit directory');
 				
 				this.loadPathState(store, directoryResource);			
 				
@@ -271,9 +271,9 @@
 								this.editDirModel.executeGroup1.groupCode)
 						.then( function ( jsonData ){
 							
-							$log.debug('completed updateDirectory service call');
+							//$log.debug('completed updateDirectory service call');
 							
-							$log.debug(JSON.stringify(jsonData))
+							//$log.debug(JSON.stringify(jsonData))
 							//return jsonData;
 							thisCtrl.loadPathState(store, directoryResource);
 							

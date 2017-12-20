@@ -21,7 +21,7 @@
 			
 			this.cancelEdit = function(){
 				
-				$log.debug('cancel edit store');
+				//$log.debug('cancel edit store');
 				
 				$state.go('stores');				
 				
@@ -217,7 +217,7 @@
 
 			this.cancelEdit = function(store, directoryResource){
 				
-				$log.debug('cancel edit directory');
+				//$log.debug('cancel edit directory');
 				
 				thisCtrl.viewStoreList();			
 				
@@ -248,7 +248,7 @@
 								this.editStoreModel.rootDir.executeGroup1.groupCode)
 						.then( function ( jsonData ){
 							
-							$log.debug('completed updateStore service call');
+							//$log.debug('completed updateStore service call');
 							
 							//$log.debug(JSON.stringify(jsonData))
 							//return jsonData;

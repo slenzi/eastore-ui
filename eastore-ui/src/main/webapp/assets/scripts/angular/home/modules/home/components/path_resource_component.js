@@ -45,7 +45,7 @@
 					
 					//$log.debug('breadcrumb click, dirNodeId = ' + $stateParams.currDirResource.nodeId + ', urlPath = ' + $stateParams.urlPath);
 					
-					// similar to $state.reload(), but we want to change one of our stateparams so we use transition to instead
+					// similar to $state.reload(), but we want to change one of our $stateparams so we use transition to instead
 					$state.transitionTo($state.current, $stateParams, { 
 					  reload: true, inherit: false, notify: true
 					});

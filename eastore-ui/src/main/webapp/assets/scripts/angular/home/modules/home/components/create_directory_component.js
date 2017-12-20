@@ -24,7 +24,7 @@
 			
 			this.cancelCreate = function(store, directoryResource){
 				
-				$log.debug('cancel create directory');
+				//$log.debug('cancel create directory');
 				
 				var newUrlPath = '/' + store.name + directoryResource.relativePath;
 				
@@ -279,9 +279,9 @@
 						.addDirectory(directoryResource.nodeId, this._newDir.dirName, this._newDir.dirDescription, this._newDir.readGroup1.groupCode, this._newDir.writeGroup1.groupCode, this._newDir.executeGroup1.groupCode)
 						.then( function ( jsonData ){
 							
-							$log.debug('completed addDirectory service call');
+							//$log.debug('completed addDirectory service call');
 							
-							$log.debug(JSON.stringify(jsonData))
+							//$log.debug(JSON.stringify(jsonData))
 							//return jsonData;
 							thisCtrl.loadPathState(store, directoryResource);
 							
@@ -299,7 +299,7 @@
 
 			this.cancelCreate = function(store, directoryResource){
 				
-				$log.debug('cancel create directory');
+				//$log.debug('cancel create directory');
 				
 				this.loadPathState(store, directoryResource);			
 				

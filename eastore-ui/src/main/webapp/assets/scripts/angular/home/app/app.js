@@ -352,7 +352,7 @@
                             
                             var parseData = urlParseService.parseStoreAndRelpath($stateParams.urlPath);
                             
-                            $log.debug('storeName = ' + parseData.storeName + ', relPathToLoad = ' + parseData.relPath);
+                            //$log.debug('storeName = ' + parseData.storeName + ', relPathToLoad = ' + parseData.relPath);
                             
                             title = title + parseData.storeName;
 							

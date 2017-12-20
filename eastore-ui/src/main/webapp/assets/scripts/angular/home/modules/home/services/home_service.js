@@ -300,7 +300,7 @@
 				
 		function _echo(msg){
 			
-			$log.debug('Calling jax-rs test echo service method');
+			//$log.debug('Calling jax-rs test echo service method');
 			
 			return eastoreTestService.echo({ message : msg }).$promise;		
 			
@@ -309,7 +309,7 @@
 		// add a new directory
 		function _addDirectory(parentDirId, dirName, dirDesc, readGroup1, writeGroup1, executeGroup1){
 			
-			$log.debug('Calling jax-rs _addDirectory service method');
+			//$log.debug('Calling jax-rs _addDirectory service method');
 			
 			return eastoreUiActionService.addDir(
 					{
@@ -326,7 +326,7 @@
 		// update a file
 		function _updateFile(fileNodeId, newName, newDesc){
 			
-			$log.debug('Calling jax-rs _updateFile service method');
+			//$log.debug('Calling jax-rs _updateFile service method');
 			
 			return eastoreUiActionService.updateFile(
 					{
@@ -340,7 +340,7 @@
 		// update a directory
 		function _updateDirectory(dirNodeId, newName, newDesc, readGroup1, writeGroup1, executeGroup1){
 			
-			$log.debug('Calling jax-rs _updateDirectory service method');
+			//$log.debug('Calling jax-rs _updateDirectory service method');
 			
 			return eastoreUiActionService.updateDir(
 					{
@@ -357,7 +357,7 @@
 		// add a new store
 		function _addStore(storeName, storeDesc, storePath, maxFileSizeBytes, rootDirName, rootDirDesc, readGroup1, writeGroup1, executeGroup1){
 			
-			$log.debug('Calling jax-rs _addStore service method');
+			//$log.debug('Calling jax-rs _addStore service method');
 			
 			return eastoreUiActionService.addStore(
 					{
@@ -377,7 +377,7 @@
 		// update store
 		function _updateStore(storeId, storeName, storeDesc, rootDirName, rootDirDesc, rootDirReadGroup1, rootDirWriteGroup1, rootDirExecuteGroup1){
 			
-			$log.debug('Calling jax-rs _updateStore service method');
+			//$log.debug('Calling jax-rs _updateStore service method');
 			
 			return eastoreUiActionService.updateStore(
 					{
@@ -396,7 +396,7 @@
 		// copy a file
 		function _copyFile(fileNodeId, dirNodeId, replaceExisting){
 			
-			$log.debug('Calling jax-rs _copyFile service method');
+			//$log.debug('Calling jax-rs _copyFile service method');
 			
 			return eastoreUiActionService.copyFile(
 					{
@@ -410,7 +410,7 @@
 		// copy a directory
 		function _copyDirectory(copyDirNodeId, destDirNodeId, replaceExisting){
 			
-			$log.debug('Calling jax-rs _copyDirectory service method');
+			//$log.debug('Calling jax-rs _copyDirectory service method');
 			
 			return eastoreUiActionService.copyDirectory(
 					{
@@ -424,7 +424,7 @@
 		// move a file
 		function _moveFile(fileNodeId, dirNodeId, replaceExisting){
 			
-			$log.debug('Calling jax-rs _moveFile service method');
+			//$log.debug('Calling jax-rs _moveFile service method');
 			
 			return eastoreUiActionService.moveFile(
 					{
@@ -438,7 +438,7 @@
 		// move a directory
 		function _moveDirectory(moveDirNodeId, destDirNodeId, replaceExisting){
 			
-			$log.debug('Calling jax-rs _moveDirectory service method');
+			//$log.debug('Calling jax-rs _moveDirectory service method');
 			
 			return eastoreUiActionService.moveDirectory(
 					{
@@ -452,7 +452,7 @@
 		// remove a file
 		function _removeFile(fileNodeId){
 			
-			$log.debug('Calling jax-rs _removeFile service method');
+			//$log.debug('Calling jax-rs _removeFile service method');
 			
 			return eastoreUiActionService.removeFile(
 					{
@@ -464,7 +464,7 @@
 		// remove a directory
 		function _removeDirectory(dirNodeId){
 			
-			$log.debug('Calling jax-rs _removeDirectory service method');
+			//$log.debug('Calling jax-rs _removeDirectory service method');
 			
 			return eastoreUiActionService.removeDirectory(
 					{
@@ -476,7 +476,7 @@
 		// fetch a specific path resource by node id.
 		function _pathResourceByNodeId(theNodeId){
 			
-			$log.debug('Calling jax-rs _pathResourceByNodeId service method');
+			//$log.debug('Calling jax-rs _pathResourceByNodeId service method');
 			
 			return eastoreUiJsonService.pathResourceByNodeId({ nodeId : theNodeId }).$promise;					
 			
@@ -485,7 +485,7 @@
 		// fetch a specific path resource by store name and relative path
 		function _pathResourceByPath(storeName, relativePath){
 			
-			$log.debug('Calling jax-rs _pathResourceByPath service method');
+			//$log.debug('Calling jax-rs _pathResourceByPath service method');
 			
 			return eastoreUiJsonService.pathResourceByPath({ storeName : storeName, relPath : relativePath }).$promise;					
 			
@@ -494,7 +494,7 @@
 		// fetch parent tree path for some child resource
 		function _breadcrumbNode(theNodeId){
 			
-			$log.debug('Calling jax-rs _breadcrumbNode service method');
+			//$log.debug('Calling jax-rs _breadcrumbNode service method');
 			
 			return eastoreUiJsonService.breadcrumbNode({ nodeId : theNodeId }).$promise;					
 			
@@ -503,7 +503,7 @@
 		// fetch parent tree path for some child resource
 		function _breadcrumbPath(storeName, relativePath){
 			
-			$log.debug('Calling jax-rs _breadcrumbPath service method');
+			//$log.debug('Calling jax-rs _breadcrumbPath service method');
 			
 			return eastoreUiJsonService.breadcrumbPath({ storeName : storeName, relPath : relativePath }).$promise;					
 			
@@ -512,7 +512,7 @@
 		// fetch store by name
 		function _storeByName(storeName){
 			
-			$log.debug('Calling jax-rs _storeByName service method');
+			//$log.debug('Calling jax-rs _storeByName service method');
 			
 			return eastoreUiJsonService.storeByName({ storeName : storeName }).$promise;
 			
@@ -521,7 +521,7 @@
 		// fetch all stores
 		function _storeList(){
 			
-			$log.debug('Calling jax-rs _storeList service method');
+			//$log.debug('Calling jax-rs _storeList service method');
 			
 			return eastoreUiJsonService.storelist().$promise;
 			
@@ -530,7 +530,7 @@
 		// fetch first-level child resources for some parent resource
 		function _loadRelPath(storeName, relativePath){
 			
-			$log.debug('Calling jax-rs loadRelPath service method');
+			//$log.debug('Calling jax-rs loadRelPath service method');
 			
 			return eastoreUiJsonService.loadRelPath({ storeName : storeName, relPath : relativePath }).$promise;		
 			
@@ -539,7 +539,7 @@
 		// download a file resource
 		function _downloadFile(fileId){
 			
-			$log.debug('Downloading file with nodeId = ' + fileId);
+			//$log.debug('Downloading file with nodeId = ' + fileId);
 			
 			var downloadUrl = appConstants.eastoreUiActionJaxrsService + '/download/id/' + fileId;
 			
@@ -550,7 +550,7 @@
 		// fetch all gatekeeper categories
 		function _fetchGatekeeperCategories(){
 			
-			$log.debug('Calling jax-rs method to fetch gatekeeper categories');
+			//$log.debug('Calling jax-rs method to fetch gatekeeper categories');
 			
 			return eastoreUiJsonService.gatekeeperCategories().$promise;
 			
@@ -559,7 +559,7 @@
 		// fetch all gatekeeper groups for specific category
 		function _fetchGatekeeperGroupsForCategory(categoryCode){
 			
-			$log.debug('Calling jax-rs method to fetch gatekeeper groups for caregory code ' + categoryCode);
+			//$log.debug('Calling jax-rs method to fetch gatekeeper groups for caregory code ' + categoryCode);
 			
 			return eastoreUiJsonService.gatekeeperGroupsForCategory({ categoryCode : categoryCode }).$promise;
 			
@@ -568,7 +568,7 @@
 		// fetch gatekeeper category by group code
 		function _fetchGatekeeperCategoryByGroupCode(groupCode){
 			
-			$log.debug('Calling jax-rs method to fetch gatekeeper category for group code ' + groupCode);
+			//$log.debug('Calling jax-rs method to fetch gatekeeper category for group code ' + groupCode);
 			
 			return eastoreUiJsonService.gatekeeperCategoryForGroup({ groupCode : groupCode }).$promise;
 			
@@ -577,7 +577,7 @@
 		// fetch gatekeeper group by group code
 		function _fetchGatekeeperGroupByGroupCode(groupCode){
 			
-			$log.debug('Calling jax-rs method to fetch gatekeeper group for group code ' + groupCode);
+			//$log.debug('Calling jax-rs method to fetch gatekeeper group for group code ' + groupCode);
 			
 			return eastoreUiJsonService.gateKeeperGroupByCode({ groupCode : groupCode }).$promise;
 			
