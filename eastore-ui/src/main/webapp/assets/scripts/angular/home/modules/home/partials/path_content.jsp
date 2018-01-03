@@ -29,14 +29,14 @@
 				<md-menu-divider></md-menu-divider>
 					
 				<md-menu-item>
-					<md-button ng-click="pathCtrl.cutSelectedResources(pathCtrl.store, pathCtrl.directory, pathCtrl.pathresources)" ng-disabled="!pathCtrl.haveSelectedPathResource(pathCtrl.pathresources)">
+					<md-button ng-click="pathCtrl.cutSelectedResources(pathCtrl.store, pathCtrl.directory, pathCtrl.getPathResources())" ng-disabled="!pathCtrl.haveSelectedPathResource(pathCtrl.getPathResources())">
 						<md-icon md-svg-icon="<%=request.getContextPath()%>/secure/home/assets/img/icons/ic_content_cut_24px.svg" md-menu-align-target></md-icon>
 						Cut
 					</md-button>
 				</md-menu-item>
 
 				<md-menu-item>
-					<md-button ng-click="pathCtrl.copySelectedResources(pathCtrl.store, pathCtrl.directory, pathCtrl.pathresources)" ng-disabled="!pathCtrl.haveSelectedPathResource(pathCtrl.pathresources)">
+					<md-button ng-click="pathCtrl.copySelectedResources(pathCtrl.store, pathCtrl.directory, pathCtrl.getPathResources())" ng-disabled="!pathCtrl.haveSelectedPathResource(pathCtrl.getPathResources())">
 						<md-icon md-svg-icon="<%=request.getContextPath()%>/secure/home/assets/img/icons/ic_content_copy_24px.svg" md-menu-align-target></md-icon>
 						Copy
 					</md-button>
@@ -52,7 +52,7 @@
 				<md-menu-divider></md-menu-divider>
 				
 				<md-menu-item>
-					<md-button ng-click="pathCtrl.deleteSelectedResources(pathCtrl.store, pathCtrl.directory, pathCtrl.pathresources)"  ng-disabled="!pathCtrl.haveSelectedPathResource(pathCtrl.pathresources)">
+					<md-button ng-click="pathCtrl.deleteSelectedResources(pathCtrl.store, pathCtrl.directory, pathCtrl.getPathResources())"  ng-disabled="!pathCtrl.haveSelectedPathResource(pathCtrl.getPathResources())">
 						<md-icon md-svg-icon="<%=request.getContextPath()%>/secure/home/assets/img/icons/ic_delete_24px.svg" md-menu-align-target></md-icon>
 						Delete
 					</md-button>
@@ -61,9 +61,9 @@
 			</md-menu-content>
 		</md-menu>	
 		
-		<div flex></div>
+		<div flex></div>	
 		
-		<md-button class="md-raised standardButton" ng-click="pathCtrl.unselectPathResource(pathCtrl.pathresources)"  ng-disabled="!pathCtrl.haveSelectedPathResource(pathCtrl.pathresources)">
+		<md-button class="md-raised standardButton" ng-click="pathCtrl.unselectPathResource(pathCtrl.getPathResources())"  ng-disabled="!pathCtrl.haveSelectedPathResource(pathCtrl.getPathResources())">
 			Unselect
 		</md-button>
 		
@@ -79,9 +79,9 @@
 	<div smart-table-resource-list
 		store="pathCtrl.store"
 		directory="pathCtrl.directory"
-		resource-list="pathCtrl.pathresources" 
+		resource-list="pathCtrl.getPathResources()" 
 		resource-click-handler="pathCtrl.clickResourceHandler(theStore, thePathResource)"
 		resource-edit-click-handler="pathCtrl.clickEditResourceHandler(theStore, theDirectory, thePathResource)">
-	</div>	
+	</div>
 		
 </md-content>

@@ -12,15 +12,15 @@
 		
 		bindings: {
 			leftnavid : '<',
-			eastomp : '<',
-			$transition$ : '<' // https://github.com/angular-ui/ui-router/issues/3110
+			eastomp : '<'
+			//,$transition$ : '<' // https://github.com/angular-ui/ui-router/issues/3110
 		},
 		
 		templateUrl : function (appConstants){
 			return appConstants.contextPath + '/assets/scripts/angular/home/modules/home/views/root.jsp'
 		},
 
-		controller : function(appConstants, resolveService, EAStomp, $log, $mdSidenav, $mdUtil, $state, $stateParams){
+		controller : function(appConstants, resolveService, sharedDataService, EAStomp, $log, $mdSidenav, $mdUtil, $state, $stateParams){
 			
 			var thisCtrl = this;
 			
@@ -111,7 +111,7 @@
                 var messageData = JSON.parse(socketMessage.body);
                 $log.info('messageData = ' + JSON.stringify(messageData));
 
-                    if($state && $stateParams && thisCtrl.$transition$ && messageData && $stateParams.currDirResource){
+                    if($state && $stateParams /*&& thisCtrl.$transition$*/ && messageData && $stateParams.currDirResource){
 
                         $log.debug('Current state = ' + $state.current.name);
 
@@ -137,7 +137,14 @@
                         if($state.current.name === 'path' && messageCode == 'DIRECTORY_CONTENTS_CHANGED' && currDirId === messageNodeId){
 
                             $log.debug('reload path resources!');
+							
+							// re-resolved the path resources and load them into our shared data service.
+							resolveService.resolvePathResources($stateParams).then(function (data){
+								sharedDataService.setPathResources(data);
+							});							
 
+							/* The following code attempts to re-resolve a resolve for a state, but I didn't have any success
+							
                             // https://github.com/angular-ui/ui-router/issues/3399
                             // https://github.com/angular-ui/ui-router/issues/3210
 
@@ -152,6 +159,7 @@
 
                             // re-fetch
                             myResolve.get(context).then(result => this.result = result);
+							*/
 
                         }
 					

@@ -9,11 +9,19 @@
 	//
 	mainModule.component('pathHeaderComponent', {
 		
+		//
+		// < : one-way data binding
+		// = : two-way data binding
+		//
 		bindings: {
-				pathresources: '<',
-				breadcrumb: '<',
-				store: '<',
-				directory : '<'
+				
+			// no longer resolved. we now load the pathresources using our shared data service
+			//pathresources: '<',
+			
+			breadcrumb: '<',
+			store: '<',
+			directory : '<'
+				
 		},
 		
 		//templateUrl : '/eastore-ui/assets/scripts/angular/home/modules/home/partials/path_header.jsp',
@@ -21,9 +29,9 @@
 			return appConstants.contextPath +  '/assets/scripts/angular/home/modules/home/partials/path_header.jsp';
 		},			
 		
-		controller : function($log, $state, $stateParams){
+		controller : function($log, $scope, $state, $stateParams, resolveService, sharedDataService){
 			
-			//$log.debug('pathHeaderComponent controller');
+			var thisCtrl = this;	
 			
 			this.clickBreadcrumb = function(store, directoryResource){
 				
@@ -38,9 +46,13 @@
 			this.loadDirectory = function(store, directoryResource){
 					
 					//$stateParams.relPath = directoryResource.relativePath;
+				
+					$stateParams.store = store;
 					$stateParams.currDirResource = directoryResource;
+					
 					//$stateParams.urlPath = $stateParams.urlPath + '/' + directoryResource.pathName;
 					//$stateParams.urlPath = '/' + $stateParams.store.name + directoryResource.relativePath;
+					
 					$stateParams.urlPath = '/' + store.name + directoryResource.relativePath;
 					
 					//$log.debug('breadcrumb click, dirNodeId = ' + $stateParams.currDirResource.nodeId + ', urlPath = ' + $stateParams.urlPath);
@@ -52,19 +64,20 @@
 				
 			};	
 
+			//
+			// re-load the data for the current working directory
+			//
 			this.refreshPath = function(store, directoryResource){
 				
 				$log.debug('refreshing current view');
 				
-				this.loadDirectory(store, directoryResource);
+				// this next line reloads the current state (not desirable)
+				//this.loadDirectory(store, directoryResource);
 				
-				//var newUrlPath = '/' + store.name + directoryResource.relativePath;
-				
-				//$state.go('path', {
-				//	urlPath: newUrlPath,
-				//	store : store,
-				//	currDirResource : directoryResource
-				//	});				
+				// re-resolved the path resources and load them into our shared data service.
+				resolveService.resolvePathResources($stateParams).then(function (data){
+					sharedDataService.setPathResources(data);
+				});
 				
 			};
 			
@@ -80,9 +93,13 @@
 	mainModule.component('pathContentComponent', {
 		
 		bindings: {
-			pathresources: '<',
+			
+			// no longer resolved. we now load the pathresources using our shared data service
+			//pathresources: '<',
+				
 			store: '<',
 			directory : '<'
+			
 		},
 		
 		//templateUrl : '/eastore-ui/assets/scripts/angular/home/modules/home/partials/path_content.jsp',
@@ -90,11 +107,38 @@
 			return appConstants.contextPath +  '/assets/scripts/angular/home/modules/home/partials/path_content.jsp';
 		},			
 		
-		controller : function($log, $mdDialog, $state, $stateParams, homeRestService, resourceClipboardService){
+		controller : function($log, $scope, $mdDialog, $state, $stateParams, sharedDataService, homeRestService, resolveService, resourceClipboardService){
 			
-			//$log.debug('pathContentComponent controller');
+			var thisCtrl = this;
 			
 			var progressValue = 0;
+			
+			// when controller loads, resolve the path resources and load them into our shared data service
+			this.$onInit = function() {
+				
+				$log.debug('pathContentComponent controller initialized');
+				
+				thisCtrl.resolvePathResources();
+				
+			};
+
+			// resolve path resources and load them into our shared data service
+			this.resolvePathResources = function(){
+				
+				//return thisCtrl.pathresources; // our resolved data
+				
+				return resolveService.resolvePathResources($stateParams).then(function (data){
+					sharedDataService.setPathResources(data);
+					//$log.debug(JSON.stringify(sharedDataService.getPathResources()));
+					return sharedDataService.getPathResources();
+				});
+				
+			};
+
+			// get current set of path resources from our shared data service
+			this.getPathResources = function(){
+				return sharedDataService.getPathResources();
+			};			
 			
 			this.getProgressValue = function(){
 				return progressValue;
@@ -603,6 +647,9 @@
 			 * return true if any of the resources are selected in collection of path resources
 			 */
 			this.haveSelectedPathResource = function(pathResources){
+				if(!pathResources){
+					return;
+				}
 				for(var i = 0; i<pathResources.length; i++){
 					if(pathResources[i].isSelected){
 						return true;
@@ -711,10 +758,10 @@
 				
 			};
 
-			this.reloadCurrentState = function(){
-				
-				$state.reload();
 			
+			// re-loads the current state. Not exactly desirable because it will close and re-initialize our websocket/stomp connections in our parent root state.
+			this.reloadCurrentState = function(){	
+				$state.reload();
 			};
 			
 			this.openMenu = function ($mdMenu, event){

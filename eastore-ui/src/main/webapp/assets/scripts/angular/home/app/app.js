@@ -316,7 +316,12 @@
 					store : function($log, $stateParams, resolveService) {
 						
 						$log.debug('------------ [path state] resolving store');
+						
 						return resolveService.resolveCurrentStore($stateParams);
+						
+						//var store = resolveService.resolveCurrentStore($stateParams);
+						//sharedDataService.setStore(store);
+						//return sharedDataService.getStore();
 						
 					},
 					
@@ -324,17 +329,29 @@
 					directory : function ($log, $stateParams, resolveService) {
 
 						$log.debug('------------ [path state] resolving directory resource');
+						
 						return resolveService.resolveCurrentDirectory($stateParams);
+						
+						//var directory = resolveService.resolveCurrentDirectory($stateParams);
+						//sharedDataService.setDirectory(directory);
+						//return sharedDataService.getDirectory();
 
 					},	
 					
 					// the first-level child resources for the current directory
-					pathresources : function ($log, $stateParams, resolveService) {
+					/* // no longer resolved. we now load the pathresources using our shared data service. See controller for pathContentComponent.
+					pathresources : function ($log, $stateParams, resolveService, sharedDataService) {
 						
 						$log.debug('------------ [path state] resolving path resources');
+						
 						return resolveService.resolvePathResources($stateParams);
+						
+						//var pathResources = resolveService.resolvePathResources($stateParams);
+						//sharedDataService.setPathResources(pathResources);
+						//return sharedDataService.getPathResources();
 							
 					},
+					*/
 					
 					// current header title
 					headerTitle : function (urlParseService, $log, $stateParams){
@@ -902,7 +919,41 @@
 		);		
 	
 
-	};	
+	};
+	
+	homeApp.run(['$log', '$transitions', '$trace', function($log, $transitions, $trace) {
+		
+		$log.debug('Running eastore-ui');
+		
+		//$trace.enable('TRANSITION');
+		
+		$transitions.onStart({ }, function(trans) {
+			
+			$log.debug('Transition started [from = ' + trans.from().name + ', to = ' + trans.to().name + ']');
+			//$log.debug(JSON.stringify($stateParams));
+			
+		});
+		
+		// $transitions.onExit
+		// $transitions.onRetain
+		// $transitions.onEnter // runs after onRetain
+		// $transitions.onFinish
+		// $transitions.onSuccess
+		// $transitions.onError
+		
+	}])	
+	
+	/*
+	homeApp.run(['$log', '$rootScope', function($log, $rootScope) {
+		
+		$log.debug('Running eastore-ui');
+		
+		$rootScope.$on('$stateChangeStart', function(event, toState, toParams, fromState, fromParams) {
+			$log.debug('state change start: toState = ' + toState + ', fromState = ' + fromState)
+		});		
+		
+	}]);
+	*/
 	
 	// not sure why we call run() on our app. It was in the angular1 'hello galaxy' example
 	// https://ui-router.github.io/ng1/tutorial/hellogalaxy
