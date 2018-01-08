@@ -28,9 +28,9 @@
 			
 			this.$onInit = function() {
 				
-				$log.debug('rootComponent controller');
+				//$log.debug('rootComponent controller');
 				
-				thisCtrl.initializeStompMessaging();
+				//thisCtrl.initializeStompMessaging();
 				
 			};
 			

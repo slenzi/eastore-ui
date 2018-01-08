@@ -62,4 +62,5 @@ application scripts
 <script type="text/javascript" src="<%=request.getContextPath()%>/assets/scripts/angular/home/modules/home/services/resolve_service.js"></script>
 <script type="text/javascript" src="<%=request.getContextPath()%>/assets/scripts/angular/home/modules/home/services/url_parse_service.js"></script>
 <script type="text/javascript" src="<%=request.getContextPath()%>/assets/scripts/angular/home/modules/home/services/resource_clipboard_service.js"></script>
+<script type="text/javascript" src="<%=request.getContextPath()%>/assets/scripts/angular/home/modules/home/services/stomp_service.js"></script>
 <script type="text/javascript" src="<%=request.getContextPath()%>/assets/scripts/angular/home/app/app.js"></script>
