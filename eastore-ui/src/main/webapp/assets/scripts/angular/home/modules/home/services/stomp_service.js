@@ -62,7 +62,9 @@
             var messageCode = messageData.code;
             var messageNodeId = messageData.nodeId;
             //var currDirId = $stateParams.currDirResource.nodeId;
-            var currDirId = sharedDataService.getDirectory().nodeId;
+            var currStore = sharedDataService.getStore();
+            var currDir = sharedDataService.getDirectory();
+            var currDirId = currDir.nodeId;
 
             $log.debug('messageCode = ' + messageCode + ', messageNodeId = ' + messageNodeId + ', currDirId = ' + currDirId);
 
@@ -84,9 +86,12 @@
                 $log.debug('reload path resources!');
 				
 				// re-resolved the path resources and load them into our shared data service.
-				resolveService.resolvePathResources($stateParams).then(function (data){
+				//resolveService.resolvePathResources($stateParams).then(function (data){
+				//	sharedDataService.setPathResources(data);
+				//});
+				resolveService.resolvePathResourcesForDirectory(currStore, currDir).then(function (data){
 					sharedDataService.setPathResources(data);
-				});
+				});                
 				
             }
 			

@@ -153,7 +153,8 @@
 		}		
 		
 		//
-		// resolve firs-level child path resources for current directory
+		// resolve firs-level child path resources for current store and directory stored in $stateParams.
+		// if $stateParams does not have store or directory then attempt to parse it from the URL
 		//
 		function _resolvePathResources($stateParams){
 			
@@ -188,6 +189,26 @@
 			//$log.debug('dirNodeId = ' + currDirRes.nodeId);
 			
 			// fetch child path resources for the current directory
+			return homeRestService
+				.loadRelPath(storeName, relPathToLoad)
+				.then( function ( jsonData ){
+					//$log.debug('resolved path resources for storeName = ' + storeName + ', relPathToLoad = ' + relPathToLoad);
+					//$log.debug(JSON.stringify(jsonData))
+					return jsonData;
+				}, function( error ){
+					alert('Error calling loadRelPath(...) service method' + JSON.stringify(error));
+				});			
+			
+		}
+		
+		//
+		// resolve firs-level child path resources for store and directory
+		//
+		function _resolvePathResourcesForDirectory(store, directory){
+			
+			var storeName = $stateParams.store.name;
+			var relPathToLoad = directory.relativePath;	
+			
 			return homeRestService
 				.loadRelPath(storeName, relPathToLoad)
 				.then( function ( jsonData ){
@@ -441,6 +462,7 @@
 			resolveCurrentEditResource : _resolveCurrentEditResource,
 			
 			resolvePathResources : _resolvePathResources,
+			resolvePathResourcesForDirectory : _resolvePathResourcesForDirectory,
 			
 			resolveBreadcrumb : _resolveBreadcrumb,
 			

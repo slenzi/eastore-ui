@@ -319,12 +319,14 @@
 						
 						//return resolveService.resolveCurrentStore($stateParams);
 						
-						var store = resolveService.resolveCurrentStore($stateParams);
+						//var store = resolveService.resolveCurrentStore($stateParams);
+						//sharedDataService.setStore(store);
+						//return sharedDataService.getStore();
 						
-						// add to shared data service so we can access the store in our stomp service
-						sharedDataService.setStore(store);
-						
-						return sharedDataService.getStore();
+                        resolveService.resolveCurrentStore($stateParams).then(function (data){
+                            sharedDataService.setStore(data);
+                            return sharedDataService.getStore();
+                        });						
 						
 					},
 					
@@ -335,12 +337,14 @@
 						
 						//return resolveService.resolveCurrentDirectory($stateParams);
 						
-						var directory = resolveService.resolveCurrentDirectory($stateParams);
+						//var directory = resolveService.resolveCurrentDirectory($stateParams);
+						//sharedDataService.setDirectory(directory);
+						//return sharedDataService.getDirectory();
 						
-						// add to shared data service so we can access the directory in our stomp service
-						sharedDataService.setDirectory(directory);
-						
-						return sharedDataService.getDirectory();
+                        var directory = resolveService.resolveCurrentDirectory($stateParams).then(function (data){
+                            sharedDataService.setDirectory(data);
+                            return sharedDataService.getDirectory();
+                        });						
 
 					},	
 					
