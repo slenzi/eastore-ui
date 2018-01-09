@@ -22,8 +22,8 @@
 			_stompClient = new EAStomp({
                 sockJsUrl: appConstants.eastoreStompSockJsUrl
             }); 
-			_stompClient.setDebug(this.stompSocketDebug);
-			_stompClient.connect(this.myStompConnect, this.myStompConnectError);				
+			_stompClient.setDebug(stompSocketDebug);
+			_stompClient.connect(myStompConnect, myStompConnectError);				
 			
 		}
 		
@@ -32,8 +32,8 @@
 		}
 		
 		function myStompConnect(frame){
-	        var subscriptTest = _stompClient.subscribe('/topic/test', this.myStompReceiveTestMessages);
-	        var subscriptResourceChange = _stompClient.subscribe('/topic/resource/change', this.myStompReceiveResourceChangeMessages);
+	        var subscriptTest = _stompClient.subscribe('/topic/test', myStompReceiveTestMessages);
+	        var subscriptResourceChange = _stompClient.subscribe('/topic/resource/change', myStompReceiveResourceChangeMessages);
 		}
 		
 		function myStompConnectError(error){
