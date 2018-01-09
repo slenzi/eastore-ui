@@ -8,7 +8,7 @@
 <md-content layout="row" flex style="display: flex; flex-flow: row; height: 100%;">
 -->
 
-<div layout="row" style="height: 100%;" ng-controller="navController as navCtrl">
+<div layout="row" style="height: 100%;" ng-controller="appController as appCtrl">
 
 	<md-sidenav class="md-sidenav-left md-hue-1" md-component-id="{{rootCtrl.leftnavid}}" md-is-locked-open="$mdMedia('gt-md')">
 
@@ -26,7 +26,7 @@
 					</a>
 					<span flex></span>
 					<!-- rootCtrl.toggleNav(rootCtrl.leftnavid) -->
-					<md-button ng-click="navCtrl.toggleNav()" class="md-icon-button" aria-label="Menu" hide-gt-md>
+					<md-button ng-click="appCtrl.toggleNav()" class="md-icon-button" aria-label="Menu" hide-gt-md>
 						<md-icon md-svg-icon="<%=request.getContextPath()%>/secure/home/assets/img/icons/ic_menu_18px.svg"></md-icon>
 					</md-button>
 					
@@ -63,7 +63,7 @@
 				<img src="{{ img.src }}" width="100%" height="90" ng-repeat="img in rootCtrl.bannerImages" />
 			</div>			
 			<h3 class="md-toolbar-tools md-toolbar-tools-bottom">
-				<md-button ng-click="navCtrl.toggleNav()" class="md-icon-button" aria-label="Menu" hide-gt-md>
+				<md-button ng-click="appCtrl.toggleNav()" class="md-icon-button" aria-label="Menu" hide-gt-md>
 					<md-icon md-svg-icon="<%=request.getContextPath()%>/secure/home/assets/img/icons/ic_menu_18px.svg"></md-icon>
 				</md-button>				
 				<span style="font-style: italic; whitespace:nowrap;">

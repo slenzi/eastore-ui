@@ -4,16 +4,18 @@
 	
 	var mainModule = angular.module('eastore-ui-main');
 	
-	mainModule.factory('stompService', ['$log', 'appConstants', 'resolveService', 'sharedDataService', 'EAStomp', '$state', '$stateParams', StompService]);
+	mainModule.factory('stompService', ['$log', '$state', '$stateParams', 'appConstants', 'resolveService', 'sharedDataService', 'EAStomp', StompService]);
 	
 	/**
 	 * Service for initializing stomp messaging over web sockets
 	 */
-	function StompService($log, appConstants, resolveService, sharedDataService, $state, $stateParams, EAStomp){
+	function StompService($log, $state, $stateParams, appConstants, resolveService, sharedDataService, EAStomp){
 		
 		var _stompClient;
 		
 		function initializeStompMessaging(){
+			
+			//alert('Initializing stomp messaging service');
 			
 			$log.debug('Initializing Stomp messaging');
 			
@@ -79,9 +81,9 @@
                     $log.debug('reload path resources!');
 					
 					// re-resolved the path resources and load them into our shared data service.
-					//resolveService.resolvePathResources($stateParams).then(function (data){
-					//	sharedDataService.setPathResources(data);
-					//});
+					resolveService.resolvePathResources($stateParams).then(function (data){
+						sharedDataService.setPathResources(data);
+					});
 					
                 }
 				
