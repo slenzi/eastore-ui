@@ -13,17 +13,20 @@
 		
 		var _stompClient;
 		
+		var isInitialized = false;
+		
 		function initializeStompMessaging(){
 			
-			//alert('Initializing stomp messaging service');
-			
 			$log.debug('Initializing Stomp messaging');
+			$log.debug('isInitialized = ' + isInitialized);
 			
-			_stompClient = new EAStomp({
-                sockJsUrl: appConstants.eastoreStompSockJsUrl
-            }); 
-			_stompClient.setDebug(stompSocketDebug);
-			_stompClient.connect(myStompConnect, myStompConnectError);				
+			if(!isInitialized){
+				_stompClient = new EAStomp({
+	                sockJsUrl: appConstants.eastoreStompSockJsUrl
+	            }); 
+				_stompClient.setDebug(stompSocketDebug);
+				_stompClient.connect(myStompConnect, myStompConnectError);					
+			}			
 			
 		}
 		
