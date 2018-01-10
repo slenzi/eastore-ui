@@ -75,6 +75,7 @@
 				//this.loadDirectory(store, directoryResource);
 				
 				// re-resolved the path resources and load them into our shared data service.
+				// TODO - use store and directory from shared data service rather than $stateParams
 				resolveService.resolvePathResources($stateParams).then(function (data){
 					sharedDataService.setPathResources(data);
 				});
@@ -113,7 +114,9 @@
 			
 			var progressValue = 0;
 			
-			// when controller loads, resolve the path resources and load them into our shared data service
+			// load current working store and directory into shared data service
+			// resolve first-level path resources for current working directory
+			// initialize stomp messagin service
 			this.$onInit = function() {
 				
 				$log.debug('pathContentComponent controller initialized');
