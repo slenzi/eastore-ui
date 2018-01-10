@@ -133,19 +133,11 @@
 
 			// resolve path resources and load them into our shared data service
 			this.resolvePathResources = function(){
-				
 				resolveService.resolvePathResourcesForDirectory(sharedDataService.getStore(), sharedDataService.getDirectory())
 					.then(function (data){
 						sharedDataService.setPathResources(data);
 					}
-				);				
-				
-				//return resolveService.resolvePathResources($stateParams).then(function (data){
-				//	sharedDataService.setPathResources(data);
-				//  $log.debug(JSON.stringify(sharedDataService.getPathResources()));
-				//	return sharedDataService.getPathResources();
-				//});
-				
+				);
 			};
 
 			// get current set of path resources from our shared data service
@@ -192,62 +184,46 @@
 					});
 					
 					//
-					// TODO - rather than reloading the entire state we should just re-fetch our 'pathresource' resolve
+					// TODO - rather than reloading the entire state we should just re-fetch our 'pathresource' * breadcrumb resolve
 					//
 					
 				}else{
-
 					alert('You clicked on a path resource with an unrecognized resource type:\n\n' + JSON.stringify(resource));
-
 				}
 				
 			};
 			
 			// handle click for edit resource
 			this.clickEditResourceHandler = function(store, directory, resourceToEdit){
-				
 				if(resourceToEdit.resourceType === 'FILE'){
-					
 					this.loadEditFile(store, directory, resourceToEdit);
-				
 				}else if(resourceToEdit.resourceType === 'DIRECTORY'){
-					
-					this.loadEditDirectory(store, directory, resourceToEdit);				
-					
+					this.loadEditDirectory(store, directory, resourceToEdit);
 				}else{
-
 					alert('You clicked on a path resource with an unrecognized resource type:\n\n' + JSON.stringify(resource));
-
 				}
-				
 			};	
 
 			// load the edit directory form
 			this.loadEditDirectory = function(currentStore, currentDirectory, childDirectoryToEdit){
-				
 				var newUrlPath = '/' + currentStore.name + currentDirectory.relativePath;
-				
 				$state.go('editdir', {
 					urlPath: newUrlPath,
 					store : currentStore,
 					currDirResource : currentDirectory,
 					currEditResource : childDirectoryToEdit
-					});				
-				
+					});
 			}
 			
 			// load the edit file form
 			this.loadEditFile = function(currentStore, currentDirectory, fileToEdit){
-				
 				var newUrlPath = '/' + currentStore.name + currentDirectory.relativePath;
-				
 				$state.go('editfile', {
 					urlPath: newUrlPath,
 					store : currentStore,
 					currDirResource : currentDirectory,
 					currEditResource : fileToEdit
-					});				
-				
+					});
 			}			
 			
 			// cut selected resources
@@ -316,9 +292,7 @@
 											
 											thisCtrl.setCalculatedProgress((i+1), resourcesToDelete.length);
 											
-											// reloading of pathresources should be handled in out root component which watches for
-											// directory resource change events from our websocket connection
-											//											
+											// we now reload path resources when we recieve a resource change event from our stomp messaging web socket connection
 											//thisCtrl.reloadCurrentState();
 										
 									});									
@@ -342,9 +316,7 @@
 											
 											thisCtrl.setCalculatedProgress((i+1), resourcesToDelete.length);
 											
-											// reloading of pathresources should be handled in out root component which watches for
-											// directory resource change events from our websocket connection
-											//											
+											// we now reload path resources when we recieve a resource change event from our stomp messaging web socket connection										
 											//thisCtrl.reloadCurrentState();
 										
 									});							
@@ -434,9 +406,7 @@
 											
 											thisCtrl.setCalculatedProgress((i+1), pathResources.length);
 											
-											// reloading of pathresources should be handled in out root component which watches for
-											// directory resource change events from our websocket connection
-											//											
+											// we now reload path resources when we recieve a resource change event from our stomp messaging web socket connection								
 											//thisCtrl.reloadCurrentState();
 											//thisCtrl.loadPathState(destinationStore, destinationDirectory);
 										
@@ -461,9 +431,7 @@
 											
 											thisCtrl.setCalculatedProgress((i+1), pathResources.length);
 											
-											// reloading of pathresources should be handled in out root component which watches for
-											// directory resource change events from our websocket connection
-											//
+											// we now reload path resources when we recieve a resource change event from our stomp messaging web socket connection
 											//thisCtrl.reloadCurrentState();
 											//thisCtrl.loadPathState(destinationStore, destinationDirectory);
 
@@ -530,9 +498,7 @@
 											
 											thisCtrl.setCalculatedProgress((i+1), pathResources.length);
 											
-											// reloading of pathresources should be handled in out root component which watches for
-											// directory resource change events from our websocket connection
-											//											
+											// we now reload path resources when we recieve a resource change event from our stomp messaging web socket connection											
 											//thisCtrl.reloadCurrentState();
 											//thisCtrl.loadPathState(destinationStore, destinationDirectory);
 										
@@ -557,9 +523,7 @@
 											
 											thisCtrl.setCalculatedProgress((i+1), pathResources.length);
 											
-											// reloading of pathresources should be handled in out root component which watches for
-											// directory resource change events from our websocket connection
-											//											
+											// we now reload path resources when we recieve a resource change event from our stomp messaging web socket connection										
 											//thisCtrl.reloadCurrentState();
 											//thisCtrl.loadPathState(destinationStore, destinationDirectory);
 
@@ -581,19 +545,7 @@
 					
 				});
 			
-			};		
-			
-			/*
-			this.getSelectedPathResources = function(pathResources){
-				var items = [];
-				for(var i = 0; i<pathResources.length; i++){
-					if(pathResources[i].isSelected){
-						items.push(pathResources[i]);
-					}
-				}
-				return items;
 			};
-			*/
 
 			/**
 			 * Get all selected items in the collection of pathResources

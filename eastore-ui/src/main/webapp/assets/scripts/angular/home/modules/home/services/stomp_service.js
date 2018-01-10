@@ -7,7 +7,7 @@
 	mainModule.factory('stompService', ['$log', '$state', 'appConstants', 'resolveService', 'sharedDataService', 'EAStomp', StompService]);
 	
 	/**
-	 * Service for initializing stomp messaging over web sockets
+	 * Service for initializing stomp messaging over web sockets. We use this in path_resource_component.js
 	 */
 	function StompService($log, $state, appConstants, resolveService, sharedDataService, EAStomp){
 		
@@ -85,10 +85,6 @@
 
                 $log.debug('reload path resources!');
 				
-				// re-resolved the path resources and load them into our shared data service.
-				//resolveService.resolvePathResources($stateParams).then(function (data){
-				//	sharedDataService.setPathResources(data);
-				//});
 				resolveService.resolvePathResourcesForDirectory(currStore, currDir).then(function (data){
 					sharedDataService.setPathResources(data);
 				});                
