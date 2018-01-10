@@ -4,14 +4,14 @@
 
 	eastoreModule
 		.controller('appController',[
-			'appConstants', '$mdSidenav', '$mdUtil', '$log', 'stompService', AppController
+			'appConstants', '$mdSidenav', '$mdUtil', '$log', AppController
 			]
 		);
 	
 	/**
-     * Bootstrap our stomp messaging service, and setup toggle for side nav bar.
+     * Setup toggle for side nav bar. Ideally this should be in our root component.... Work on fixing this later.
 	 */
-	function AppController(appConstants, $mdSidenav, $mdUtil, $log, stompService){
+	function AppController(appConstants, $mdSidenav, $mdUtil, $log){
 		
 		var self = this;
 		
@@ -20,8 +20,6 @@
 		function doInit(){
 			
 			$log.debug('Initializing AppController');
-			
-			stompService.initializeStompMessaging();
 			
 		};
 		

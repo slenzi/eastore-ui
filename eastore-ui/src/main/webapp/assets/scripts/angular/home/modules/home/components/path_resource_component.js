@@ -107,7 +107,7 @@
 			return appConstants.contextPath +  '/assets/scripts/angular/home/modules/home/partials/path_content.jsp';
 		},			
 		
-		controller : function($log, $scope, $mdDialog, $state, $stateParams, sharedDataService, homeRestService, resolveService, resourceClipboardService){
+		controller : function($log, $scope, $mdDialog, $state, $stateParams, sharedDataService, homeRestService, resolveService, resourceClipboardService, stompService){
 			
 			var thisCtrl = this;
 			
@@ -118,20 +118,33 @@
 				
 				$log.debug('pathContentComponent controller initialized');
 				
+				// put the current working store & directory into our shared data service so
+				// we can access them from our stomp messaging service
+				sharedDataService.setStore(thisCtrl.store);
+				sharedDataService.setDirectory(thisCtrl.directory);
+				
+				// resolve first-level path resources for the current working directory
 				thisCtrl.resolvePathResources();
+				
+				// initialize stomp messaging web socket connection
+				stompService.initializeStompMessaging();
 				
 			};
 
 			// resolve path resources and load them into our shared data service
 			this.resolvePathResources = function(){
 				
-				//return thisCtrl.pathresources; // our resolved data
+				resolveService.resolvePathResourcesForDirectory(sharedDataService.getStore(), sharedDataService.getDirectory())
+					.then(function (data){
+						sharedDataService.setPathResources(data);
+					}
+				);				
 				
-				return resolveService.resolvePathResources($stateParams).then(function (data){
-					sharedDataService.setPathResources(data);
-					//$log.debug(JSON.stringify(sharedDataService.getPathResources()));
-					return sharedDataService.getPathResources();
-				});
+				//return resolveService.resolvePathResources($stateParams).then(function (data){
+				//	sharedDataService.setPathResources(data);
+				//  $log.debug(JSON.stringify(sharedDataService.getPathResources()));
+				//	return sharedDataService.getPathResources();
+				//});
 				
 			};
 

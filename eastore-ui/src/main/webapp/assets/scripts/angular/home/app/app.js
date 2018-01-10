@@ -317,11 +317,11 @@
 						
 						$log.debug('------------ [path state] resolving store');
 						
-						//return resolveService.resolveCurrentStore($stateParams);
+						return resolveService.resolveCurrentStore($stateParams);
 						
-						var store = resolveService.resolveCurrentStore($stateParams);
-						sharedDataService.setStore(store);
-						return sharedDataService.getStore();
+						//var store = resolveService.resolveCurrentStore($stateParams);
+						//sharedDataService.setStore(store);
+						//return sharedDataService.getStore();
 						
                         //resolveService.resolveCurrentStore($stateParams).then(function (data){
                         //    sharedDataService.setStore(data);
@@ -335,11 +335,11 @@
 
 						$log.debug('------------ [path state] resolving directory resource');
 						
-						//return resolveService.resolveCurrentDirectory($stateParams);
+						return resolveService.resolveCurrentDirectory($stateParams);
 						
-						var directory = resolveService.resolveCurrentDirectory($stateParams);
-						sharedDataService.setDirectory(directory);
-						return sharedDataService.getDirectory();
+						//var directory = resolveService.resolveCurrentDirectory($stateParams);
+						//sharedDataService.setDirectory(directory);
+						//return sharedDataService.getDirectory();
 						
                         //var directory = resolveService.resolveCurrentDirectory($stateParams).then(function (data){
                         //    sharedDataService.setDirectory(data);
