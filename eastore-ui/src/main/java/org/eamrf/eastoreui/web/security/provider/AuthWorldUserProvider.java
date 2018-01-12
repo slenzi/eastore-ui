@@ -1,8 +1,11 @@
 package org.eamrf.eastoreui.web.security.provider;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 
-import org.frontier.ecog.webapp.authworld.client.AuthWorldClient;
+import org.eamrf.eastoreui.core.exception.ServiceException;
+import org.frontier.ecog.exception.EcogDatabaseException;
+import org.frontier.ecog.webapp.authworld.client.AuthworldLoginService;
 import org.frontier.ecog.webapp.authworld.model.AuthWorldUser;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Scope;
@@ -21,10 +24,15 @@ import org.springframework.web.context.WebApplicationContext;
 public class AuthWorldUserProvider {
 
 	@Autowired
-	private HttpServletRequest request;	
+	private HttpServletRequest request;
+	
+	@Autowired
+	private HttpServletResponse response;	
+	
+	AuthworldLoginService loginService = new AuthworldLoginService();
 	
 	public AuthWorldUserProvider() {
-		
+
 	}
 	
 	/**
@@ -32,17 +40,33 @@ public class AuthWorldUserProvider {
 	 * 
 	 * @return
 	 */
-	public AuthWorldUser getUser() {
-		return AuthWorldClient.getAuthWorldUser(request);
+	public AuthWorldUser getUserFromSession() {
+		return loginService.getUserFromSession(request, response, true);
 	}
 	
 	/**
-	 * Check if we have an AuthWorld user in the session.
+	 * Check if we have a valid AuthWorld user in the session.
 	 * 
 	 * @return
 	 */
-	public boolean haveUser() {
-		return AuthWorldClient.getAuthWorldUser(request) != null;
+	public boolean haveValidUserInSession() throws ServiceException {
+		try {
+			// TODO - change function so it does not throw an EcogDatabaseException
+			return loginService.haveValidUserInSession(request, response);
+		} catch (EcogDatabaseException e) {
+			throw new ServiceException(e);
+		}
+	}
+	
+	/**
+	 * Attempts to build and return an AuthWorldUser object using authworld session key from authworld cookie.
+	 * 
+	 * @return
+	 */
+	public AuthWorldUser getUserFromCookie() {
+		
+		return loginService.getUserFromCookie(request, response);
+		
 	}
 
 }

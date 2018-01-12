@@ -47,7 +47,7 @@ public class StoreService {
 	 */
 	private String getLoggedInUserId() throws ServiceException {
 		
-		AuthWorldUser user = authworldUserProvider.getUser();
+		AuthWorldUser user = authworldUserProvider.getUserFromSession();
 		if(user == null) {
 			throw new ServiceException("No AuthWorld user in the session");
 		}
