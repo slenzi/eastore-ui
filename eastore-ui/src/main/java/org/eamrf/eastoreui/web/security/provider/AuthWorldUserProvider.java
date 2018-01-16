@@ -40,8 +40,8 @@ public class AuthWorldUserProvider {
 	 * 
 	 * @return
 	 */
-	public AuthWorldUser getUserFromSession() {
-		return loginService.getUserFromSession(request, response, true);
+	public AuthWorldUser getUserFromSession(boolean updateLastActive) {
+		return loginService.getUserFromSession(request, response, updateLastActive);
 	}
 	
 	/**

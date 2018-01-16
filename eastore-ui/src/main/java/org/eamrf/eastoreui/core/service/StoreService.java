@@ -47,6 +47,7 @@ public class StoreService {
 	 */
 	private String getLoggedInUserId() throws ServiceException {
 		
+		// TODO - possibly need spring profile for controlling whether or not update last active time in cookie when fetchin user
 		AuthWorldUser user = authworldUserProvider.getUserFromSession();
 		if(user == null) {
 			throw new ServiceException("No AuthWorld user in the session");

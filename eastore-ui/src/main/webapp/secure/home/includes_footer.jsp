@@ -43,6 +43,10 @@ application scripts
 <script type="text/javascript" src="<%=request.getContextPath()%>/assets/scripts/angular/common/modules/websocket/ea-stomp.js"></script>
 
 <!-- specific to report app -->
+<script type="text/javascript" src="<%=request.getContextPath()%>/assets/scripts/angular/home/modules/login/modules.js"></script>
+<script type="text/javascript" src="<%=request.getContextPath()%>/assets/scripts/angular/home/modules/login/components/root_login_component.js"></script>
+<script type="text/javascript" src="<%=request.getContextPath()%>/assets/scripts/angular/home/modules/login/components/authworld_login_component.js"></script>
+
 <script type="text/javascript" src="<%=request.getContextPath()%>/assets/scripts/angular/home/modules/home/modules.js"></script>
 <script type="text/javascript" src="<%=request.getContextPath()%>/assets/scripts/angular/home/modules/home/directives.js"></script>
 <script type="text/javascript" src="<%=request.getContextPath()%>/assets/scripts/angular/home/modules/home/components/root_component.js"></script>

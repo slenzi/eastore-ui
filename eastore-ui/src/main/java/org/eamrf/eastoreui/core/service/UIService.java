@@ -11,8 +11,10 @@ import org.eamrf.eastoreui.core.aop.profiler.MethodTimer;
 import org.eamrf.eastoreui.core.exception.ServiceException;
 import org.eamrf.eastoreui.core.model.file.FileResponse;
 import org.eamrf.eastoreui.core.service.security.GatekeeperService;
+import org.eamrf.eastoreui.web.security.provider.AuthWorldUserProvider;
 import org.eamrf.gatekeeper.web.service.jaxws.model.Category;
 import org.eamrf.gatekeeper.web.service.jaxws.model.Group;
+import org.frontier.ecog.webapp.authworld.model.AuthWorldUser;
 import org.slf4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -38,6 +40,25 @@ public class UIService {
     
     @Autowired
     private GatekeeperService gatekeeperService;
+    
+    @Autowired
+    private AuthWorldUserProvider authworldUserProvider;     
+    
+    /**
+     * Check if there is an AuthWorldUser object in the session
+     * 
+     * @return
+     */
+    public Boolean haveAuthWorldUserInSession() {
+    	
+    	// TODO - possibly need spring profile for controlling whether or not update last active time in cookie when fetchin user
+    	AuthWorldUser user = authworldUserProvider.getUserFromSession();
+    	if(user != null) {
+    		return true;
+    	}
+    	return false;
+    	
+    }
     
     /**
      * fetch group by group code

@@ -12,7 +12,7 @@
 		
 		bindings: {
 			leftnavid : '<',
-			eastomp : '<'
+			haveUserInSession: '<'
 			//,$transition$ : '<' // https://github.com/angular-ui/ui-router/issues/3110
 		},
 		
@@ -20,12 +20,26 @@
 			return appConstants.contextPath + '/assets/scripts/angular/home/modules/home/views/root.jsp'
 		},
 
-		controller : function(appConstants, $log, $mdSidenav, $mdUtil){
+		controller : function(appConstants, $log, $mdSidenav, $mdUtil, $location, $state, sharedDataService){
 			
 			var thisCtrl = this;
 			
 			this.$onInit = function() {
+				
 				$log.debug('rootComponent controller');
+				
+				$log.debug('Have AuthWorldUser in session? = ' + thisCtrl.haveUserInSession);
+				if(!thisCtrl.haveUserInSession){
+					var currentUrl = $location.absUrl();
+					$log.debug('Current location = ' + currentUrl);
+					sharedDataService.setUrl(currentUrl);
+					$state.go('login');
+				}
+				
+				// if no user in session then store current URL in shared data service, then
+				// load the 'login' state where can attempt to log in the user using authworld
+				// cookie data, or if need be redirect the user to the authworld login page.
+				
 			};
 			
 			this.leftNavComponentId = appConstants.leftNavComponentId;

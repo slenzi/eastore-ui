@@ -10,6 +10,7 @@
 	 * ECOG-ACRIN Modules:
 	 * 
 	 * eastore-ui-main ---- Our main module
+	 * eastore-ui-login ----- Our login module
 	 * eastore-ui-util ---- Utility module
 	 * ea-upload-module --- File upload module
 	 * ea-stomp-module ---- STOMP messaging over web sockets using SockJS
@@ -25,7 +26,7 @@
 	homeApp = angular
 		.module('eastore-ui-home-app',
 				[
-				 'ui.router', 'ngMaterial', 'ngResource', 'eastore-ui-main', 'eastore-ui-util', 'ea-upload-module', 'ea-stomp-module', 'smart-table'
+				 'ui.router', 'ngMaterial', 'ngResource', 'eastore-ui-main', 'eastore-ui-login', 'eastore-ui-util', 'ea-upload-module', 'ea-stomp-module', 'smart-table'
 				 ])
 		// @xyz@ values are replaced/filtered by maven during build process
 		.constant('appConstants', {
@@ -171,7 +172,16 @@
 						$log.debug('------------ [root state] resolving left nav id');
 						return appConstants.leftNavComponentId;
 						
-					}
+					},
+					
+					// since this is being resolved on the root state, it will resolve before all our resolves on our child states
+					haveUserInSession : function($log, homeRestService){
+						
+						$log.debug('------------ [root state] resolving authworld user in session');
+						
+						return homeRestService.haveAuthWorldUserInSession();	
+						
+					}					
 					
 					//,
 
@@ -216,10 +226,13 @@
 				},
 				params : defaultStateParams,
 				resolve : {
-					stores : function ($log, $stateParams, resolveService) {
+					stores : function ($log, $stateParams, haveUserInSession, resolveService) {
 						
 						$log.debug('------------ [stores state] resolving stores ');
-						return resolveService.resolveStores($stateParams);
+						
+						if(haveUserInSession){
+							return resolveService.resolveStores($stateParams);
+						}
 						
 					},
 					headerTitle : function ($log, $stateParams){
@@ -313,11 +326,13 @@
 				resolve : {
 					
 					// the current store
-					store : function($log, $stateParams, resolveService, sharedDataService) {
+					store : function($log, $stateParams, haveUserInSession, resolveService, sharedDataService) {
 						
 						$log.debug('------------ [path state] resolving store');
 						
-						return resolveService.resolveCurrentStore($stateParams);
+						if(haveUserInSession){
+							return resolveService.resolveCurrentStore($stateParams);
+						}
 						
 						//var store = resolveService.resolveCurrentStore($stateParams);
 						//sharedDataService.setStore(store);
@@ -331,11 +346,13 @@
 					},
 					
 					// current working directory
-					directory : function ($log, $stateParams, resolveService, sharedDataService) {
+					directory : function ($log, $stateParams, haveUserInSession, resolveService, sharedDataService) {
 
 						$log.debug('------------ [path state] resolving directory resource');
 						
-						return resolveService.resolveCurrentDirectory($stateParams);
+						if(haveUserInSession){
+							return resolveService.resolveCurrentDirectory($stateParams);
+						}
 						
 						//var directory = resolveService.resolveCurrentDirectory($stateParams);
 						//sharedDataService.setDirectory(directory);
@@ -390,10 +407,12 @@
 					},
 					
 					// breadcrumb parent tree (bottom-up) for current directory
-					breadcrumb : function ($log, $stateParams, resolveService){
+					breadcrumb : function ($log, $stateParams, haveUserInSession, resolveService){
 						
 						$log.debug('------------ [path state] resolving breadcrumb parent tree');
-						return resolveService.resolveBreadcrumb($stateParams);
+						if(haveUserInSession){
+							return resolveService.resolveBreadcrumb($stateParams);
+						}
 						
 					}
 					
@@ -443,18 +462,22 @@
 					},
 					
 					// the current store
-					store : function($log, $stateParams, resolveService) {
+					store : function($log, $stateParams, haveUserInSession, resolveService) {
 						
 						$log.debug('------------ [upload state] resolving store');
-						return resolveService.resolveCurrentStore($stateParams);
+						if(haveUserInSession){
+							return resolveService.resolveCurrentStore($stateParams);
+						}
 						
 					},
 					
 					// current working directory
-					directory : function ($log, $stateParams, resolveService) {
+					directory : function ($log, $stateParams, haveUserInSession, resolveService) {
 
 						$log.debug('------------ [upload state] resolving directory resource');
-						return resolveService.resolveCurrentDirectory($stateParams);
+						if(haveUserInSession){
+							return resolveService.resolveCurrentDirectory($stateParams);
+						}
 
 					}						
 					
@@ -926,14 +949,90 @@
 				}					
 			}				
 			
-		);		
-	
+		);
+			
+			
+		//
+		// login root state - the parent state of all our 'login' state
+		//
+		$stateProvider.state(
+			'loginroot', {
+				
+				abstract: true,
+				
+				views : {
+					'rootview' : {
+						component : 'rootLoginComponent'
+					}
+					
+				},					
 
+				resolve : {
+
+					
+				}
+				
+			}
+		);			
+			
+		
+		//
+		// authworld login state (does not inherit from parent root state like the other states)
+		//
+		$stateProvider.state(
+			'login', {
+				parent: 'loginroot',
+				url: '/login',
+				views : {
+					uicontent : {
+						component : 'loginContentComponent'
+					},
+					uiheader : {
+						component : 'loginHeaderComponent'
+					},
+					uititle : {
+						component : 'loginTitleComponent'
+					},
+					uileftmenu : {
+						component : 'loginLeftMenuComponent'
+					}
+				},
+				params : defaultStateParams,
+				resolve : {
+					
+					headerTitle : function ($log, $stateParams){
+						return 'Authenticating...';
+					},
+					
+					redirectUrl : function(sharedDataService){
+						
+						return sharedDataService.getUrl();
+						
+					}
+					
+				}					
+			}
+		);
+		
 	};
 	
-	homeApp.run(['$log', '$transitions', '$trace', function($log, $transitions, $trace) {
+	homeApp.run(['$log', '$transitions', '$trace', 'homeRestService', function($log, $transitions, $trace, homeRestService) {
 		
 		$log.debug('Running eastore-ui');
+		
+		/*
+		var fubar = homeRestService.haveAuthWorldUserInSession().then(function (data){
+			
+			$log.debug('data = ' + data);
+			$log.debug('--> Have AuthWorldUser In Session? = ' + JSON.stringify(data));
+			return data;
+			
+		});
+		*/
+		
+		//var fubar = homeRestService.haveAuthWorldUserInSession();
+		
+		//$log.debug('--> fubar = ' + JSON.stringify(fubar));						
 		
 		//$trace.enable('TRANSITION');
 		

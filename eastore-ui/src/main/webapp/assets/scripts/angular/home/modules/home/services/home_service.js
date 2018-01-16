@@ -289,7 +289,14 @@
 					params: {
 						groupCode: '@groupCode'
 					}
-				}
+				},
+				
+				haveAuthWorldUserInSession: {
+					url: appConstants.eastoreUiJsonJaxrsService + '/authworld/haveuser',
+					method: 'GET',
+					isArray: false,
+					params: { }
+				}				
 			
 			});
 		
@@ -581,7 +588,18 @@
 			
 			return eastoreUiJsonService.gateKeeperGroupByCode({ groupCode : groupCode }).$promise;
 			
-		}		
+		}
+		
+		// check if there is an AuthWorldUser object in the session
+		function _haveAuthWorldUserInSession(){
+			
+			//return eastoreUiJsonService.haveAuthWorldUserInSession().$promise;
+			
+			return $http.get(appConstants.eastoreUiJsonJaxrsService + '/authworld/haveuser').then(function(response) {
+				return response.data;
+			});			
+			
+		}
 		
 		// *********************************
 		// External API
@@ -589,6 +607,8 @@
 	    return {
 	    	
 			echo : _echo,
+			
+			haveAuthWorldUserInSession : _haveAuthWorldUserInSession,
 			
 			addStore : _addStore,
 			updateStore : _updateStore,

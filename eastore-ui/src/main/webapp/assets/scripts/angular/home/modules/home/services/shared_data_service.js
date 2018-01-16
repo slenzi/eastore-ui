@@ -15,6 +15,15 @@
 		var _directory;
 		var _pathResources;
 		
+		var _url;
+		
+		function _getUrl(){
+			return _url;
+		}
+		function _setUrl(url){
+			_url = url;
+		}
+		
 		function _getStore(){
 			return _store;
 		}
@@ -48,10 +57,13 @@
 			setDirectory : _setDirectory,
 			
 			getPathResources : _getPathResources,
-			setPathResources : _setPathResources
+			setPathResources : _setPathResources,
+			
+			setUrl : _setUrl,
+			getUrl : _getUrl
 			
 		};		
 		
 	}	
 	
-})();			
+})();
