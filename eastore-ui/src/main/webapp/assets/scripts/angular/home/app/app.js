@@ -9,11 +9,11 @@
 	 * 
 	 * ECOG-ACRIN Modules:
 	 * 
-	 * eastore-ui-main ---- Our main module
+	 * eastore-ui-main ------ Our main module
 	 * eastore-ui-login ----- Our login module
-	 * eastore-ui-util ---- Utility module
-	 * ea-upload-module --- File upload module
-	 * ea-stomp-module ---- STOMP messaging over web sockets using SockJS
+	 * eastore-ui-util ------ Utility module
+	 * ea-upload-module ----- File upload module
+	 * ea-stomp-module ------ STOMP messaging over web sockets using SockJS
 	 * 
 	 * Third Party Modules:
 	 * 
@@ -32,9 +32,12 @@
 		.constant('appConstants', {
 			contextPath: '@application.context@',
 			applicationUrl: '@application.url@',
+			authworldActive: '@authworld.active@',
+			authworldUrl: '@authworld.url@',
 			eastoreTestJaxrsService: '@eastore.test.jax.rs.service@',
 			eastoreUiJsonJaxrsService: '@eastore.ui.json.jax.rs.service@',
 			eastoreUiActionJaxrsService: '@eastore.ui.action.jax.rs.service@',
+			eastoreUiAuthJaxrsService: '@eastore.ui.auth.jax.rs.service@',
 			httpUploadHandler : '@eastore.ui.action.jax.rs.service@/uploadFile',
 			eastoreStompSockJsUrl : '@eastore.websocket.stomp.sockjs@',
 			leftNavComponentId : 'MyLeftNav'
@@ -992,10 +995,11 @@
 					},
 					uititle : {
 						component : 'loginTitleComponent'
-					},
-					uileftmenu : {
-						component : 'loginLeftMenuComponent'
 					}
+					// no left nav on the login template/page
+					//,uileftmenu : {
+					//	component : 'loginLeftMenuComponent'
+					//}
 				},
 				params : defaultStateParams,
 				resolve : {

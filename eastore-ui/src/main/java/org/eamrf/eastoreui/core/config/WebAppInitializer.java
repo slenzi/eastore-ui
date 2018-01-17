@@ -17,6 +17,7 @@ import org.springframework.core.annotation.Order;
 import org.springframework.core.env.ConfigurableEnvironment;
 import org.springframework.web.context.WebApplicationContext;
 import org.springframework.web.context.request.RequestContextListener;
+import org.springframework.web.filter.RequestContextFilter;
 import org.springframework.web.servlet.support.AbstractAnnotationConfigDispatcherServletInitializer;
 
 /**
@@ -129,7 +130,7 @@ public class WebAppInitializer extends AbstractAnnotationConfigDispatcherServlet
 		
 		super.onStartup(servletContext);
 		
-		registerAuthWorldClientFilter(servletContext);
+		//registerAuthWorldClientFilter(servletContext);
 		
 		registerApacheCxfServlet(servletContext);
 		
@@ -139,6 +140,9 @@ public class WebAppInitializer extends AbstractAnnotationConfigDispatcherServlet
 	 * Setup AuthWorld Client Filter
 	 * 
 	 * @param servletContext
+	 * 
+	 * @deprecated - no longer use the authworld client filter. We now use the new AuthWorldLoginService.
+	 * @ See org.eamrf.eastoreui.web.security.provider.AuthWorldUserProvider
 	 */
 	private void registerAuthWorldClientFilter(ServletContext servletContext) {
 		

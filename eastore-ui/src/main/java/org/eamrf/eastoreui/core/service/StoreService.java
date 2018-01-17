@@ -11,7 +11,7 @@ import org.eamrf.eastoreui.core.aop.profiler.MethodTimer;
 import org.eamrf.eastoreui.core.exception.ServiceException;
 import org.eamrf.eastoreui.core.model.file.FileResponse;
 import org.eamrf.eastoreui.web.jaxrs.eastore.client.EAStoreJsonClient;
-import org.eamrf.eastoreui.web.security.provider.AuthWorldUserProvider;
+import org.eamrf.eastoreui.web.security.authworld.AuthWorldService;
 import org.eamrf.eastoreui.web.jaxrs.eastore.client.EAStoreActionClient;
 import org.eamrf.eastoreui.web.jaxrs.eastore.client.EAStoreClientProvider;
 import org.eamrf.web.rs.exception.WebServiceException;
@@ -35,31 +35,9 @@ public class StoreService {
     private EAStoreClientProvider eaStoreClientProvider;
     
     @Autowired
-    private AuthWorldUserProvider authworldUserProvider;    
+    private AuthenticationService authService;    
 	
 	public StoreService() { }
-	
-	/**
-	 * Fetch the NCI MD Number (aka CTEP ID) from the currently logged in AuthWorld user.
-	 * 
-	 * @return
-	 * @throws ServiceException
-	 */
-	private String getLoggedInUserId() throws ServiceException {
-		
-		// TODO - possibly need spring profile for controlling whether or not update last active time in cookie when fetchin user
-		AuthWorldUser user = authworldUserProvider.getUserFromSession();
-		if(user == null) {
-			throw new ServiceException("No AuthWorld user in the session");
-		}
-		String ctepId = user.getNciMdNum();
-		if(StringUtil.isNullEmpty(ctepId)) {
-			throw new ServiceException("Currently logged in AuthWorld user has a null or empty CTEP ID (ncimdnum)");
-		}
-		
-		return user.getNciMdNum();
-		
-	}
 	
 	/**
 	 * Call E-A Store echo test method
@@ -100,7 +78,7 @@ public class StoreService {
     	
 		EAStoreActionClient client = eaStoreClientProvider.getActionClient();
 		
-		String userId = getLoggedInUserId();
+		String userId = authService.getUserId();
 		
 		try {
 			return client.addDirectory(dirNodeId, dirName, dirDesc, readGroup1, writeGroup1, executeGroup1, userId);
@@ -125,7 +103,7 @@ public class StoreService {
     	
 		EAStoreActionClient client = eaStoreClientProvider.getActionClient();
 		
-		String userId = getLoggedInUserId();
+		String userId = authService.getUserId();
 		
 		try {
 			return client.updateFile(fileNodeId, fileName, fileDesc, userId);
@@ -153,7 +131,7 @@ public class StoreService {
     	
 		EAStoreActionClient client = eaStoreClientProvider.getActionClient();
 		
-		String userId = getLoggedInUserId();
+		String userId = authService.getUserId();
 		
 		try {
 			return client.updateDirectory(dirNodeId, dirName, dirDesc, readGroup1, writeGroup1, executeGroup1, userId);
@@ -181,7 +159,7 @@ public class StoreService {
 		
 		EAStoreActionClient client = eaStoreClientProvider.getActionClient();
 		
-		String userId = getLoggedInUserId();
+		String userId = authService.getUserId();
 		
 		try {
 			return client.uploadFile(dirNodeId, fileName, dataHandler, userId);
@@ -205,7 +183,7 @@ public class StoreService {
 		
 		EAStoreJsonClient client = eaStoreClientProvider.getJsonClient();
 		
-		String userId = getLoggedInUserId();
+		String userId = authService.getUserId();
 		
 		try {
 			return client.getPathResourceById(nodeId, userId);
@@ -228,7 +206,7 @@ public class StoreService {
 		
 		EAStoreJsonClient client = eaStoreClientProvider.getJsonClient();
 		
-		String userId = getLoggedInUserId();
+		String userId = authService.getUserId();
 		
 		try {
 			return client.getPathResourceByPath(storeName, relPath, userId);
@@ -248,7 +226,7 @@ public class StoreService {
 		
 		EAStoreJsonClient client = eaStoreClientProvider.getJsonClient();
 		
-		String userId = getLoggedInUserId();
+		String userId = authService.getUserId();
 		
     	String jsonResponse = null;
     	try {
@@ -271,7 +249,7 @@ public class StoreService {
 		
 		EAStoreJsonClient client = eaStoreClientProvider.getJsonClient();
 		
-		String userId = getLoggedInUserId();
+		String userId = authService.getUserId();
 		
     	String jsonResponse = null;
     	try {
@@ -295,7 +273,7 @@ public class StoreService {
 		
 		EAStoreJsonClient client = eaStoreClientProvider.getJsonClient();
 		
-		String userId = getLoggedInUserId();
+		String userId = authService.getUserId();
 		
     	String jsonResponse = null;
     	try {
@@ -321,7 +299,7 @@ public class StoreService {
 		
 		EAStoreJsonClient client = eaStoreClientProvider.getJsonClient();
 		
-		String userId = getLoggedInUserId();
+		String userId = authService.getUserId();
 		
     	String jsonResponse = null;
     	try {
@@ -347,7 +325,7 @@ public class StoreService {
 		
 		EAStoreJsonClient client = eaStoreClientProvider.getJsonClient();
 		
-		String userId = getLoggedInUserId();
+		String userId = authService.getUserId();
 		
     	String jsonResponse = null;
     	try {
@@ -372,7 +350,7 @@ public class StoreService {
     	
     	EAStoreActionClient client = eaStoreClientProvider.getActionClient();
     	
-    	String userId = getLoggedInUserId();
+    	String userId = authService.getUserId();
     	
     	FileResponse fresp = null;
     	try {
@@ -401,7 +379,7 @@ public class StoreService {
     	
     	EAStoreActionClient client = eaStoreClientProvider.getActionClient();
     	
-    	String userId = getLoggedInUserId();
+    	String userId = authService.getUserId();
     	
 		try {
 			return client.copyFile(fileNodeId, dirNodeId, replaceExisting, userId);
@@ -424,7 +402,7 @@ public class StoreService {
     	
     	EAStoreActionClient client = eaStoreClientProvider.getActionClient();
     	
-    	String userId = getLoggedInUserId();
+    	String userId = authService.getUserId();
     	
 		try {
 			return client.copyDirectory(copyDirNodeId, destDirNodeId, replaceExisting, userId);
@@ -447,7 +425,7 @@ public class StoreService {
     	
     	EAStoreActionClient client = eaStoreClientProvider.getActionClient();
     	
-    	String userId = getLoggedInUserId();
+    	String userId = authService.getUserId();
     	
 		try {
 			return client.moveFile(fileNodeId, dirNodeId, replaceExisting, userId);
@@ -470,7 +448,7 @@ public class StoreService {
     	
     	EAStoreActionClient client = eaStoreClientProvider.getActionClient();
     	
-    	String userId = getLoggedInUserId();
+    	String userId = authService.getUserId();
     	
 		try {
 			return client.moveDirectory(moveDirNodeId, destDirNodeId, replaceExisting, userId);
@@ -491,7 +469,7 @@ public class StoreService {
     	
     	EAStoreActionClient client = eaStoreClientProvider.getActionClient();
     	
-    	String userId = getLoggedInUserId();
+    	String userId = authService.getUserId();
     	
 		try {
 			return client.removeFile(fileNodeId, userId);
@@ -512,7 +490,7 @@ public class StoreService {
     	
     	EAStoreActionClient client = eaStoreClientProvider.getActionClient();
     	
-    	String userId = getLoggedInUserId();
+    	String userId = authService.getUserId();
     	
 		try {
 			return client.removeDirectory(dirNodeId, userId);
@@ -544,7 +522,7 @@ public class StoreService {
 
     	EAStoreActionClient client = eaStoreClientProvider.getActionClient();
     	
-    	String userId = getLoggedInUserId();
+    	String userId = authService.getUserId();
     	
     	// TODO - check for user permission to add store?
     	
@@ -583,7 +561,7 @@ public class StoreService {
 
     	EAStoreActionClient client = eaStoreClientProvider.getActionClient();
     	
-    	String userId = getLoggedInUserId();
+    	String userId = authService.getUserId();
     	
     	// TODO - check for user permission to add store?
     	

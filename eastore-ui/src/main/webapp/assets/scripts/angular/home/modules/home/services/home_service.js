@@ -289,13 +289,6 @@
 					params: {
 						groupCode: '@groupCode'
 					}
-				},
-				
-				haveAuthWorldUserInSession: {
-					url: appConstants.eastoreUiJsonJaxrsService + '/authworld/haveuser',
-					method: 'GET',
-					isArray: false,
-					params: { }
 				}				
 			
 			});
@@ -590,16 +583,34 @@
 			
 		}
 		
-		// check if there is an AuthWorldUser object in the session
+		// check if there is an AuthWorldUser object in the session.
+		// does NOT validate the user or their login data
 		function _haveAuthWorldUserInSession(){
 			
-			//return eastoreUiJsonService.haveAuthWorldUserInSession().$promise;
-			
-			return $http.get(appConstants.eastoreUiJsonJaxrsService + '/authworld/haveuser').then(function(response) {
+			return $http.get(appConstants.eastoreUiAuthJaxrsService + '/authworld/haveuser').then(function(response) {
 				return response.data;
 			});			
 			
 		}
+		
+		// check if there is an AuthWorldUser object in the session.
+		// Will validate the user and their login data
+		function _haveValidAuthWorldUserInSession(){
+			
+			return $http.get(appConstants.eastoreUiAuthJaxrsService + '/authworld/havevaliduser').then(function(response) {
+				return response.data;
+			});			
+			
+		}
+		
+		// attempt to auto log in the user using data from authworld cookie
+		function _autoLoginAuthWorldUser(){
+			
+			return $http.get(appConstants.eastoreUiAuthJaxrsService + '/authworld/autologin').then(function(response) {
+				return response.data;
+			});			
+			
+		}		
 		
 		// *********************************
 		// External API
@@ -609,6 +620,8 @@
 			echo : _echo,
 			
 			haveAuthWorldUserInSession : _haveAuthWorldUserInSession,
+			haveValidAuthWorldUserInSession : _haveValidAuthWorldUserInSession,
+			autoLoginAuthWorldUser : _autoLoginAuthWorldUser,
 			
 			addStore : _addStore,
 			updateStore : _updateStore,

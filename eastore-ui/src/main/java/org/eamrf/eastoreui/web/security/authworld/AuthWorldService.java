@@ -1,4 +1,4 @@
-package org.eamrf.eastoreui.web.security.provider;
+package org.eamrf.eastoreui.web.security.authworld;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -14,24 +14,21 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.context.WebApplicationContext;
 
 /**
- * Provider for AuthWorld user
+ * Hook for accessing AuthWorld authentication system
  * 
  * @author slenzi
  *
  */
+// @Scope(value = WebApplicationContext.SCOPE_SESSION, proxyMode = ScopedProxyMode.TARGET_CLASS)
 @Service
-@Scope(value = WebApplicationContext.SCOPE_SESSION, proxyMode = ScopedProxyMode.TARGET_CLASS)
-public class AuthWorldUserProvider {
-
-	@Autowired
-	private HttpServletRequest request;
+public class AuthWorldService {
 	
 	@Autowired
-	private HttpServletResponse response;	
+	private AuthWorldProps authworldProps;
 	
 	AuthworldLoginService loginService = new AuthworldLoginService();
 	
-	public AuthWorldUserProvider() {
+	public AuthWorldService() {
 
 	}
 	
@@ -40,18 +37,30 @@ public class AuthWorldUserProvider {
 	 * 
 	 * @return
 	 */
-	public AuthWorldUser getUserFromSession(boolean updateLastActive) {
-		return loginService.getUserFromSession(request, response, updateLastActive);
+	public AuthWorldUser getUserFromSession(HttpServletRequest request, HttpServletResponse response) {
+		
+		boolean isAuthWorldActive = authworldProps.isActive();
+		
+		if(isAuthWorldActive) {
+			// only update last active time in cookie if authworld integration is active
+			return loginService.getUserFromSession(request, response, true);
+		}else {
+			return loginService.getUserFromSession(request, response, false);
+		}
 	}
 	
 	/**
 	 * Check if we have a valid AuthWorld user in the session.
 	 * 
+	 * - Get user from session
+	 * - Validate user session key
+	 * - Validate AuthWorld login
+	 * - Validate inactivity 
+	 * 
 	 * @return
 	 */
-	public boolean haveValidUserInSession() throws ServiceException {
+	public boolean haveValidUserInSession(HttpServletRequest request, HttpServletResponse response) throws ServiceException {
 		try {
-			// TODO - change function so it does not throw an EcogDatabaseException
 			return loginService.haveValidUserInSession(request, response);
 		} catch (EcogDatabaseException e) {
 			throw new ServiceException(e);
@@ -63,9 +72,20 @@ public class AuthWorldUserProvider {
 	 * 
 	 * @return
 	 */
-	public AuthWorldUser getUserFromCookie() {
+	public AuthWorldUser getUserFromCookie(HttpServletRequest request, HttpServletResponse response) {
 		
 		return loginService.getUserFromCookie(request, response);
+		
+	}
+	
+	/**
+	 * Adds the AuthWorld user to the session
+	 * 
+	 * @param user
+	 */
+	public void addUserToSession(AuthWorldUser user, HttpServletRequest request) {
+		
+		loginService.addUserToSession(user, request);
 		
 	}
 

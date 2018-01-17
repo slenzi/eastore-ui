@@ -35,24 +35,7 @@ public class UIJsonResource extends BaseResourceHandler {
     private Logger logger;
     
     @Autowired
-    private UIService uiService;
-    
-    /**
-     * Check if there is an authworld user in the session
-     * 
-     * @return
-     * @throws WebServiceException
-     */
-    @GET
-	@Path("/authworld/haveuser")
-	@Produces(MediaType.APPLICATION_JSON)      
-    public Boolean haveAuthWorldUserInSession() throws WebServiceException {
-    	
-    	logger.debug(UIJsonResource.class.getSimpleName() + " haveAuthWorldUserInSession(...) called");
-    	
-    	return uiService.haveAuthWorldUserInSession();
-    	
-    }    
+    private UIService uiService;     
     
     /**
      * Fetch all gatekeeper categories
