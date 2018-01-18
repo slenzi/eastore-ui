@@ -47,7 +47,7 @@
 		
 		<!-- EA-MRF dependencies -->
 		<version.eamrf.common>0.3.0</version.eamrf.common>
-		<version.authworld>triton-tomcat8-0.6.0.Beta.4</version.authworld> <!-- was triton-tomcat8-0.5.5 -->
+		<version.authworld>triton-tomcat8-0.6.0.Beta.6</version.authworld> <!-- was triton-tomcat8-0.5.5 -->
 		<version.gatekeeper>1.0.0.RC3</version.gatekeeper>			
 	
 	</properties>

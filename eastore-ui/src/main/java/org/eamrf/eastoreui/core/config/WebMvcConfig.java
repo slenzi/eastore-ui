@@ -2,7 +2,9 @@ package org.eamrf.eastoreui.core.config;
 
 import java.util.List;
 
+import org.eamrf.eastoreui.core.properties.ManagedProperties;
 import org.eamrf.eastoreui.web.main.interceptors.LoggingInterceptor;
+import org.eamrf.eastoreui.web.main.interceptors.security.AuthWorldInterceptor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
@@ -38,7 +40,13 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurerAdapter
 public class WebMvcConfig extends WebMvcConfigurerAdapter {
 
 	@Autowired
+	private ManagedProperties appProps;
+	
+	@Autowired
 	private LoggingInterceptor loggingInterceptor;
+	
+	//@Autowired
+	//private AuthWorldInterceptor authWorldInterceptor;
 	
 	/* (non-Javadoc)
 	 * @see org.springframework.web.servlet.config.annotation.WebMvcConfigurerAdapter#configureDefaultServletHandling(org.springframework.web.servlet.config.annotation.DefaultServletHandlerConfigurer)
@@ -80,10 +88,20 @@ public class WebMvcConfig extends WebMvcConfigurerAdapter {
 	@Override
 	public void addInterceptors(InterceptorRegistry registry) {
 		
+		System.out.println("Registering interceptors.");
+		
+		final String appContext = appProps.getProperty("application.context");
+		
 		//super.addInterceptors(registry);
 		
-		// sample interceptor which simply logs before and after interception of request
-		registry.addInterceptor(loggingInterceptor);
+		// sample interceptor which simply logs before and after interception of all request
+		registry.addInterceptor(loggingInterceptor).addPathPatterns("/**");
+		
+		// intercept all requests for jax-rs ui action & json services
+		//registry.addInterceptor(authWorldInterceptor).addPathPatterns(
+		//		"/cxf/easapi/v1/ui/action/**",
+		//		"/cxf/easapi/v1/ui/json/**"
+		//		);
 		
 		// example path mapping...
 		//registry.addInterceptor(new LoggingInterceptor()).addPathPatterns("/fstore/administration/*");

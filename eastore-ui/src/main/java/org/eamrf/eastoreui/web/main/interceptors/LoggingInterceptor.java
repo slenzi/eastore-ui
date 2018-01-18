@@ -36,11 +36,11 @@ public class LoggingInterceptor implements HandlerInterceptor {
 	 * @see org.springframework.web.servlet.HandlerInterceptor#afterCompletion(javax.servlet.http.HttpServletRequest, javax.servlet.http.HttpServletResponse, java.lang.Object, java.lang.Exception)
 	 */
 	@Override
-	public void afterCompletion(HttpServletRequest request,
-			HttpServletResponse response, Object handler, Exception ex)
-			throws Exception {
+	public void afterCompletion(HttpServletRequest request, HttpServletResponse response, Object handler, Exception ex) throws Exception {
 		
-		logger.debug(LoggingInterceptor.class.getName() + ".afterCompletion(...) called");
+		logger.info(LoggingInterceptor.class.getName() + ".afterCompletion(...) called");
+		logger.info("Request URI = " + request.getRequestURI());
+		logger.info("Request URL = " + request.getRequestURL().toString());
 
 	}
 
@@ -48,10 +48,11 @@ public class LoggingInterceptor implements HandlerInterceptor {
 	 * @see org.springframework.web.servlet.HandlerInterceptor#postHandle(javax.servlet.http.HttpServletRequest, javax.servlet.http.HttpServletResponse, java.lang.Object, org.springframework.web.servlet.ModelAndView)
 	 */
 	@Override
-	public void postHandle(HttpServletRequest request, HttpServletResponse response,
-			Object handler, ModelAndView modelAndView) throws Exception {
+	public void postHandle(HttpServletRequest request, HttpServletResponse response, Object handler, ModelAndView modelAndView) throws Exception {
 		
-		logger.debug(LoggingInterceptor.class.getName() + ".postHandle(...) called");
+		logger.info(LoggingInterceptor.class.getName() + ".postHandle(...) called");
+		logger.info("Request URI = " + request.getRequestURI());
+		logger.info("Request URL = " + request.getRequestURL().toString());		
 
 	}
 
@@ -59,10 +60,11 @@ public class LoggingInterceptor implements HandlerInterceptor {
 	 * @see org.springframework.web.servlet.HandlerInterceptor#preHandle(javax.servlet.http.HttpServletRequest, javax.servlet.http.HttpServletResponse, java.lang.Object)
 	 */
 	@Override
-	public boolean preHandle(HttpServletRequest request, HttpServletResponse response,
-			Object arg2) throws Exception {
+	public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object modelAndView) throws Exception {
 
-		logger.debug(LoggingInterceptor.class.getName() + ".postHandle(...) called");		
+		logger.info(LoggingInterceptor.class.getName() + ".postHandle(...) called");
+		logger.info("Request URI = " + request.getRequestURI());
+		logger.info("Request URL = " + request.getRequestURL().toString());		
 		
 		return true;
 		

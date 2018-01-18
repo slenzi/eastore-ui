@@ -23,7 +23,6 @@ import org.springframework.web.context.WebApplicationContext;
  * instantiate the target bean when it is needed in a request.
  * 
  * @author slenzi
- *
  */
 @Service
 @Scope(value = WebApplicationContext.SCOPE_REQUEST, proxyMode = ScopedProxyMode.TARGET_CLASS)
@@ -32,14 +31,20 @@ public class AuthenticationService {
 	@Autowired
 	private HttpServletRequest request;
 	
-	@Autowired
-	private HttpServletResponse response;	
-	
     @Autowired
     private AuthWorldService authworldService;  	
 	
 	public AuthenticationService() {
 		
+	}
+	
+	/**
+	 * Check if authentication service is active
+	 * 
+	 * @return
+	 */
+	public boolean isAuthenticationActive() {
+		return authworldService.isAuthWorldActive();
 	}
 	
 	/**
@@ -50,7 +55,7 @@ public class AuthenticationService {
 	 */
 	public String getUserId() throws ServiceException {
 		
-		AuthWorldUser user = authworldService.getUserFromSession(request, response);
+		AuthWorldUser user = authworldService.getUserFromSession(request);
 		if(user == null) {
 			throw new ServiceException("No AuthWorld user in the session");
 		}
@@ -71,7 +76,7 @@ public class AuthenticationService {
 	 */
 	public AuthWorldUser getUser() {
 		
-		return authworldService.getUserFromSession(request, response);
+		return authworldService.getUserFromSession(request);
 		
 	}
 	
@@ -82,7 +87,7 @@ public class AuthenticationService {
      */
     public Boolean haveUserInSession() {
     	
-    	AuthWorldUser user = authworldService.getUserFromSession(request, response);
+    	AuthWorldUser user = authworldService.getUserFromSession(request);
     	if(user != null) {
     		return true;
     	}
@@ -93,42 +98,54 @@ public class AuthenticationService {
     /**
      * Check if there is an AuthWorldUser object in the session, and validate it.
      * 
+     * @param - data from the authworld credentials cookie
      * @return
      * @throws ServiceException 
      */
-    public Boolean haveValidUserInSession() throws ServiceException {
+    public Boolean haveValidUserInSession(String cookieData) throws ServiceException {
     	
-    	return authworldService.haveValidUserInSession(request, response);
+    	return authworldService.haveValidUserInSession(request, cookieData);
  
     	
     }	
 	
 	/**
-	 * Attempts to get an authworld user using data from the authworld cookie
+	 * Attempts to get an authworld user using data from the authworld credentials cookie
 	 * 
+	 * @param - data from the authworld credentials cookie
 	 * @return
 	 * @throws ServiceException
 	 */
-	public AuthWorldUser getUserFromCookie() {
+	public AuthWorldUser getUserFromCookie(String cookieData) {
 		
-		return authworldService.getUserFromCookie(request, response);
+		return authworldService.getUserFromCookie(request, cookieData);
 		
 	}
 	
 	/**
-	 * Attempt to log the user in using data from authworld cookie
+	 * Attempt to log the user in using data from authworld credentials cookie
 	 * 
+	 * @param - data from the authworld credentials cookie
 	 * @return
 	 */
-	public Boolean autoLoginViaCookie() {
+	public Boolean autoLoginViaCookie(String cookieData) {
 		
-		AuthWorldUser user = authworldService.getUserFromCookie(request, response);
+		AuthWorldUser user = authworldService.getUserFromCookie(request, cookieData);
 		if(user == null) {
 			return false;
 		}
 		authworldService.addUserToSession(user, request);
 		return true;
 		
+	}
+	
+	/**
+	 * Get name of AuthWorld cookie
+	 * 
+	 * @return
+	 */
+	public String getAuthWorldCookieName() {
+		return authworldService.getCookieName();
 	}
 
 	public void cookieTest(HttpServletResponse resp) {

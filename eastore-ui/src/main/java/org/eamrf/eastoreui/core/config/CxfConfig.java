@@ -7,6 +7,7 @@ import javax.ws.rs.ext.RuntimeDelegate;
 import org.apache.cxf.bus.spring.SpringBus;
 import org.apache.cxf.endpoint.Server;
 import org.apache.cxf.jaxrs.JAXRSServerFactoryBean;
+import org.eamrf.eastoreui.web.jaxrs.interceptor.AuthWorldInterceptor;
 import org.eamrf.eastoreui.web.jaxrs.local.StoreUIApplication;
 import org.eamrf.eastoreui.web.jaxrs.local.TestResource;
 import org.eamrf.eastoreui.web.jaxrs.local.UIActionResource;
@@ -73,7 +74,11 @@ public class CxfConfig {
 				getJsonProvider(),
 				//getEAAuthRequestHandler(), // Remove security until we have a better solution that works with our Angular front-end
 				getExceptionMapper()
-				) );			
+				) );
+			
+			
+			// add authworld interceptor
+			factory.getInInterceptors().add(getAuthWorldInterceptor());
 			
 			return factory.create();
 			
@@ -112,7 +117,12 @@ public class CxfConfig {
 		@Bean
 		public UIAuthResource getUIAuthResource(){
 			return new UIAuthResource();
-		}		
+		}
+		
+		@Bean
+		public AuthWorldInterceptor getAuthWorldInterceptor() {
+			return new AuthWorldInterceptor();
+		}
 		
 		/**
 		 * jax-rs JSON marshalling / provider

@@ -1,35 +1,38 @@
 package org.eamrf.eastoreui.web.security.authworld;
 
 import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
 
 import org.eamrf.eastoreui.core.exception.ServiceException;
 import org.frontier.ecog.exception.EcogDatabaseException;
 import org.frontier.ecog.webapp.authworld.client.AuthworldLoginService;
 import org.frontier.ecog.webapp.authworld.model.AuthWorldUser;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.annotation.Scope;
-import org.springframework.context.annotation.ScopedProxyMode;
 import org.springframework.stereotype.Service;
-import org.springframework.web.context.WebApplicationContext;
 
 /**
  * Hook for accessing AuthWorld authentication system
  * 
  * @author slenzi
- *
  */
-// @Scope(value = WebApplicationContext.SCOPE_SESSION, proxyMode = ScopedProxyMode.TARGET_CLASS)
 @Service
 public class AuthWorldService {
-	
+
 	@Autowired
 	private AuthWorldProps authworldProps;
 	
-	AuthworldLoginService loginService = new AuthworldLoginService();
+	private AuthworldLoginService loginService = new AuthworldLoginService();
 	
 	public AuthWorldService() {
 
+	}
+	
+	/**
+	 * Check if authworld authentication integration is active (controlled by build property)
+	 * 
+	 * @return
+	 */
+	public boolean isAuthWorldActive() {
+		return authworldProps.isActive();
 	}
 	
 	/**
@@ -37,16 +40,8 @@ public class AuthWorldService {
 	 * 
 	 * @return
 	 */
-	public AuthWorldUser getUserFromSession(HttpServletRequest request, HttpServletResponse response) {
-		
-		boolean isAuthWorldActive = authworldProps.isActive();
-		
-		if(isAuthWorldActive) {
-			// only update last active time in cookie if authworld integration is active
-			return loginService.getUserFromSession(request, response, true);
-		}else {
-			return loginService.getUserFromSession(request, response, false);
-		}
+	public AuthWorldUser getUserFromSession(HttpServletRequest request) {
+		return loginService.getUserFromSession(request);
 	}
 	
 	/**
@@ -59,9 +54,9 @@ public class AuthWorldService {
 	 * 
 	 * @return
 	 */
-	public boolean haveValidUserInSession(HttpServletRequest request, HttpServletResponse response) throws ServiceException {
+	public boolean haveValidUserInSession(HttpServletRequest request, String cookieData) throws ServiceException {
 		try {
-			return loginService.haveValidUserInSession(request, response);
+			return loginService.haveValidUserInSession(request, cookieData);
 		} catch (EcogDatabaseException e) {
 			throw new ServiceException(e);
 		}
@@ -72,10 +67,8 @@ public class AuthWorldService {
 	 * 
 	 * @return
 	 */
-	public AuthWorldUser getUserFromCookie(HttpServletRequest request, HttpServletResponse response) {
-		
-		return loginService.getUserFromCookie(request, response);
-		
+	public AuthWorldUser getUserFromCookie(HttpServletRequest request, String cookieData) {
+		return loginService.getUserByCookie(request, cookieData);
 	}
 	
 	/**
@@ -84,9 +77,89 @@ public class AuthWorldService {
 	 * @param user
 	 */
 	public void addUserToSession(AuthWorldUser user, HttpServletRequest request) {
-		
 		loginService.addUserToSession(user, request);
-		
+	}
+	
+	/**
+	 * Get the name of the AuthWorld credentials cookie
+	 * 
+	 * @return
+	 */
+	public String getCookieName() {
+		return loginService.getCookieName();
+	}
+	
+	/**
+	 * Get the domain under which the cookie is stored
+	 * 
+	 * @return
+	 */
+	public String getCookieDomain() {
+		return loginService.getCookieDomain();
+	}	
+	
+	/**
+	 * Build the value string for the authworld credentials cookie
+	 * 
+	 * @param ctepId - users ctep id
+	 * @param instId - primary inst id for their authworld session
+	 * @param sessionKey - authworld sesion key for the users session
+	 * @param loginDate - login date for the users authworld session
+	 * @param lastActiveDate - last active date for the user
+	 * @return
+	 */
+	public String buildCookieValue(String ctepId, String instId, String sessionKey, String loginDate, String lastActiveDate) {
+		return loginService.buildCookieValue(ctepId, instId, sessionKey, loginDate, lastActiveDate);
+	}
+	
+	/**
+	 * Parses and return the 'last active date' from the cookie data.
+	 * 
+	 * @param cookieDate
+	 * @return
+	 */	
+	public String getCookieLastActiveDate(String cookieData) {
+		return loginService.getCookieLastActiveDate(cookieData); 
+	}
+	
+	/**
+	 * Parses and return the 'login date' from the cookie data.
+	 * 
+	 * @param cookieData
+	 * @return
+	 */	
+	public String getCookieLoginDate(String cookieData) {
+		return loginService.getCookieLoginDate(cookieData);
+	}
+	
+	/**
+	 * Parses and return the 'authworld session key' from the cookie data.
+	 * 
+	 * @param cookieData
+	 * @return
+	 */	
+	public String getCookieSessionKey(String cookieData) {
+		return loginService.getCookieSessionKey(cookieData);
 	}
 
+	/**
+	 * Parses and return the 'primary inst id' from the cookie data.
+	 * 
+	 * @param cookieData
+	 * @return
+	 */	
+	public String getCookiePrimaryInst(String cookieData) {
+		return loginService.getCookiePrimaryInst(cookieData);
+	}
+	
+	/**
+	 * Parses and return the 'user ctep id' from the cookie data.
+	 * 
+	 * @param cookieData
+	 * @return
+	 */	
+	public String getCookieCtepId(String cookieData) {
+		return loginService.getCookieCtepId(cookieData);
+	}
+	
 }
