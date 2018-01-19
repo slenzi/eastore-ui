@@ -53,9 +53,9 @@ public class UIAuthResource extends BaseResourceHandler {
      * @return
      * @throws WebServiceException
      */
+    // @Produces(MediaType.APPLICATION_JSON) 
     @GET
-	@Path("/authworld/haveuser")
-	@Produces(MediaType.APPLICATION_JSON)      
+	@Path("/authworld/haveuser")     
     public Boolean haveUserInSession() throws WebServiceException {
     	
     	logger.debug(UIJsonResource.class.getSimpleName() + " haveUserInSession(...) called");
@@ -70,9 +70,9 @@ public class UIAuthResource extends BaseResourceHandler {
      * @return
      * @throws WebServiceException
      */
+    // @Produces(MediaType.APPLICATION_JSON) 
     @GET
-	@Path("/authworld/havevaliduser")
-	@Produces(MediaType.APPLICATION_JSON)      
+	@Path("/authworld/havevaliduser")     
     public Boolean haveValidUserInSession(@Context HttpHeaders headers) throws WebServiceException {
     	
     	logger.debug(UIJsonResource.class.getSimpleName() + " haveValidUserInSession(...) called");
@@ -102,9 +102,9 @@ public class UIAuthResource extends BaseResourceHandler {
      * @return
      * @throws WebServiceException
      */
+    // @Produces(MediaType.APPLICATION_JSON)  
     @GET
-	@Path("/authworld/autologin")
-	@Produces(MediaType.APPLICATION_JSON)      
+	@Path("/authworld/autologin")    
     public Boolean autoLogin(@Context HttpHeaders headers) throws WebServiceException {
     	
     	logger.info(UIJsonResource.class.getSimpleName() + " autoLogin(...) called");
@@ -135,9 +135,9 @@ public class UIAuthResource extends BaseResourceHandler {
      * @return
      * @throws WebServiceException
      */
+    // @Produces(MediaType.APPLICATION_JSON) 
     @GET
-	@Path("/authworld/handoffurl")
-	@Produces(MediaType.APPLICATION_JSON)      
+	@Path("/authworld/handoffurl")     
     public String getHandOffUrl(@QueryParam("relayState") String relayState) throws WebServiceException {
     	
     	logger.debug(UIJsonResource.class.getSimpleName() + " getHandOffUrl(...) called");
