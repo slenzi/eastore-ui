@@ -53,13 +53,13 @@ public class AuthWorldInterceptor extends AbstractPhaseInterceptor<Message> {
 		
 		//message.get(Message.REQUEST_URL);
 		String requestUrl = request.getRequestURL().toString();
-		logger.info("Request URL => " + requestUrl);
+		//logger.info("Request URL => " + requestUrl);
 		
 		// fire when the request is for the UI 'action' or 'json' jax-rs services		
 		Matcher matcher = pattern.matcher(requestUrl);
 		if(matcher.find()) {
 			
-			logger.info("Matched URL!");
+			logger.info("Matched URL! Check for authworld cookie and update it...");
 		
 			//String enpointAddress = (String)message.get(Message.ENDPOINT_ADDRESS);
 			//logger.info("Endpoint Address => " + enpointAddress);

@@ -107,18 +107,22 @@ public class UIAuthResource extends BaseResourceHandler {
 	@Produces(MediaType.APPLICATION_JSON)      
     public Boolean autoLogin(@Context HttpHeaders headers) throws WebServiceException {
     	
-    	logger.debug(UIJsonResource.class.getSimpleName() + " autoLogin(...) called");
+    	logger.info(UIJsonResource.class.getSimpleName() + " autoLogin(...) called");
     	
     	// only proceed if authentication is active
     	if(!authService.isAuthenticationActive()) {
+    		logger.info("Authworld authentication not active...");
     		return false;
     	}
     	
+    	logger.info("Checking authworld credential cookie...");
     	String cookieData = getAuthWorldCredentialCookieValue(headers);
     	if(cookieData.equals("")) {
+    		logger.info("Data from authworld credential cookie could not be located...");
     		return false;
     	}
     	
+    	logger.info("Attempting to auto log in user using cookie data...");
     	return authService.autoLoginViaCookie(cookieData);
     	
     }
@@ -162,6 +166,7 @@ public class UIAuthResource extends BaseResourceHandler {
     	
     	Cookie cookie = getAuthWorldCredentialsCookie(headers);
     	if(cookie == null) {
+    		logger.info("authworld credential cookie not found...");
     		return null;
     	}
     	String cookieData = StringUtil.changeNull(cookie.getValue());
@@ -178,6 +183,7 @@ public class UIAuthResource extends BaseResourceHandler {
      */
     private Cookie getAuthWorldCredentialsCookie(HttpHeaders headers) {
     	Map<String, Cookie> cookieMap = headers.getCookies();
+    	logger.info("Authworld cookie name => " + authService.getAuthWorldCookieName());
     	return cookieMap.get(authService.getAuthWorldCookieName());
     }
     

@@ -46,6 +46,7 @@
 					
 					$log.debug('Redirect URL? = ' + thisCtrl.redirectUrl);
 					
+					$log.debug('Attempting to auto log in user...');
 					var successful = homeRestService.autoLoginAuthWorldUser();
 					
 					if(successful){
