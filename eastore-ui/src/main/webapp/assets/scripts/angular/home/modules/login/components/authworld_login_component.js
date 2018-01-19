@@ -36,32 +36,43 @@
 			
 			var thisCtrl = this;
 			
-			this.$onInit = function() {
-				
-				var isAuthWorldActive = (appConstants.authworldActive == 'true');
-				
-				$log.debug('AuthWorld Active? = ' + isAuthWorldActive);
-				
-				if(isAuthWorldActive){
-					
-					$log.debug('Redirect URL? = ' + thisCtrl.redirectUrl);
-					
-					$log.debug('Attempting to auto log in user...');
-					var successful = homeRestService.autoLoginAuthWorldUser();
-					
-					if(successful){
-						// redirect user to resource they were originally trying to access
-						$window.location.href = thisCtrl.redirectUrl;
-					}else{
-						// redirect user to authworld login. AuthWorld will redirect them back
-						// to the resource they were originally trying to access after they log in.
-						var handOffUrl = homeRestService.buildAuthWorldHandOffUrl(thisCtrl.redirectUrl);
-						$window.location.href = handOffUrl;
-					}
-					
-				}
-				
-			};
+            this.$onInit = function() {
+
+                var isAuthWorldActive = (appConstants.authworldActive == 'true');
+
+                $log.debug('AuthWorld Active? = ' + isAuthWorldActive);
+
+                if(isAuthWorldActive){
+
+                    $log.debug('Redirect URL? = ' + thisCtrl.redirectUrl);
+                    $log.debug('Attempting to auto log in user...');
+
+                    homeRestService.autoLoginAuthWorldUser().then(function (data){
+                        thisCtrl.handleAutoLoginResponse(data);
+                    });
+
+                }
+
+            };
+			
+            this.handleAutoLoginResponse = function(successful){
+
+                $log.debug('successful => ' + successful);
+
+                if(successful){
+                    $log.debug('Auto login was a success! Redirect to resource.');
+                    // redirect user to resource they were originally trying to access
+                    $window.location.href = thisCtrl.redirectUrl;
+                }else{
+                    $log.debug('Auto login was NOT a success. Redirecting to authworld login page using handoff url.');
+                    // redirect user to authworld login. AuthWorld will redirect them back
+                    // to the resource they were originally trying to access after they log in.
+                    var handOffUrl = homeRestService.buildAuthWorldHandOffUrl(thisCtrl.redirectUrl);
+                    $window.location.href = handOffUrl;
+                }
+
+
+            };			
 			
 		},
 		

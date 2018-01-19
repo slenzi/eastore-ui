@@ -117,7 +117,7 @@ public class UIAuthResource extends BaseResourceHandler {
     	
     	logger.info("Checking authworld credential cookie...");
     	String cookieData = getAuthWorldCredentialCookieValue(headers);
-    	if(cookieData.equals("")) {
+    	if(StringUtil.isNullEmpty(cookieData)) {
     		logger.info("Data from authworld credential cookie could not be located...");
     		return false;
     	}
