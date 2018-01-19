@@ -123,7 +123,7 @@ public class UIAuthResource extends BaseResourceHandler {
     	}
     	
     	logger.info("Attempting to auto log in user using cookie data...");
-    	return authService.autoLoginViaCookie(cookieData);
+    	return authService.doAutoLoginViaAuthWorldCookie(cookieData);
     	
     }
     

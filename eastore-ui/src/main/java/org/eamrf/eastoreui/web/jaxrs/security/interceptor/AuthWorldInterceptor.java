@@ -71,19 +71,19 @@ public class AuthWorldInterceptor extends AbstractPhaseInterceptor<Message> {
 					logger.info("Found AuthWorld Credentials Cookie => " + authCookie);
 	
 					String cookieData = authCookie.getValue();
-					String ctepId = authenticationService.getCookieCtepId(cookieData);
-					String loginDate = authenticationService.getCookieLoginDate(cookieData);
-					String primaryInst = authenticationService.getCookiePrimaryInst(cookieData);
-					String sessionKey = authenticationService.getCookieSessionKey(cookieData);
+					String ctepId = authenticationService.getAuthWorldCookieCtepId(cookieData);
+					String loginDate = authenticationService.getAuthWorldCookieLoginDate(cookieData);
+					String primaryInst = authenticationService.getAuthWorldCookiePrimaryInst(cookieData);
+					String sessionKey = authenticationService.getAuthWorldCookieSessionKey(cookieData);
 					
-					String newCookieData = authenticationService.buildCookieValue(
+					String newCookieData = authenticationService.buildAuthWorldCookieValue(
 							ctepId, primaryInst, sessionKey, loginDate, Long.toString(DateUtil.getCurrentTime().getTime()));
 					
 					Cookie updatedCookie = new Cookie(authenticationService.getAuthWorldCookieName(), newCookieData);
-					updatedCookie.setDomain(authCookie.getDomain());
-					updatedCookie.setPath(authCookie.getPath());
-					updatedCookie.setMaxAge(authCookie.getMaxAge());
-					updatedCookie.setComment(authCookie.getComment());
+					updatedCookie.setDomain(authenticationService.getAuthWorldCookieDomain());
+					updatedCookie.setPath(authenticationService.getAuthWorldCookiePath());
+					updatedCookie.setMaxAge(authenticationService.getAuthWorldCookieMaxAgeSeconds());
+					updatedCookie.setComment(authenticationService.getAuthWorldCookieComments());
 					
 					logger.info("Updating AuthWorld Credentials Cookie => " + updatedCookie);
 					response.addCookie(updatedCookie);

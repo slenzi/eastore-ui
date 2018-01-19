@@ -69,7 +69,7 @@ public class AuthWorldService {
 	 * 
 	 * @return
 	 */
-	public AuthWorldUser getUserFromCookie(HttpServletRequest request, String cookieData) {
+	public AuthWorldUser getUserFromAuthWorldCookie(HttpServletRequest request, String cookieData) {
 		return loginService.getUserByCookie(request, cookieData);
 	}
 	
@@ -87,7 +87,7 @@ public class AuthWorldService {
 	 * 
 	 * @return
 	 */
-	public String getCookieName() {
+	public String getAuthWorldCookieName() {
 		return loginService.getCookieName();
 	}
 	
@@ -96,7 +96,7 @@ public class AuthWorldService {
 	 * 
 	 * @return
 	 */
-	public String getCookieDomain() {
+	public String getAuthWorldCookieDomain() {
 		return loginService.getCookieDomain();
 	}
 	
@@ -110,7 +110,7 @@ public class AuthWorldService {
 	 * @param lastActiveDate - last active date for the user
 	 * @return
 	 */
-	public String buildCookieValue(String ctepId, String instId, String sessionKey, String loginDate, String lastActiveDate) {
+	public String buildAuthWorldCookieValue(String ctepId, String instId, String sessionKey, String loginDate, String lastActiveDate) {
 		return loginService.buildCookieValue(ctepId, instId, sessionKey, loginDate, lastActiveDate);
 	}
 	
@@ -120,7 +120,7 @@ public class AuthWorldService {
 	 * @param cookieDate
 	 * @return
 	 */	
-	public String getCookieLastActiveDate(String cookieData) {
+	public String getAuthWorldCookieLastActiveDate(String cookieData) {
 		return loginService.getCookieLastActiveDate(cookieData); 
 	}
 	
@@ -130,7 +130,7 @@ public class AuthWorldService {
 	 * @param cookieData
 	 * @return
 	 */	
-	public String getCookieLoginDate(String cookieData) {
+	public String getAuthWorldCookieLoginDate(String cookieData) {
 		return loginService.getCookieLoginDate(cookieData);
 	}
 	
@@ -140,7 +140,7 @@ public class AuthWorldService {
 	 * @param cookieData
 	 * @return
 	 */	
-	public String getCookieSessionKey(String cookieData) {
+	public String getAuthWorldCookieSessionKey(String cookieData) {
 		return loginService.getCookieSessionKey(cookieData);
 	}
 
@@ -150,7 +150,7 @@ public class AuthWorldService {
 	 * @param cookieData
 	 * @return
 	 */	
-	public String getCookiePrimaryInst(String cookieData) {
+	public String getAuthWorldCookiePrimaryInst(String cookieData) {
 		return loginService.getCookiePrimaryInst(cookieData);
 	}
 	
@@ -160,7 +160,7 @@ public class AuthWorldService {
 	 * @param cookieData
 	 * @return
 	 */	
-	public String getCookieCtepId(String cookieData) {
+	public String getAuthWorldCookieCtepId(String cookieData) {
 		return loginService.getCookieCtepId(cookieData);
 	}
 	
@@ -178,6 +178,33 @@ public class AuthWorldService {
 		} catch (UnsupportedEncodingException e) {
 			throw new ServiceException(e);
 		}
+	}
+	
+	/**
+	 * Get the 'comments' to be used/set on the authworld cookie
+	 * 
+	 * @return
+	 */
+	public String getAuthWorldCookieComments() {
+		return authworldProps.getCookieComments();
+	}
+	
+	/**
+	 * Get the 'path' to be used/set on the authworld cookie
+	 * 
+	 * @return
+	 */
+	public String getAuthWorldCookiePath() {
+		return authworldProps.getCookiePath();
+	}
+	
+	/**
+	 * Get the max age in seconds to be used/set on the authworld cookie
+	 * 
+	 * @return
+	 */
+	public Integer getAuthWorldCookieMaxAgeSeconds() {
+		return authworldProps.getCookieMaxAgeSeconds();
 	}
 	
 }
