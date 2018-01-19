@@ -75,9 +75,7 @@ public class AuthenticationService {
 	 * @throws ServiceException
 	 */
 	public AuthWorldUser getUser() {
-		
 		return authworldService.getUserFromSession(request);
-		
 	}
 	
     /**
@@ -86,13 +84,11 @@ public class AuthenticationService {
      * @return
      */
     public Boolean haveUserInSession() {
-    	
     	AuthWorldUser user = authworldService.getUserFromSession(request);
     	if(user != null) {
     		return true;
     	}
     	return false;
-    	
     }
     
     /**
@@ -117,9 +113,7 @@ public class AuthenticationService {
 	 * @throws ServiceException
 	 */
 	public AuthWorldUser getUserFromCookie(String cookieData) {
-		
 		return authworldService.getUserFromCookie(request, cookieData);
-		
 	}
 	
 	/**
@@ -129,14 +123,12 @@ public class AuthenticationService {
 	 * @return
 	 */
 	public Boolean autoLoginViaCookie(String cookieData) {
-		
 		AuthWorldUser user = authworldService.getUserFromCookie(request, cookieData);
 		if(user == null) {
 			return false;
 		}
 		authworldService.addUserToSession(user, request);
 		return true;
-		
 	}
 	
 	/**
@@ -147,14 +139,88 @@ public class AuthenticationService {
 	public String getAuthWorldCookieName() {
 		return authworldService.getCookieName();
 	}
+	
+	/**
+	 * Parses and return the 'last active date' from the cookie data.
+	 * 
+	 * @param cookieDate
+	 * @return
+	 */		
+	public String getCookieLastActiveDate(String cookieData) {
+		return authworldService.getCookieLastActiveDate(cookieData);
+	}
+	
+	/**
+	 * Parses and return the 'login date' from the cookie data.
+	 * 
+	 * @param cookieData
+	 * @return
+	 */		
+	public String getCookieLoginDate(String cookieData) {
+		return authworldService.getCookieLoginDate(cookieData);
+	}
+	
+	/**
+	 * Parses and return the 'authworld session key' from the cookie data.
+	 * 
+	 * @param cookieData
+	 * @return
+	 */		
+	public String getCookieSessionKey(String cookieData) {
+		return authworldService.getCookieSessionKey(cookieData);
+	}
+	
+	/**
+	 * Parses and return the 'primary inst id' from the cookie data.
+	 * 
+	 * @param cookieData
+	 * @return
+	 */		
+	public String getCookiePrimaryInst(String cookieData) {
+		return authworldService.getCookiePrimaryInst(cookieData);
+	}
+	
+	/**
+	 * Parses and return the 'user ctep id' from the cookie data.
+	 * 
+	 * @param cookieData
+	 * @return
+	 */		
+	public String getCookieCtepId(String cookieData) {
+		return authworldService.getCookieCtepId(cookieData);
+	}
+	
+	/**
+	 * Build the value string for the authworld credentials cookie
+	 * 
+	 * @param ctepId - users ctep id
+	 * @param instId - primary inst id for their authworld session
+	 * @param sessionKey - authworld sesion key for the users session
+	 * @param loginDate - login date for the users authworld session
+	 * @param lastActiveDate - last active date for the user
+	 * @return
+	 */
+	public String buildCookieValue(String ctepId, String instId, String sessionKey, String loginDate, String lastActiveDate) {
+		return authworldService.buildCookieValue(ctepId, instId, sessionKey, loginDate, lastActiveDate);
+	}
+	
+	/**
+	 * Builds a URL for authworld handoff/redirection
+	 * 
+	 * @param relayState - optional relate state url. The user will be automatically redirected to this
+	 * URL after the successfully authenticate and log into authworld.
+	 * @return
+	 * @throws ServiceException
+	 */	
+	public String buildAuthWorldHandoffUrl(String relayState) throws ServiceException {
+		return authworldService.buildAuthWorldHandoffUrl(relayState);
+	}
 
 	public void cookieTest(HttpServletResponse resp) {
-		
 		Cookie c = new Cookie("FubarCookieTest", "My Cookie Data = " + DateUtil.defaultFormat(DateUtil.getCurrentTime()));
 		c.setDomain("ecog.org");
 		c.setPath("/");
 		resp.addCookie(c);		
-		
 	}
 
 }

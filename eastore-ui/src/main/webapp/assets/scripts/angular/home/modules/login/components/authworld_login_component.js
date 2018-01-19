@@ -32,7 +32,7 @@
 			return appConstants.contextPath +  '/assets/scripts/angular/home/modules/login/partials/authworld_login_content.jsp';
 		},			
 		
-		controller : function($log, $state, appConstants, homeRestService){				
+		controller : function($log, $state, $window, appConstants, homeRestService){				
 			
 			var thisCtrl = this;
 			
@@ -50,9 +50,12 @@
 					
 					if(successful){
 						// redirect user to resource they were originally trying to access
+						$window.location.href = thisCtrl.redirectUrl;
 					}else{
 						// redirect user to authworld login. AuthWorld will redirect them back
 						// to the resource they were originally trying to access after they log in.
+						var handOffUrl = homeRestService.buildAuthWorldHandOffUrl(thisCtrl.redirectUrl);
+						$window.location.href = handOffUrl;
 					}
 					
 				}

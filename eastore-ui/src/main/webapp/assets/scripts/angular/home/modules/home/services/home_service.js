@@ -604,11 +604,13 @@
 		}
 		
 		// attempt to auto log in the user using data from authworld cookie
-		function _autoLoginAuthWorldUser(){
+		function _buildAuthWorldHandOffUrl(relayState){
 			
-			return $http.get(appConstants.eastoreUiAuthJaxrsService + '/authworld/autologin').then(function(response) {
-				return response.data;
-			});			
+			return $http.get(appConstants.eastoreUiAuthJaxrsService + '/authworld/autologin', {
+						params: { relayState : relayState }
+					}).then(function(response) {
+						return response.data;
+					});			
 			
 		}		
 		
@@ -622,6 +624,7 @@
 			haveAuthWorldUserInSession : _haveAuthWorldUserInSession,
 			haveValidAuthWorldUserInSession : _haveValidAuthWorldUserInSession,
 			autoLoginAuthWorldUser : _autoLoginAuthWorldUser,
+			buildAuthWorldHandOffUrl : _buildAuthWorldHandOffUrl,
 			
 			addStore : _addStore,
 			updateStore : _updateStore,

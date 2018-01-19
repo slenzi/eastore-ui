@@ -9,6 +9,7 @@ import javax.ws.rs.GET;
 import javax.ws.rs.POST;
 import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
+import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.Cookie;
 import javax.ws.rs.core.HttpHeaders;
@@ -81,13 +82,10 @@ public class UIAuthResource extends BaseResourceHandler {
     		return false;
     	}
     	
-    	Cookie cookie = this.getAuthWorldCredentialsCookie(headers);
-    	if(cookie == null) {
-    		logger.info("No authworld credentials cookie found.");
+    	String cookieData = getAuthWorldCredentialCookieValue(headers);
+    	if(cookieData.equals("")) {
     		return false;
     	}
-    	String cookieData = StringUtil.changeNull(cookie.getValue());
-    	logger.info("authworld cookie data = " + cookieData);
     	
     	try {
     		return authService.haveValidUserInSession(cookieData);
@@ -114,17 +112,61 @@ public class UIAuthResource extends BaseResourceHandler {
     	// only proceed if authentication is active
     	if(!authService.isAuthenticationActive()) {
     		return false;
-    	}    	
+    	}
     	
-    	Cookie cookie = this.getAuthWorldCredentialsCookie(headers);
-    	if(cookie == null) {
-    		logger.info("No authworld credentials cookie found.");
+    	String cookieData = getAuthWorldCredentialCookieValue(headers);
+    	if(cookieData.equals("")) {
     		return false;
     	}
-    	String cookieData = StringUtil.changeNull(cookie.getValue());
-    	logger.info("authworld cookie data = " + cookieData);    	
     	
     	return authService.autoLoginViaCookie(cookieData);
+    	
+    }
+    
+    /**
+     * Builds a URL for authworld handoff/redirection
+     * 
+     * @param relayState - The user will be automatically redirected to this
+	 * URL after they successfully authenticate and log into authworld.
+     * @return
+     * @throws WebServiceException
+     */
+    @GET
+	@Path("/authworld/handoffurl")
+	@Produces(MediaType.APPLICATION_JSON)      
+    public String getHandOffUrl(@QueryParam("relayState") String relayState) throws WebServiceException {
+    	
+    	logger.debug(UIJsonResource.class.getSimpleName() + " getHandOffUrl(...) called");
+    	
+    	logger.info("Relay State URL => " + relayState);
+
+    	String handOffUrl = null;
+    	try {
+    		handOffUrl =  authService.buildAuthWorldHandoffUrl(relayState);
+    		logger.info("HandOff URL => " + handOffUrl);
+		} catch (ServiceException e) {
+			logger.error(e.getMessage(), e);
+			throw new WebServiceException(WebExceptionType.CODE_IO_ERROR, e.getMessage(), e);
+		}
+    	return handOffUrl;
+    	
+    }    
+    
+    /**
+     * Get the value string from the authworld credentials cookie
+     * 
+     * @param headers
+     * @return
+     */
+    private String getAuthWorldCredentialCookieValue(HttpHeaders headers) {
+    	
+    	Cookie cookie = getAuthWorldCredentialsCookie(headers);
+    	if(cookie == null) {
+    		return null;
+    	}
+    	String cookieData = StringUtil.changeNull(cookie.getValue());
+    	logger.info("authworld cookie data = " + cookieData);
+    	return cookieData;	
     	
     }
     

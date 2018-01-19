@@ -4,7 +4,7 @@ import java.util.List;
 
 import org.eamrf.eastoreui.core.properties.ManagedProperties;
 import org.eamrf.eastoreui.web.main.interceptors.LoggingInterceptor;
-import org.eamrf.eastoreui.web.main.interceptors.security.AuthWorldInterceptor;
+import org.eamrf.eastoreui.web.main.security.interceptors.AuthWorldInterceptor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;

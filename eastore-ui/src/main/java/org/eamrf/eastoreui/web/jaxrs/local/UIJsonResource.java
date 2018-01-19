@@ -177,7 +177,7 @@ public class UIJsonResource extends BaseResourceHandler {
      */
     @GET
 	@Path("/stores")
-	@Produces(MediaType.APPLICATION_JSON)    
+	@Produces(MediaType.APPLICATION_JSON)
     public Response stores() throws WebServiceException {
     	
     	logger.debug(UIJsonResource.class.getSimpleName() + " stores() called");

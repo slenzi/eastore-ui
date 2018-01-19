@@ -1,5 +1,7 @@
 package org.eamrf.eastoreui.web.security.authworld;
 
+import java.io.UnsupportedEncodingException;
+
 import javax.servlet.http.HttpServletRequest;
 
 import org.eamrf.eastoreui.core.exception.ServiceException;
@@ -96,7 +98,7 @@ public class AuthWorldService {
 	 */
 	public String getCookieDomain() {
 		return loginService.getCookieDomain();
-	}	
+	}
 	
 	/**
 	 * Build the value string for the authworld credentials cookie
@@ -160,6 +162,22 @@ public class AuthWorldService {
 	 */	
 	public String getCookieCtepId(String cookieData) {
 		return loginService.getCookieCtepId(cookieData);
+	}
+	
+	/**
+	 * Builds a URL for authworld handoff/redirection
+	 * 
+	 * @param relayState - optional relate state url. The user will be automatically redirected to this
+	 * URL after the successfully authenticate and log into authworld.
+	 * @return
+	 * @throws ServiceException
+	 */
+	public String buildAuthWorldHandoffUrl(String relayState) throws ServiceException {
+		try {
+			return loginService.buildAuthWorldHandoffUrl(relayState);
+		} catch (UnsupportedEncodingException e) {
+			throw new ServiceException(e);
+		}
 	}
 	
 }

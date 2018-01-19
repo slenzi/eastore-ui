@@ -1,4 +1,4 @@
-package org.eamrf.eastoreui.web.main.interceptors.security;
+package org.eamrf.eastoreui.web.main.security.interceptors;
 
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
@@ -23,7 +23,8 @@ import org.springframework.web.servlet.ModelAndView;
  * 
  * @author slenzi
  * 
- * @deprecated - doesn't seem to fire for jaxrs requests....not sure why.
+ * @deprecated - doesn't seem to fire for jaxrs requests....not sure why.  Now using a Apache CXF interceptor.
+ * @see org.eamrf.eastoreui.web.jaxrs.security.interceptor.AuthWorldInterceptor
  *
  */
 //@Component
