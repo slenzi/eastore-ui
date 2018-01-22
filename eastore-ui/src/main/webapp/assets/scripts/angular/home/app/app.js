@@ -989,11 +989,12 @@
 				views : {
 					uicontent : {
 						component : 'loginContentComponent'
-					},
-					uiheader : {
-						component : 'loginHeaderComponent'
-					},
-					uititle : {
+					}
+					// no need for header on login page
+					//,uiheader : {
+					//	component : 'loginHeaderComponent'
+					//}
+					,uititle : {
 						component : 'loginTitleComponent'
 					}
 					// no left nav on the login template/page

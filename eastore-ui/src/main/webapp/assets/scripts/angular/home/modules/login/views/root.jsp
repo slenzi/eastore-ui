@@ -28,7 +28,9 @@
 			</h3>
 		</md-toolbar>	
 		
+		<!--
 		<ui-view name="uiheader"></ui-view>
+		-->
 		
 		<md-content layout="column">
 		

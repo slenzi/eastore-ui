@@ -4,6 +4,7 @@
 	
 	var mainModule = angular.module('eastore-ui-login');
 	
+	/* No need for header on login view
 	mainModule.component('loginHeaderComponent', {
 		
 		bindings: {
@@ -21,6 +22,7 @@
 		controllerAs : 'loginCtrl' // default is $ctrl
 		
 	});
+	*/
 	
 	mainModule.component('loginContentComponent', {
 		
@@ -110,7 +112,7 @@
 		
 	});
 	
-	/* no left nan bar on the login template
+	/* no left nav bar on the login view
 	mainModule.component('loginLeftMenuComponent', {
 		
 		bindings: {
