@@ -71,6 +71,8 @@
 				
 				$log.debug('refreshing current view');
 				
+				sharedDataService.setProgressBarEnabled(true);
+				
 				// this next line reloads the current state (not desirable)
 				//this.loadDirectory(store, directoryResource);
 				
@@ -78,6 +80,7 @@
 				// TODO - use store and directory from shared data service rather than $stateParams
 				resolveService.resolvePathResources($stateParams).then(function (data){
 					sharedDataService.setPathResources(data);
+					sharedDataService.setProgressBarEnabled(false);
 				});
 				
 			};
@@ -136,9 +139,11 @@
 
 			// resolve path resources and load them into our shared data service
 			this.resolvePathResources = function(){
+				sharedDataService.setProgressBarEnabled(true);
 				resolveService.resolvePathResourcesForDirectory(sharedDataService.getStore(), sharedDataService.getDirectory())
 					.then(function (data){
 						sharedDataService.setPathResources(data);
+						sharedDataService.setProgressBarEnabled(false);
 					}
 				);
 			};

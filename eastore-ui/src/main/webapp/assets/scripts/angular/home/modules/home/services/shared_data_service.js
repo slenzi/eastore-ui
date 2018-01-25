@@ -4,18 +4,27 @@
 	
 	var mainModule = angular.module('eastore-ui-main');
 	
-	mainModule.factory('sharedDataService', [SharedDataService]);
+	mainModule.factory('sharedDataService', ['$log', SharedDataService]);
 	
 	/**
 	 * Service for sharing data between our various components/controllers
 	 */
-	function SharedDataService(){
+	function SharedDataService($log){
 		
+		// current working store, directory
 		var _store;
 		var _directory;
+		
+		// current lsit of child path resources for the current working directory
 		var _pathResources;
 		
+		// keep track of current url, used during login (might need to redirect user back after authentication)
 		var _url;
+		
+		// for progress bar in uipogress template
+		var _progressBarStyle = 'indeterminate';
+		var _progressBarValue = 100; // only applicable if progress style is 'determinate'
+		var _progressBarEnabled = false;
 		
 		function _getUrl(){
 			return _url;
@@ -45,6 +54,26 @@
 			_pathResources = pathResources;
 		}
 		
+		function _getProgressBarStyle(){
+			return _progressBarStyle;
+		}
+		function _getProgressBarValue(){
+			return _progressBarValue;
+		}
+		function _isProgressBarEnabled(){
+			return _progressBarEnabled;
+		}
+		function _setProgressBarStyle(style){
+			_progressBarStyle = style;
+		}
+		function _setProgressBarValue(value){
+			_progressBarValue = value;
+		}
+		function _setProgressBarEnabled(isEnabled){
+			$log.debug('Progress Bar Enabled = ' + isEnabled);
+			_progressBarEnabled = isEnabled;
+		}		
+		
 		// *********************************
 		// External API
 		// *********************************
@@ -60,7 +89,14 @@
 			setPathResources : _setPathResources,
 			
 			setUrl : _setUrl,
-			getUrl : _getUrl
+			getUrl : _getUrl,
+			
+			getProgressBarStyle : _getProgressBarStyle,
+			getProgressBarValue : _getProgressBarValue,
+			isProgressBarEnabled : _isProgressBarEnabled,
+			setProgressBarStyle : _setProgressBarStyle,
+			setProgressBarValue : _setProgressBarValue,
+			setProgressBarEnabled : _setProgressBarEnabled
 			
 		};		
 		

@@ -67,12 +67,10 @@
 						return storeObj.description;
 					},
 					getDateCreated: function (storeObj) {
-						var dateCreated = new Date(storeObj.dateCreated);
-						return dateCreated.toString("MM/dd/yyyy hh:mm:ss tt");
+						return moment(storeObj.dateCreated, "x").format('YYYY-MM-DD HH:mm:ss A');
 					},
 					getDateUpdated: function (storeObj) {
-						var dateUpdated = new Date(storeObj.dateUpdated);
-						return dateUpdated.toString("MM/dd/yyyy hh:mm:ss tt");
+						return moment(storeObj.dateUpdated, "x").format('YYYY-MM-DD HH:mm:ss A');
 					}						
 				}
 			};
@@ -446,12 +444,10 @@
 						return $scope.getPermissionDetails(pathResObj);
 					},
 					getDateCreated: function (pathResObj) {
-						var dateCreated = new Date(pathResObj.dateCreated);
-						return dateCreated.toString("MM/dd/yyyy hh:mm:ss tt");
+						return moment(pathResObj.dateCreated, "x").format('YYYY-MM-DD HH:mm:ss A');
 					},
 					getDateUpdated: function (pathResObj) {
-						var dateUpdated = new Date(pathResObj.dateUpdated);
-						return dateUpdated.toString("MM/dd/yyyy hh:mm:ss tt");
+						return moment(pathResObj.dateUpdated, "x").format('YYYY-MM-DD HH:mm:ss A');
 					}
 				}
 			};
@@ -574,9 +570,9 @@
 			'	<tr>' +
 			'		 <th st-ratio="5">Menu</th>' +
 			//'     <th st-sort="tableGetters().getNodeId">ID</th>' +
-			'        <th st-ratio="25" st-sort="tableGetters().getNodeName">Name</th>' +
+			'        <th st-ratio="30" st-sort="tableGetters().getNodeName" style="min-width:250px;">Name</th>' +
 			'        <th st-ratio="20" st-sort="tableGetters().getDescription">Description</th>' +
-			'        <th st-ratio="20" st-sort="tableGetters().getPermissions">Permissions</th>' +
+			'        <th st-ratio="15" st-sort="tableGetters().getPermissions">Permissions</th>' +
 			'        <th st-ratio="10" st-sort="tableGetters().getMimeType">Type</th>' +
 			'        <th st-ratio="10" st-sort="tableGetters().getSize">Size</th>' +
 			'        <th st-ratio="10" st-sort="tableGetters().getDateUpdated">Updated Date</th>' +

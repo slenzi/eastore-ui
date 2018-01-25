@@ -2,7 +2,9 @@
 	
 <md-content layout-padding layout="column" class= id="reportContent" style="padding: 0px;">
 
+<!-- moved to uiprogress view, with its own component
 <md-progress-linear md-mode="determinate" value="{{pathCtrl.getProgressValue()}}" style="padding: 0px;" ></md-progress-linear>
+-->
 	
 	<section layout="row" layout-sm="row" layout-align="left left" layout-wrap>
 	

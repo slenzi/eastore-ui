@@ -16,7 +16,7 @@
 			return appConstants.contextPath +  '/assets/scripts/angular/home/modules/home/partials/left_menu.jsp';
 		},			
 		
-		controller : function(appConstants, $mdSidenav, $log, $state, homeRestService){
+		controller : function(appConstants, $mdSidenav, $log, $state, homeRestService, sharedDataService){
 			
 			//$log.debug('leftMenuComponent controller');
 			
@@ -39,6 +39,12 @@
 				if($mdSidenav(appConstants.leftNavComponentId).isOpen()){
 					$mdSidenav(appConstants.leftNavComponentId).close();
 				}				
+				
+			};
+			
+			this.toggleProgress = function(){
+				
+				sharedDataService.setProgressBarEnabled(!sharedDataService.isProgressBarEnabled());
 				
 			};
 			

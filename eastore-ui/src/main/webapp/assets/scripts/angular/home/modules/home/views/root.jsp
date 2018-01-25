@@ -61,7 +61,7 @@
 			<span flex></span>
 			<div cycle>
 				<img src="{{ img.src }}" width="100%" height="90" ng-repeat="img in rootCtrl.bannerImages" />
-			</div>			
+			</div>
 			<h3 class="md-toolbar-tools md-toolbar-tools-bottom">
 				<md-button ng-click="appCtrl.toggleNav()" class="md-icon-button" aria-label="Menu" hide-gt-md>
 					<md-icon md-svg-icon="<%=request.getContextPath()%>/secure/home/assets/img/icons/ic_menu_18px.svg"></md-icon>
@@ -73,6 +73,7 @@
 				</span>
 				<div flex></div>
 			</h3>
+			<ui-view name="uiprogress"></ui-view>
 		</md-toolbar>	
 		
 		<ui-view name="uiheader"></ui-view>

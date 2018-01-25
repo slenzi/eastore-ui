@@ -218,6 +218,9 @@
 					uiheader : {
 						component : 'storeListHeaderComponent' // when 'stores' state is active, render 'storeListHeaderComponent' into view with name 'uiheader'
 					},
+					uiprogress : {
+						component : 'progressComponent'
+					},
 					uititle : {
 						//template : 'Protocol Listing'
 						component : 'titleHeaderComponent' // when 'stores' state is active, render 'titleHeaderComponent' into view with name 'uititle'
@@ -265,6 +268,9 @@
 					uiheader : {
 						component : 'createStoreHeaderComponent' // when 'createstore' state is active, render 'createStoreHeaderComponent' into view with name 'uiheader'
 					},
+					uiprogress : {
+						component : 'progressComponent'
+					},					
 					uititle : {
 						component : 'titleHeaderComponent' // when 'createstore' state is active, render 'titleHeaderComponent' into view with name 'uititle'
 					},
@@ -316,6 +322,9 @@
 					uiheader : {
 						component : 'pathHeaderComponent' // when 'path' state is active, render 'pathHeaderComponent' into view with name 'uiheader'
 					},
+					uiprogress : {
+						component : 'progressComponent'
+					},					
 					uititle : {
 						//template : '{{$ctrl.headerTitle}}'
 						component : 'titleHeaderComponent' // when 'path' state is active, render 'titleHeaderComponent' into view with name 'uititle'
@@ -439,6 +448,9 @@
 					uiheader : {
 						component : 'uploadHeaderComponent' // when 'upload' state is active, render 'uploadHeaderComponent' into view with name 'uiheader'
 					},
+					uiprogress : {
+						component : 'progressComponent'
+					},					
 					uititle : {
 						//template : 'Protocol Listing'
 						component : 'titleHeaderComponent' // when 'upload' state is active, render 'titleHeaderComponent' into view with name 'uititle'
@@ -504,6 +516,9 @@
 					uiheader : {
 						component : 'createDirHeaderComponent' // when 'createdir' state is active, render 'createDirHeaderComponent' into view with name 'uiheader'
 					},
+					uiprogress : {
+						component : 'progressComponent'
+					},					
 					uititle : {
 						//template : 'Protocol Listing'
 						component : 'titleHeaderComponent' // when 'createdir' state is active, render 'titleHeaderComponent' into view with name 'uititle'
@@ -576,6 +591,9 @@
 					uiheader : {
 						component : 'editDirHeaderComponent' // when 'editdir' state is active, render 'editDirHeaderComponent' into view with name 'uiheader'
 					},
+					uiprogress : {
+						component : 'progressComponent'
+					},					
 					uititle : {
 						//template : 'Protocol Listing'
 						component : 'titleHeaderComponent' // when 'editdir' state is active, render 'titleHeaderComponent' into view with name 'uititle'
@@ -739,6 +757,9 @@
 					uiheader : {
 						component : 'editFileHeaderComponent' // when 'editfile' state is active, render 'editFileHeaderComponent' into view with name 'uiheader'
 					},
+					uiprogress : {
+						component : 'progressComponent'
+					},					
 					uititle : {
 						//template : 'Protocol Listing'
 						component : 'titleHeaderComponent' // when 'editfile' state is active, render 'titleHeaderComponent' into view with name 'uititle'
@@ -825,6 +846,9 @@
 					uiheader : {
 						component : 'editStoreHeaderComponent' // when 'editstore' state is active, render 'editStoreHeaderComponent' into view with name 'uiheader'
 					},
+					uiprogress : {
+						component : 'progressComponent'
+					},					
 					uititle : {
 						//template : 'Protocol Listing'
 						component : 'titleHeaderComponent' // when 'editstore' state is active, render 'titleHeaderComponent' into view with name 'uititle'

@@ -1523,65 +1523,6 @@ md-autocomplete {
   }
 }
 
-// !!Important - Theme-based Background-color can be configured in backdrop-theme.scss
-//             - Animate background-color opacity only for `.md-opaque` styles
-
-md-backdrop {
-  transition: opacity 450ms;
-
-  position: absolute;
-  top:0;
-  bottom:0;
-  left: 0;
-  right: 0;
-
-  z-index: $z-index-backdrop;
-
-  &.md-menu-backdrop {
-    position: fixed !important;
-    z-index: $z-index-menu - 1;
-  }
-  &.md-select-backdrop {
-    z-index: $z-index-dialog + 1;
-    transition-duration: 0;
-  }
-  &.md-dialog-backdrop {
-    z-index: $z-index-dialog - 1;
-  }
-  &.md-bottom-sheet-backdrop {
-    z-index: $z-index-bottom-sheet - 1;
-  }
-  &.md-sidenav-backdrop {
-    z-index: $z-index-sidenav - 1;
-  }
-
-
-  &.md-click-catcher {
-    position: absolute;
-  }
-
-  &.md-opaque {
-
-    opacity: .48;
-
-    &.ng-enter {
-      opacity: 0;
-    }
-    &.ng-enter.md-opaque.ng-enter-active {
-      opacity: .48;
-    }
-    &.ng-leave {
-      opacity: .48;
-      transition: opacity 400ms;
-    }
-    &.ng-leave.md-opaque.ng-leave-active {
-      opacity: 0;
-    }
-  }
-
-}
-
-
 $bottom-sheet-horizontal-padding: 2 * $baseline-grid !default;
 $bottom-sheet-vertical-padding: 1 * $baseline-grid !default;
 $bottom-sheet-icon-after-margin: 4 * $baseline-grid !default;
@@ -1758,6 +1699,65 @@ md-bottom-sheet {
     border: 1px solid #fff;
   }
 }
+
+// !!Important - Theme-based Background-color can be configured in backdrop-theme.scss
+//             - Animate background-color opacity only for `.md-opaque` styles
+
+md-backdrop {
+  transition: opacity 450ms;
+
+  position: absolute;
+  top:0;
+  bottom:0;
+  left: 0;
+  right: 0;
+
+  z-index: $z-index-backdrop;
+
+  &.md-menu-backdrop {
+    position: fixed !important;
+    z-index: $z-index-menu - 1;
+  }
+  &.md-select-backdrop {
+    z-index: $z-index-dialog + 1;
+    transition-duration: 0;
+  }
+  &.md-dialog-backdrop {
+    z-index: $z-index-dialog - 1;
+  }
+  &.md-bottom-sheet-backdrop {
+    z-index: $z-index-bottom-sheet - 1;
+  }
+  &.md-sidenav-backdrop {
+    z-index: $z-index-sidenav - 1;
+  }
+
+
+  &.md-click-catcher {
+    position: absolute;
+  }
+
+  &.md-opaque {
+
+    opacity: .48;
+
+    &.ng-enter {
+      opacity: 0;
+    }
+    &.ng-enter.md-opaque.ng-enter-active {
+      opacity: .48;
+    }
+    &.ng-leave {
+      opacity: .48;
+      transition: opacity 400ms;
+    }
+    &.ng-leave.md-opaque.ng-leave-active {
+      opacity: 0;
+    }
+  }
+
+}
+
 
 // Material Design Button
 // https://material.google.com/components/buttons.html
@@ -2684,7 +2684,7 @@ md-calendar {
   font-weight: 500; // Roboto Medium
   @include rtl(padding, 0 0 0 $md-calendar-side-padding + $md-calendar-month-label-padding, rtl-value( 0 0 0 $md-calendar-side-padding + $md-calendar-month-label-padding));
 
-  md-calendar-month &:not(.md-calendar-month-label-disabled) {
+  &.md-calendar-label-clickable {
     cursor: pointer;
   }
 
@@ -3774,13 +3774,6 @@ md-input-container {
     overflow: hidden;
     @include rtl(clear, left, right);
 
-    &.ng-enter {
-      // Upon entering the DOM, messages should be hidden
-      .md-input-message-animation {
-        opacity: 0;
-        margin-top: -100px;
-      }
-    }
   }
 
   .md-input-message-animation, .md-char-counter {
@@ -3814,16 +3807,16 @@ md-input-container {
     }
   }
 
-  // Note: This is a workaround to fix an ng-enter flicker bug
   .md-input-message-animation {
-    &:not(.ng-animate) {
+    // Enter animation
+    // Pre-animation state is transparent and off target
+    &.ng-enter-prepare {
       opacity: 0;
       margin-top: -100px;
     }
-  }
 
-  .md-input-message-animation {
-    &.ng-enter {
+    // First keyframe of entry animation
+    &.ng-enter:not(.ng-enter-active) {
       opacity: 0;
       margin-top: -100px;
     }
@@ -4385,6 +4378,8 @@ $max-dense-menu-height: 2 * $baseline-grid + $max-visible-items * $dense-menu-it
   z-index: $z-index-menu;
   opacity: 0;
   border-radius: $menu-border-radius;
+  max-height: calc(100vh - 10px);
+  overflow: auto;
 
   md-menu-divider {
     margin-top: $baseline-grid / 2;
@@ -5128,151 +5123,6 @@ md-radio-group {
   }
 }
 
-$sidenav-mobile-width: 320px !default;
-$sidenav-desktop-width: 400px !default;
-$sidenav-min-space: 56px !default;
-
-md-sidenav {
-  box-sizing: border-box;
-  position: absolute;
-  flex-direction: column;
-  z-index: $z-index-sidenav;
-
-  width: $sidenav-mobile-width;
-  max-width: $sidenav-mobile-width;
-  bottom: 0;
-  overflow: auto;
-  -webkit-overflow-scrolling: touch;
-
-  ul {
-    list-style: none;
-  }
-
-  // Animation Comment Syntax: [mdLockedOpen]|[mdClosed]
-  // mdLockedOpen states: unlocked, locked, any
-  // mdClosed states: open, closed, any
-  // Default state: unlocked|open
-
-  // unlocked|closed
-  &.md-closed {
-    display: none;
-  }
-
-  // any|open <=> any|closed
-  &.md-closed-add,
-  &.md-closed-remove {
-    display: flex;
-    transition: 0.2s ease-in all;
-  }
-
-  // any|open <=> any|closed (animating)
-  &.md-closed-add.md-closed-add-active,
-  &.md-closed-remove.md-closed-remove-active {
-    transition: $swift-ease-out;
-  }
-
-  // unlocked|any <=> locked|any
-  &.md-locked-open-add,
-  &.md-locked-open-remove {
-    position: static;
-    display: flex;
-    transform: translate3d(0, 0, 0);
-  }
-
-  // locked|any
-  &.md-locked-open,
-  &.md-locked-open.md-closed,
-  &.md-locked-open.md-closed.md-sidenav-left,
-  &.md-locked-open.md-closed.md-sidenav-right {
-    position: static;
-    display: flex;
-    transform: translate3d(0, 0, 0);
-  }
-
-  // locked|closed => unlock|closed
-  &.md-locked-open-remove.md-closed {
-    position: static;
-    display: flex;
-    transform: translate3d(0, 0, 0);
-  }
-
-  // unlocked|closed => locked|closed
-  &.md-closed.md-locked-open-add {
-    position: static;
-    display: flex;
-    transform: translate3d(0%, 0, 0);
-  }
-
-  // unlocked|closed => locked|closed (pre-animation)
-  &.md-closed.md-locked-open-add:not(.md-locked-open-add-active) {
-    transition: width $swift-ease-in-duration $swift-ease-in-timing-function,
-                min-width $swift-ease-in-duration $swift-ease-in-timing-function;
-    width: 0 !important;
-    min-width: 0 !important;
-  }
-
-  // unlocked|closed => locked|closed (animating)
-  &.md-closed.md-locked-open-add-active {
-    transition: width $swift-ease-in-duration $swift-ease-in-timing-function,
-                min-width $swift-ease-in-duration $swift-ease-in-timing-function;
-  }
-
-  // locked|any => unlocked|any (animating)
-  &.md-locked-open-remove-active {
-    transition: width $swift-ease-in-duration $swift-ease-in-timing-function,
-                min-width $swift-ease-in-duration $swift-ease-in-timing-function;
-    width: 0 !important;
-    min-width: 0 !important;
-  }
-
-  @extend .md-sidenav-left;
-}
-.md-sidenav-backdrop.md-locked-open {
-  display: none;
-}
-
-.md-sidenav-left {
-  left: 0;
-  top: 0;
-  transform: translate3d(0%, 0, 0);
-  &.md-closed {
-    transform: translate3d(-100%, 0, 0);
-  }
-}
-
-.md-sidenav-right {
-  left: 100%;
-  top: 0;
-  transform: translate(-100%, 0);
-  &.md-closed {
-    transform: translate(0%, 0);
-  }
-}
-
-@media (min-width: $layout-breakpoint-xs) {
-  md-sidenav {
-    max-width: $sidenav-desktop-width;
-  }
-}
-
-@media (max-width: $sidenav-desktop-width + $sidenav-min-space) {
-  md-sidenav {
-    width: calc(100% - #{$sidenav-min-space});
-    min-width: calc(100% - #{$sidenav-min-space});
-    max-width: calc(100% - #{$sidenav-min-space});
-  }
-}
-
-// IE Only
-@media screen and (-ms-high-contrast: active) {
-  .md-sidenav-left {
-    border-right: 1px solid #fff;
-  }
-  .md-sidenav-right {
-    border-left: 1px solid #fff;
-  }
-}
-
 $select-checkbox-border-radius: 2px !default;
 $select-checkbox-border-width: 2px !default;
 $select-checkbox-width: rem(1.4) !default;
@@ -5588,6 +5438,151 @@ md-select-menu[multiple] {
       @include rtl(margin-left, $select-option-padding * (2 / 3), auto);
       @include rtl(margin-right, auto, $select-option-padding * (2 / 3));
     }
+  }
+}
+
+$sidenav-mobile-width: 320px !default;
+$sidenav-desktop-width: 400px !default;
+$sidenav-min-space: 56px !default;
+
+md-sidenav {
+  box-sizing: border-box;
+  position: absolute;
+  flex-direction: column;
+  z-index: $z-index-sidenav;
+
+  width: $sidenav-mobile-width;
+  max-width: $sidenav-mobile-width;
+  bottom: 0;
+  overflow: auto;
+  -webkit-overflow-scrolling: touch;
+
+  ul {
+    list-style: none;
+  }
+
+  // Animation Comment Syntax: [mdLockedOpen]|[mdClosed]
+  // mdLockedOpen states: unlocked, locked, any
+  // mdClosed states: open, closed, any
+  // Default state: unlocked|open
+
+  // unlocked|closed
+  &.md-closed {
+    display: none;
+  }
+
+  // any|open <=> any|closed
+  &.md-closed-add,
+  &.md-closed-remove {
+    display: flex;
+    transition: 0.2s ease-in all;
+  }
+
+  // any|open <=> any|closed (animating)
+  &.md-closed-add.md-closed-add-active,
+  &.md-closed-remove.md-closed-remove-active {
+    transition: $swift-ease-out;
+  }
+
+  // unlocked|any <=> locked|any
+  &.md-locked-open-add,
+  &.md-locked-open-remove {
+    position: static;
+    display: flex;
+    transform: translate3d(0, 0, 0);
+  }
+
+  // locked|any
+  &.md-locked-open,
+  &.md-locked-open.md-closed,
+  &.md-locked-open.md-closed.md-sidenav-left,
+  &.md-locked-open.md-closed.md-sidenav-right {
+    position: static;
+    display: flex;
+    transform: translate3d(0, 0, 0);
+  }
+
+  // locked|closed => unlock|closed
+  &.md-locked-open-remove.md-closed {
+    position: static;
+    display: flex;
+    transform: translate3d(0, 0, 0);
+  }
+
+  // unlocked|closed => locked|closed
+  &.md-closed.md-locked-open-add {
+    position: static;
+    display: flex;
+    transform: translate3d(0%, 0, 0);
+  }
+
+  // unlocked|closed => locked|closed (pre-animation)
+  &.md-closed.md-locked-open-add:not(.md-locked-open-add-active) {
+    transition: width $swift-ease-in-duration $swift-ease-in-timing-function,
+                min-width $swift-ease-in-duration $swift-ease-in-timing-function;
+    width: 0 !important;
+    min-width: 0 !important;
+  }
+
+  // unlocked|closed => locked|closed (animating)
+  &.md-closed.md-locked-open-add-active {
+    transition: width $swift-ease-in-duration $swift-ease-in-timing-function,
+                min-width $swift-ease-in-duration $swift-ease-in-timing-function;
+  }
+
+  // locked|any => unlocked|any (animating)
+  &.md-locked-open-remove-active {
+    transition: width $swift-ease-in-duration $swift-ease-in-timing-function,
+                min-width $swift-ease-in-duration $swift-ease-in-timing-function;
+    width: 0 !important;
+    min-width: 0 !important;
+  }
+
+  @extend .md-sidenav-left;
+}
+.md-sidenav-backdrop.md-locked-open {
+  display: none;
+}
+
+.md-sidenav-left {
+  left: 0;
+  top: 0;
+  transform: translate3d(0%, 0, 0);
+  &.md-closed {
+    transform: translate3d(-100%, 0, 0);
+  }
+}
+
+.md-sidenav-right {
+  left: 100%;
+  top: 0;
+  transform: translate(-100%, 0);
+  &.md-closed {
+    transform: translate(0%, 0);
+  }
+}
+
+@media (min-width: $layout-breakpoint-xs) {
+  md-sidenav {
+    max-width: $sidenav-desktop-width;
+  }
+}
+
+@media (max-width: $sidenav-desktop-width + $sidenav-min-space) {
+  md-sidenav {
+    width: calc(100% - #{$sidenav-min-space});
+    min-width: calc(100% - #{$sidenav-min-space});
+    max-width: calc(100% - #{$sidenav-min-space});
+  }
+}
+
+// IE Only
+@media screen and (-ms-high-contrast: active) {
+  .md-sidenav-left {
+    border-right: 1px solid #fff;
+  }
+  .md-sidenav-right {
+    border-left: 1px solid #fff;
   }
 }
 
@@ -6343,6 +6338,14 @@ md-switch {
   }
 }
 
+[md-swipe-left], [md-swipe-right] {
+    touch-action : pan-y;
+}
+
+[md-swipe-up], [md-swipe-down] {
+    touch-action : pan-x;
+}
+
 $tabs-paginator-width: $baseline-grid * 4 !default;
 $tabs-tab-width: $baseline-grid * 12 !default;
 $tabs-header-height: 48px !default;
@@ -6450,6 +6453,11 @@ md-tabs-wrapper {
       left: 50%;
       transform: translate3d(-50%, -50%, 0);
     }
+
+    // For RTL tabs, rotate the buttons
+    [dir="rtl"] & {
+      transform: rotateY(180deg) translateY(-50%);
+    }
   }
   md-prev-button {
     @include rtl-prop(left, right, 0, auto);
@@ -6458,6 +6466,8 @@ md-tabs-wrapper {
   md-next-button {
     @include rtl-prop(right, left, 0, auto);
     background-image: url('data:image/svg+xml;base64,PD94bWwgdmVyc2lvbj0iMS4wIiBlbmNvZGluZz0idXRmLTgiPz4gPCEtLSBHZW5lcmF0b3I6IEFkb2JlIElsbHVzdHJhdG9yIDE3LjEuMCwgU1ZHIEV4cG9ydCBQbHVnLUluIC4gU1ZHIFZlcnNpb246IDYuMDAgQnVpbGQgMCkgIC0tPiA8IURPQ1RZUEUgc3ZnIFBVQkxJQyAiLS8vVzNDLy9EVEQgU1ZHIDEuMS8vRU4iICJodHRwOi8vd3d3LnczLm9yZy9HcmFwaGljcy9TVkcvMS4xL0RURC9zdmcxMS5kdGQiPiA8c3ZnIHZlcnNpb249IjEuMSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIiB4bWxuczp4bGluaz0iaHR0cDovL3d3dy53My5vcmcvMTk5OS94bGluayIgeD0iMHB4IiB5PSIwcHgiIHdpZHRoPSIyNHB4IiBoZWlnaHQ9IjI0cHgiIHZpZXdCb3g9IjAgMCAyNCAyNCIgZW5hYmxlLWJhY2tncm91bmQ9Im5ldyAwIDAgMjQgMjQiIHhtbDpzcGFjZT0icHJlc2VydmUiPiA8ZyBpZD0iSGVhZGVyIj4gPGc+IDxyZWN0IHg9Ii02MTgiIHk9Ii0xMzM2IiBmaWxsPSJub25lIiB3aWR0aD0iMTQwMCIgaGVpZ2h0PSIzNjAwIi8+IDwvZz4gPC9nPiA8ZyBpZD0iTGFiZWwiPiA8L2c+IDxnIGlkPSJJY29uIj4gPGc+IDxwb2x5Z29uIHBvaW50cz0iMTAsNiA4LjYsNy40IDEzLjIsMTIgOC42LDE2LjYgMTAsMTggMTYsMTIgCQkiIHN0eWxlPSJmaWxsOndoaXRlOyIvPiA8cmVjdCBmaWxsPSJub25lIiB3aWR0aD0iMjQiIGhlaWdodD0iMjQiLz4gPC9nPiA8L2c+IDxnIGlkPSJHcmlkIiBkaXNwbGF5PSJub25lIj4gPGcgZGlzcGxheT0iaW5saW5lIj4gPC9nPiA8L2c+IDwvc3ZnPg0K');
+
+    // In regular mode, we need to flip the chevron icon to point the other way
     md-icon {
       transform: translate3d(-50%, -50%, 0) rotate(180deg);
     }
@@ -6543,7 +6553,7 @@ md-tab-content {
   &.md-left:not(.md-active) {
     @include rtl(transform, translateX(-100%), translateX(+100%));
     animation: 2 * $swift-ease-in-out-duration md-tab-content-hide;
-    opacity: 0;
+    visibility: hidden;
     * {
       transition: visibility 0s linear;
       transition-delay: $swift-ease-in-out-duration;
@@ -6553,7 +6563,7 @@ md-tab-content {
   &.md-right:not(.md-active) {
     @include rtl(transform, translateX(100%), translateX(-100%));
     animation: 2 * $swift-ease-in-out-duration md-tab-content-hide;
-    opacity: 0;
+    visibility: hidden;
     * {
       transition: visibility 0s linear;
       transition-delay: $swift-ease-in-out-duration;
@@ -6608,7 +6618,7 @@ md-tab {
   box-sizing: border-box;
   overflow: hidden;
   text-overflow: ellipsis;
-  &.md-focused {
+  &.md-focused, &:focus {
     box-shadow: none;
     outline: none;
   }
@@ -6628,7 +6638,7 @@ md-tab {
   }
 }
 
-md-toolbar + md-tabs {
+md-toolbar + md-tabs, md-toolbar + md-dialog-content md-tabs {
   border-top-left-radius: 0;
   border-top-right-radius: 0;
 }
@@ -7049,6 +7059,23 @@ md-toolbar {
 }
 
 
+.md-truncate {
+  overflow: hidden;
+  white-space: nowrap;
+
+  // Default overflow is ellipsis
+  text-overflow: ellipsis;
+
+  // Allow override to use clipping
+  &.md-clip {
+    text-overflow: clip;
+  }
+
+  // This is a flex-specific hack that forces the element to only take up available space.
+  &.flex {
+    width: 0;
+  }
+}
 $tooltip-fontsize-lg: 10px !default;
 $tooltip-fontsize-sm: 14px !default;
 $tooltip-height-lg: 22px !default;
@@ -7118,23 +7145,6 @@ $tooltip-max-width: 32px !default;
   }
 }
 
-.md-truncate {
-  overflow: hidden;
-  white-space: nowrap;
-
-  // Default overflow is ellipsis
-  text-overflow: ellipsis;
-
-  // Allow override to use clipping
-  &.md-clip {
-    text-overflow: clip;
-  }
-
-  // This is a flex-specific hack that forces the element to only take up available space.
-  &.flex {
-    width: 0;
-  }
-}
 $virtual-repeat-scrollbar-width: 16px !default;
 
 .md-virtual-repeat-container {

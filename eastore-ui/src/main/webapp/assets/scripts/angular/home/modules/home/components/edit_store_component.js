@@ -47,7 +47,7 @@
 			return appConstants.contextPath +  '/assets/scripts/angular/home/modules/home/partials/edit_store_content.jsp';
 		},				
 		
-		controller : function($log, $state, $scope, homeRestService){
+		controller : function($log, $state, $scope, homeRestService, sharedDataService){
 			
 			//$log.debug('editStoreContentComponent controller');
 			
@@ -235,6 +235,8 @@
 				// the form will only be valid if values are entered into all field flag as required
 				if($scope.storeForm.$valid){
 					
+					sharedDataService.setProgressBarEnabled(true);
+					
 					// call service to update store, then reload store list view
 					homeRestService
 						.updateStore(
@@ -253,10 +255,15 @@
 							//$log.debug(JSON.stringify(jsonData))
 							//return jsonData;
 							
-							thisCtrl.viewStoreList();
+							sharedDataService.setProgressBarEnabled(false);
 							
 						}, function( error ){
 							alert('Error calling updateStore(...) service method' + JSON.stringify(error));
+						})
+						.then( function ( ){
+							
+							thisCtrl.viewStoreList();
+							
 						});
 					
 				}else{
