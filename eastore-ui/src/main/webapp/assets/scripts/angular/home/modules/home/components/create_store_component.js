@@ -44,7 +44,7 @@
 			return appConstants.contextPath +  '/assets/scripts/angular/home/modules/home/partials/create_store_content.jsp';
 		},				
 		
-		controller : function($log, $state, $scope, homeRestService){
+		controller : function($log, $state, $scope, homeRestService, sharedDataService){
 			
 			//$log.debug('createStoreContentComponent controller');
 			
@@ -261,6 +261,8 @@
 			this.doCreateStore = function(){
 				
 				if($scope.storeForm.$valid){
+					
+					sharedDataService.setProgressBarEnabled(true);
 				
 					// call service to create store, then load store list state
 					homeRestService
@@ -276,16 +278,17 @@
 								this._newStore.rootDir.executeGroup1.groupCode)
 						.then( function ( jsonData ){
 							
-							//$log.debug('completed addStore service call');
-							
-							//$log.debug(JSON.stringify(jsonData))
-							//return jsonData;
-							
-							$state.go('stores');
+							sharedDataService.setProgressBarEnabled(false);
 							
 						}, function( error ){
 							alert('Error calling addStore(...) service method' + JSON.stringify(error));
-						});					
+							sharedDataService.setProgressBarEnabled(false);
+						})
+						.then( function ( ){
+							
+							$state.go('stores');
+							
+						});						
 					
 				}else{
 					alert('Please fill out all required fields. Thank you.');

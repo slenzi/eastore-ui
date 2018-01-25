@@ -644,6 +644,15 @@
 			};
 			
 			/**			
+			 * select ll resources in the collection of path resources
+			 */
+			this.selectAllPathResource = function(pathResources){
+				for(var i = 0; i<pathResources.length; i++){
+					pathResources[i].isSelected = true;
+				}	
+			};				
+			
+			/**			
 			 * unselect any selected resources in the collection of path resources
 			 */
 			this.unselectPathResource = function(pathResources){

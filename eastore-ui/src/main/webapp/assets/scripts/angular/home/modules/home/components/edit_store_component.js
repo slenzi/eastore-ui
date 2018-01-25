@@ -250,15 +250,11 @@
 								this.editStoreModel.rootDir.executeGroup1.groupCode)
 						.then( function ( jsonData ){
 							
-							//$log.debug('completed updateStore service call');
-							
-							//$log.debug(JSON.stringify(jsonData))
-							//return jsonData;
-							
 							sharedDataService.setProgressBarEnabled(false);
 							
 						}, function( error ){
 							alert('Error calling updateStore(...) service method' + JSON.stringify(error));
+							sharedDataService.setProgressBarEnabled(false);
 						})
 						.then( function ( ){
 							

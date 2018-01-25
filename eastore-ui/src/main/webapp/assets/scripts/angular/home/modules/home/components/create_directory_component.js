@@ -57,7 +57,7 @@
 			return appConstants.contextPath +  '/assets/scripts/angular/home/modules/home/partials/create_directory_content.jsp';
 		},				
 		
-		controller : function($log, $state, $scope, homeRestService){
+		controller : function($log, $state, $scope, homeRestService, sharedDataService){
 			
 			//$log.debug('storesContentComponent controller');
 			
@@ -271,6 +271,8 @@
 				// the form will only be valid if values are entered into all field flag as required
 				if($scope.dirForm.$valid){
 					
+					sharedDataService.setProgressBarEnabled(true);
+					
 					//alert('parentNodeId =' + directoryResource.nodeId + ', new dir name = ' + this._newDir.dirName + ', new dire desc = ' + this._newDir.dirDescription + ', read group = ' + this._newDir.readGroup1.groupCode + ', write group = ' + this._newDir.writeGroup1.groupCode + ', execute group = ' + this._newDir.executeGroup1.groupCode);
 					
 					// call service to create directory, then reload path state
@@ -279,15 +281,17 @@
 						.addDirectory(directoryResource.nodeId, this._newDir.dirName, this._newDir.dirDescription, this._newDir.readGroup1.groupCode, this._newDir.writeGroup1.groupCode, this._newDir.executeGroup1.groupCode)
 						.then( function ( jsonData ){
 							
-							//$log.debug('completed addDirectory service call');
-							
-							//$log.debug(JSON.stringify(jsonData))
-							//return jsonData;
-							thisCtrl.loadPathState(store, directoryResource);
+							sharedDataService.setProgressBarEnabled(false);
 							
 						}, function( error ){
 							alert('Error calling addDirectory(...) service method' + JSON.stringify(error));
-						});
+							sharedDataService.setProgressBarEnabled(false);
+						})
+						.then( function ( ){
+							
+							thisCtrl.loadPathState(store, directoryResource);
+							
+						});						
 
 					//this.loadPathState(store, directoryResource);
 					

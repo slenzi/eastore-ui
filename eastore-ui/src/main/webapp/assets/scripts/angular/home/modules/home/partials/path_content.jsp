@@ -12,7 +12,7 @@
 			<md-button aria-label="Open Menu" class="md-icon-button" ng-click="pathCtrl.openMenu($mdMenu, $event)">
 				<md-icon md-menu-origin md-svg-icon="<%=request.getContextPath()%>/secure/home/assets/img/icons/ic_menu_24px.svg"></md-icon>
 			</md-button>
-			<md-menu-content width="4" style="min-height: 350px;">
+			<md-menu-content width="4" style="min-height: 430px;">
 				
 				<md-menu-item>
 					<md-button ng-click="pathCtrl.loadStateUploadForm(pathCtrl.store, pathCtrl.directory)">
@@ -60,14 +60,32 @@
 					</md-button>
 				</md-menu-item>
 				
+				<md-menu-divider></md-menu-divider>
+				
+				<md-menu-item>
+					<md-button ng-click="pathCtrl.selectAllPathResource(pathCtrl.getPathResources())" >
+						<md-icon md-svg-icon="<%=request.getContextPath()%>/secure/home/assets/img/icons/ic_select_all_24px.svg" md-menu-align-target></md-icon>
+						Select All
+					</md-button>
+				</md-menu-item>				
+				
+				<md-menu-item>
+					<md-button ng-click="pathCtrl.unselectPathResource(pathCtrl.getPathResources())"  ng-disabled="!pathCtrl.haveSelectedPathResource(pathCtrl.getPathResources())">
+						<md-icon md-svg-icon="<%=request.getContextPath()%>/secure/home/assets/img/icons/ic_remove_circle_24px.svg" md-menu-align-target></md-icon>
+						Unselect
+					</md-button>
+				</md-menu-item>				
+				
 			</md-menu-content>
 		</md-menu>	
 		
 		<div flex></div>	
 		
+		<!--
 		<md-button class="md-raised standardButton" ng-click="pathCtrl.unselectPathResource(pathCtrl.getPathResources())"  ng-disabled="!pathCtrl.haveSelectedPathResource(pathCtrl.getPathResources())">
 			Unselect
 		</md-button>
+		-->
 		
 	</section>	
 	

@@ -59,7 +59,7 @@
 			return appConstants.contextPath +  '/assets/scripts/angular/home/modules/home/partials/edit_directory_content.jsp';
 		},				
 		
-		controller : function($log, $state, $scope, homeRestService){
+		controller : function($log, $state, $scope, homeRestService, sharedDataService){
 			
 			//$log.debug('editDirContentComponent controller');
 			
@@ -260,6 +260,8 @@
 				// the form will only be valid if values are entered into all field flag as required
 				if($scope.dirForm.$valid){
 					
+					sharedDataService.setProgressBarEnabled(true);
+					
 					// call service to update directory, then reload path state
 					homeRestService
 						.updateDirectory(
@@ -271,15 +273,17 @@
 								this.editDirModel.executeGroup1.groupCode)
 						.then( function ( jsonData ){
 							
-							//$log.debug('completed updateDirectory service call');
-							
-							//$log.debug(JSON.stringify(jsonData))
-							//return jsonData;
-							thisCtrl.loadPathState(store, directoryResource);
+							sharedDataService.setProgressBarEnabled(false);
 							
 						}, function( error ){
 							alert('Error calling updateDirectory(...) service method' + JSON.stringify(error));
-						});
+							sharedDataService.setProgressBarEnabled(false);
+						})
+						.then( function ( ){
+							
+							thisCtrl.loadPathState(store, directoryResource);
+							
+						});						
 
 					//this.loadPathState(store, directoryResource);
 					
