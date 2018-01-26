@@ -178,11 +178,20 @@
 					},
 					
 					// since this is being resolved on the root state, it will resolve before all our resolves on our child states
-					haveUserInSession : function($log, homeRestService){
+					haveUserInSession : function($log, appConstants, homeRestService){
 						
 						$log.debug('------------ [root state] resolving authworld user in session');
 						
-						return homeRestService.haveAuthWorldUserInSession();	
+						var isAuthWorldActive = (appConstants.authworldActive == 'true');
+						
+						if(isAuthWorldActive){
+							// full validation when authworld is active
+							return homeRestService.haveValidAuthWorldUserInSession();
+						}else{
+							// basic check for user in session
+							return homeRestService.haveAuthWorldUserInSession();
+						}
+						
 						
 					}					
 					

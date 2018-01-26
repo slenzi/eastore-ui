@@ -18,7 +18,8 @@
 	<md-progress-circular md-mode="indeterminate" md-diameter="40"></md-progress-circular>
 	-->	
 	
-	<md-button class="" ng-click="pathCtrl.refreshPath(pathCtrl.store, pathCtrl.directory)" aria-label="Refresh View">
+	<md-button class="" ng-click="pathCtrl.refreshPath(pathCtrl.store, pathCtrl.directory)" aria-label="Refresh Files">
+		<md-tooltip md-direction="bottom">Refresh Files</md-tooltip>
 		<md-icon style="fill:white;" md-svg-icon="<%=request.getContextPath()%>/secure/home/assets/img/icons/ic_refresh_24px.svg"></md-icon>
 	</md-button>		
 	

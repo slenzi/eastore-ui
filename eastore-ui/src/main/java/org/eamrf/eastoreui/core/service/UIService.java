@@ -7,9 +7,9 @@ import java.util.List;
 import javax.activation.DataHandler;
 
 import org.eamrf.core.logging.stereotype.InjectLogger;
+import org.eamrf.eastore.client.model.file.FileResponse;
 import org.eamrf.eastoreui.core.aop.profiler.MethodTimer;
 import org.eamrf.eastoreui.core.exception.ServiceException;
-import org.eamrf.eastoreui.core.model.file.FileResponse;
 import org.eamrf.eastoreui.core.service.security.GatekeeperService;
 import org.eamrf.eastoreui.web.security.authworld.AuthWorldService;
 import org.eamrf.gatekeeper.web.service.jaxws.model.Category;

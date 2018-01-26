@@ -7,13 +7,13 @@ import javax.activation.DataHandler;
 
 import org.eamrf.core.logging.stereotype.InjectLogger;
 import org.eamrf.core.util.StringUtil;
+import org.eamrf.eastore.client.jaxrs.EAStoreActionClient;
+import org.eamrf.eastore.client.jaxrs.EAStoreJsonClient;
+import org.eamrf.eastore.client.model.file.FileResponse;
 import org.eamrf.eastoreui.core.aop.profiler.MethodTimer;
 import org.eamrf.eastoreui.core.exception.ServiceException;
-import org.eamrf.eastoreui.core.model.file.FileResponse;
-import org.eamrf.eastoreui.web.jaxrs.eastore.client.EAStoreJsonClient;
+import org.eamrf.eastoreui.web.jaxrs.eastore.provider.EAStoreClientProvider;
 import org.eamrf.eastoreui.web.security.authworld.AuthWorldService;
-import org.eamrf.eastoreui.web.jaxrs.eastore.client.EAStoreActionClient;
-import org.eamrf.eastoreui.web.jaxrs.eastore.client.EAStoreClientProvider;
 import org.eamrf.web.rs.exception.WebServiceException;
 import org.frontier.ecog.webapp.authworld.model.AuthWorldUser;
 import org.slf4j.Logger;

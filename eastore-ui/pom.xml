@@ -46,6 +46,7 @@
 		<version.hikaricp>2.7.2</version.hikaricp> <!-- was 2.6.1 -->
 		
 		<!-- EA-MRF dependencies -->
+		<version.eamrf.eastore.rs.client>1.0.0</version.eamrf.eastore.rs.client>
 		<version.eamrf.common>0.3.0</version.eamrf.common>
 		<version.authworld>triton-tomcat8-0.6.0</version.authworld> <!-- was triton-tomcat8-0.5.5 -->
 		<version.gatekeeper>1.0.0.RC3</version.gatekeeper>			
@@ -259,7 +260,13 @@
 		            <artifactId>*</artifactId>
 		        </exclusion>		                
     		</exclusions>		    
-		</dependency>												
+		</dependency>
+		
+		<dependency>
+		    <groupId>org.eamrf</groupId>
+		    <artifactId>eastore-rs-client</artifactId>
+		    <version>${version.eamrf.eastore.rs.client}</version>
+		</dependency>													
 	
 	</dependencies>
 	
