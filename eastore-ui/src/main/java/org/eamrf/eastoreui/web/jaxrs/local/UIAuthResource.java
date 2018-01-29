@@ -46,6 +46,23 @@ public class UIAuthResource extends BaseResourceHandler {
     private AuthenticationService authService;
     
     private final String TEST_COOKIE_NAME = "MyCookie";
+    
+    /**
+     * Check if the currently logged in user is an authworld admin
+     * 
+     * @return
+     * @throws WebServiceException
+     */
+    @GET
+	@Path("/authworld/isadmin")
+    @Produces(MediaType.TEXT_PLAIN)
+    public Boolean isAdminUser() throws WebServiceException {
+    	
+    	logger.debug(UIJsonResource.class.getSimpleName() + " isAdminUser(...) called");
+
+    	return authService.isAuthWorldAdmin();
+    	
+    }    
 
     /**
      * Check if there is an authworld user in the session, but do not perform validation.

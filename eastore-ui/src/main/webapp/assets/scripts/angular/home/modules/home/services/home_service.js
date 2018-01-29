@@ -528,6 +528,16 @@
 						return response.data;
 					});			
 			
+		}
+		
+		// check if the currently logged in user is an authworld admin
+		function _isAdmin(){
+			
+			return $http.get(appConstants.eastoreUiAuthJaxrsService + '/authworld/isadmin').then(function(response) {
+				// service returns text/plain, so convert to boolean
+				return (response.data == 'true');
+			});			
+			
 		}		
 		
 		// *********************************
@@ -541,6 +551,7 @@
 			haveValidAuthWorldUserInSession : _haveValidAuthWorldUserInSession,
 			autoLoginAuthWorldUser : _autoLoginAuthWorldUser,
 			buildAuthWorldHandOffUrl : _buildAuthWorldHandOffUrl,
+			isAdmin : _isAdmin,
 			
 			addStore : _addStore,
 			updateStore : _updateStore,

@@ -9,7 +9,10 @@
 	//
 	mainModule.component('storeListHeaderComponent', {
 		
-		bindings: { stores: '<' },
+		bindings: {
+			stores: '<',
+			isAdmin: '<'
+		},
 		
 		//template :
 		//	'Protocol List'
@@ -21,7 +24,14 @@
 		},			
 		
 		controller : function($log, $state){
+			
 			//$log.debug('storesHeaderComponent controller');
+			
+			var thisCtrl = this;
+			
+			this.isAdminUser = function(){
+				return thisCtrl.isAdmin;
+			};
 			
 			// show the create store form
 			this.showCreateStoreForm = function(){
@@ -41,7 +51,9 @@
 	//
 	mainModule.component('storeListContentComponent', {
 		
-		bindings: { stores: '<' },
+		bindings: {
+			stores: '<'
+		},
 		
 		//templateUrl : '/eastore-ui/assets/scripts/angular/home/modules/home/partials/store_list_content.jsp',
 		templateUrl : function (appConstants){
@@ -51,6 +63,8 @@
 		controller : function($log, $state){
 			
 			//$log.debug('storesContentComponent controller');
+			
+			var thisCtrl = this;		
 			
 			this.clickStoreHandler = function(theStore){
 				

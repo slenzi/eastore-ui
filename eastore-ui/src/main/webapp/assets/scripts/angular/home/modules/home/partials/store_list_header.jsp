@@ -5,7 +5,7 @@
 
 	<div flex></div>
 	
-	<md-button class="" ng-click="storeCtrl.showCreateStoreForm()" aria-label="New Store">
+	<md-button class="" ng-click="storeCtrl.showCreateStoreForm()" aria-label="New Store" ng-if="storeCtrl.isAdminUser()">
 		<md-tooltip md-direction="bottom">New Store</md-tooltip>
 		<md-icon style="fill:white;" md-svg-icon="<%=request.getContextPath()%>/secure/home/assets/img/icons/ic_add_circle_outline_24px.svg"></md-icon>
 	</md-button>	

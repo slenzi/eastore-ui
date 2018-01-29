@@ -53,6 +53,7 @@
 				<md-card-content>
 					<div layout="row">
 						
+						<!--
 						<div layout="column">
 						
 							<md-input-container style="margin-right: 10px;">
@@ -68,6 +69,7 @@
 							</md-input-container>
 							
 						</div>
+						-->
 						
 						<div layout="column">
 

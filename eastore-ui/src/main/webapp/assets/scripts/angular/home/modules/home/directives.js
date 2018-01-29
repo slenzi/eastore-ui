@@ -95,7 +95,7 @@
 					return true;
 				}
 				return false;
-			};			
+			};
 			
 		}];
 		
@@ -105,7 +105,7 @@
 			'<table st-table="storeListView" st-safe-src="storeListSafe" class="table mySmartTable">' +
 			'	<thead>' +
 			'	<tr>' +
-			'		 <th st-ratio="5">Menu</th>' +
+			'		 <th st-ratio="5"></th>' +
 			'        <th st-ratio="50" st-sort="tableGetters().getStoreName">Name</th>' +
 			'        <th st-ratio="30" st-sort="tableGetters().getStoreDescription">Description</th>' +
 			'        <th st-ratio="15" st-sort="tableGetters().getDateCreated">Created</th>' +

@@ -43,6 +43,19 @@ public class AuthenticationService {
 	}
 	
 	/**
+	 * Check if the currently logged in user is an authworld admin.
+	 * 
+	 * @return
+	 */
+	public boolean isAuthWorldAdmin() {
+		AuthWorldUser user = authworldService.getUserFromSession(request);
+		if(user != null) {
+			return user.isAdmin();
+		}
+		return false;
+	}
+	
+	/**
 	 * Check if authentication service is active
 	 * 
 	 * @return

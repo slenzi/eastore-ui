@@ -192,8 +192,15 @@
 							return homeRestService.haveAuthWorldUserInSession();
 						}
 						
-						
-					}					
+					},
+					
+					// resolve whether or not the currently logged in user is an authworld admin
+					isAdmin : function(haveUserInSession, homeRestService){
+						if(haveUserInSession){
+							return homeRestService.isAdmin();
+						}
+						return false;
+					}
 					
 					//,
 
