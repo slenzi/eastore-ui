@@ -1,8 +1,9 @@
 package org.eamrf.eastoreui.web.jaxrs.eastore.provider;
 
 import org.eamrf.core.logging.stereotype.InjectLogger;
-import org.eamrf.eastore.client.jaxrs.EAStoreActionClient;
-import org.eamrf.eastore.client.jaxrs.EAStoreJsonClient;
+import org.eamrf.eastore.client.jaxrs.v1.EAStoreActionClient;
+import org.eamrf.eastore.client.jaxrs.v1.EAStoreJsonClient;
+import org.eamrf.eastore.client.jaxrs.v1.EAStoreTreeClient;
 import org.slf4j.Logger;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
@@ -40,6 +41,12 @@ public class EAStoreClientProvider {
 	public EAStoreActionClient getActionClient(){
 		
 		return new EAStoreActionClient(serviceUrl, serviceUser, servicePass);
+		
+	}
+	
+	public EAStoreTreeClient getTreeClient(){
+		
+		return new EAStoreTreeClient(serviceUrl, serviceUser, servicePass);
 		
 	}	
 

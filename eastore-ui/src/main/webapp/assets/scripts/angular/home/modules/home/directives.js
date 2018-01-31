@@ -97,6 +97,14 @@
 				return false;
 			};
 			
+			$scope.isAdminUser = function(){
+				return $scope.isAdmin;
+			};
+			
+			$scope.showTreeView = function(storeObj){
+				$scope.storeTreeViewClickHandler( {theStore: storeObj} );
+			};
+			
 		}];
 		
 		// track by $index
@@ -120,7 +128,7 @@
 			'	<tbody>' +
 			'	<tr st-select-row="storeObj" st-select-mode="multiple" ng-repeat="storeObj in storeListView">' +	
 			'        <td>' +
-			'			<md-menu ng-if=\"canExecuteStore(storeObj);\">' +
+			'			<md-menu ng-if="canExecuteStore(storeObj);">' +
 			'				<md-button aria-label="Open phone interactions menu" class="md-icon-button" ng-click="$mdOpenMenu(); $event.stopPropagation();">' +
 			'					<md-icon md-menu-origin md-svg-icon="/eastore-ui/secure/home/assets/img/icons/ic_more_horiz_24px.svg" style="height: 20px;"></md-icon>' +
 			'				</md-button>' +
@@ -129,13 +137,19 @@
 			'						<md-button ng-click="editStore(storeObj)">' +
 			'							Edit Store' +
 			'						</md-button>' +
+			'					</md-menu-item>' +
+			'                   <md-menu-divider ng-if="isAdminUser();"></md-menu-divider>' +
+			'					<md-menu-item ng-if="isAdminUser();">' +
+			'						<md-button ng-click="showTreeView(storeObj)">' +
+			'							Admin: Tree View' +
+			'						</md-button>' +
 			'					</md-menu-item>' +			
 			'				</md-menu-content>' +		
 			'			</md-menu>' +
 			'        </td>' +			
 			'        <td>' +
-			'           <a href ng-click=\"viewStore(storeObj);  $event.stopPropagation();\"  ng-if=\"canReadStore(storeObj);\">{{ storeObj.name }}</a>' +
-			'           <span ng-if=\"!canReadStore(storeObj);\" ng-mouseover=\"storeObj.showTip = true\">{{ storeObj.name }}<md-tooltip md-visible=\"storeObj.showTip\" md-direction=\"right\">No read access</md-tooltip></span>' +
+			'           <a href ng-click="viewStore(storeObj);  $event.stopPropagation();"  ng-if="canReadStore(storeObj);">{{ storeObj.name }}</a>' +
+			'           <span ng-if="!canReadStore(storeObj);" ng-mouseover="storeObj.showTip = true">{{ storeObj.name }}<md-tooltip md-visible="storeObj.showTip" md-direction="right">No read access</md-tooltip></span>' +
 			'        </td>' +
 			'        <td>{{storeObj.description}}</td>' +
 			'        <td>{{tableGetters().getDateCreated(storeObj)}}</td>' +
@@ -155,7 +169,9 @@
 			scope: {
 				storeList: '=',
 				storeClickHandler: '&',
-				storeEditClickHandler: '&'
+				storeEditClickHandler: '&',
+				storeTreeViewClickHandler: '&',
+				isAdmin: '='
 			},
 			controller: controller,
 			template: template

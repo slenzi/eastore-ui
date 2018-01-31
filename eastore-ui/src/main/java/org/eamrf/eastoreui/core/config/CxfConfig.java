@@ -12,6 +12,7 @@ import org.eamrf.eastoreui.web.jaxrs.local.TestResource;
 import org.eamrf.eastoreui.web.jaxrs.local.UIActionResource;
 import org.eamrf.eastoreui.web.jaxrs.local.UIAuthResource;
 import org.eamrf.eastoreui.web.jaxrs.local.UIJsonResource;
+import org.eamrf.eastoreui.web.jaxrs.local.UITreeResource;
 import org.eamrf.eastoreui.web.jaxrs.security.interceptor.AuthWorldInterceptor;
 import org.eamrf.web.rs.exception.WebServiceExceptionMapper;
 import org.springframework.context.annotation.Bean;
@@ -65,7 +66,7 @@ public class CxfConfig {
 			// Add service beans
 			factory.setServiceBeans(
 				Arrays.<Object>asList(
-					getTestResource(), getUIJsonResource(), getUIActionResource(), getUIAuthResource()
+					getTestResource(), getUIJsonResource(), getUIActionResource(), getUIAuthResource(), getUITreeResource()
 				)
 			);
 			
@@ -118,6 +119,11 @@ public class CxfConfig {
 		public UIAuthResource getUIAuthResource(){
 			return new UIAuthResource();
 		}
+		
+		@Bean
+		public UITreeResource getUITreeResource(){
+			return new UITreeResource();
+		}		
 		
 		@Bean
 		public AuthWorldInterceptor getAuthWorldInterceptor() {

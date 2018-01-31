@@ -6,16 +6,14 @@ package org.eamrf.eastoreui.core.service;
 import javax.activation.DataHandler;
 
 import org.eamrf.core.logging.stereotype.InjectLogger;
-import org.eamrf.core.util.StringUtil;
-import org.eamrf.eastore.client.jaxrs.EAStoreActionClient;
-import org.eamrf.eastore.client.jaxrs.EAStoreJsonClient;
+import org.eamrf.eastore.client.jaxrs.v1.EAStoreActionClient;
+import org.eamrf.eastore.client.jaxrs.v1.EAStoreJsonClient;
+import org.eamrf.eastore.client.jaxrs.v1.EAStoreTreeClient;
 import org.eamrf.eastore.client.model.file.FileResponse;
 import org.eamrf.eastoreui.core.aop.profiler.MethodTimer;
 import org.eamrf.eastoreui.core.exception.ServiceException;
 import org.eamrf.eastoreui.web.jaxrs.eastore.provider.EAStoreClientProvider;
-import org.eamrf.eastoreui.web.security.authworld.AuthWorldService;
 import org.eamrf.web.rs.exception.WebServiceException;
-import org.frontier.ecog.webapp.authworld.model.AuthWorldUser;
 import org.slf4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -571,6 +569,31 @@ public class StoreService {
 		} catch (WebServiceException e) {
 			throw new ServiceException("Error calling eastore addStore(...), " + e.getMessage(), e);
 		} 		
+		
+	}
+	
+	/**
+	 * Fetch a text/html tree representation for the directory. 
+	 * 
+	 * @param dirId
+	 * @return
+	 * @throws ServiceException
+	 */
+	public String getPathResourceDownloadTree(Long dirId) throws ServiceException {
+		
+		EAStoreTreeClient client = eaStoreClientProvider.getTreeClient();
+		
+		String userId = authService.getUserId();
+		
+    	String htmlResponse = null;
+    	try {
+    		htmlResponse = client.getPathResourceDownloadTree(dirId, userId);
+		} catch (WebServiceException e) {
+			throw new ServiceException("Error fetching download html tree, dirId=" + 
+					dirId + ", userId=" + userId + ", " + e.getMessage(), e);
+		}
+    	
+    	return htmlResponse;		
 		
 	}	
     

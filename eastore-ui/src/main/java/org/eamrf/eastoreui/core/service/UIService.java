@@ -425,6 +425,19 @@ public class UIService {
 		return storeService.updateStore(storeId, storeName, storeDesc, rootDirName, 
 				rootDirDesc, rootDirReadGroup1, rootDirWriteGroup1, rootDirExecuteGroup1);
 		
-	}	
+	}
+	
+	/**
+	 * Fetch a text/html tree representation for the directory.
+	 * 
+	 * @param dirId
+	 * @return
+	 * @throws ServiceException
+	 */
+	public String getPathResourceDownloadTree(Long dirId) throws ServiceException {
+		
+		return storeService.getPathResourceDownloadTree(dirId);
+		
+	}
 
 }

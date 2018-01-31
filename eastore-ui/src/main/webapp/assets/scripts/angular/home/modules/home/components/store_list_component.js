@@ -52,7 +52,8 @@
 	mainModule.component('storeListContentComponent', {
 		
 		bindings: {
-			stores: '<'
+			stores: '<',
+			isAdmin: '<'			
 		},
 		
 		//templateUrl : '/eastore-ui/assets/scripts/angular/home/modules/home/partials/store_list_content.jsp',
@@ -60,11 +61,15 @@
 			return appConstants.contextPath +  '/assets/scripts/angular/home/modules/home/partials/store_list_content.jsp';
 		},				
 		
-		controller : function($log, $state){
+		controller : function($log, $state, $window, appConstants){
 			
 			//$log.debug('storesContentComponent controller');
 			
-			var thisCtrl = this;		
+			var thisCtrl = this;
+			
+			this.isAdminUser = function(){
+				return thisCtrl.isAdmin;
+			};			
 			
 			this.clickStoreHandler = function(theStore){
 				
@@ -91,6 +96,13 @@
 					editStore : theStore
 					});
 					
+			};
+			
+			// show the admin tree view for the entire store
+			this.showStoreTreeView = function(theStore){
+				var rootDirId = theStore.rootDir.nodeId;
+				$window.open(appConstants.eastoreUiTreeJaxrsService + '/download/dirId/' + rootDirId, '_blank');
+				
 			};
 			
 		},

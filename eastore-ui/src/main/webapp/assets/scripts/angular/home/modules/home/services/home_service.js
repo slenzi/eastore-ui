@@ -538,7 +538,15 @@
 				return (response.data == 'true');
 			});			
 			
-		}		
+		}
+		
+		// return an html/text pathresource download tree, showing all files and directories for the directory provided
+		function _getPathResourceDownloadTree(dirId){
+			return $http.get(appConstants.eastoreUiTreeJaxrsService + '/download/dirId/' + dirId).then(function(response) {
+				// service returns text/html
+				return response.data;
+			});
+		}
 		
 		// *********************************
 		// External API
@@ -585,7 +593,9 @@
 			fetchGatekeeperCategories : _fetchGatekeeperCategories,
 			fetchGatekeeperGroupsForCategory : _fetchGatekeeperGroupsForCategory,
 			fetchGatekeeperGroupByGroupCode : _fetchGatekeeperGroupByGroupCode,
-			fetchGatekeeperCategoryByGroupCode : _fetchGatekeeperCategoryByGroupCode
+			fetchGatekeeperCategoryByGroupCode : _fetchGatekeeperCategoryByGroupCode,
+			
+			getPathResourceDownloadTree : _getPathResourceDownloadTree
 	    	
 	    };
 		
