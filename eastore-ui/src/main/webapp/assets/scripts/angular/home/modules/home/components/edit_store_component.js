@@ -9,13 +9,15 @@
 	//
 	mainModule.component('editStoreHeaderComponent', {
 		
-		bindings: {},
+		bindings: {
+			editStoreModel : '<'
+		},
 		
 		templateUrl : function (appConstants){
 			return appConstants.contextPath +  '/assets/scripts/angular/home/modules/home/partials/edit_store_header.jsp';
 		},			
 		
-		controller : function($log, $state){
+		controller : function($log, $state, $mdDialog, homeRestService){
 			
 			//$log.debug('editStoreHeaderComponent controller');
 			
@@ -25,7 +27,45 @@
 				
 				$state.go('stores');				
 				
-			};				
+			};
+			
+			this.rebuildSearchIndex = function(storeId){
+				
+			    var confirm = $mdDialog.confirm()
+		          .title('Would you like to re-build the search index for the store?')
+		          .textContent('This will wipe and rebuild the Lucene search index for all files in the store.')
+		          .ariaLabel('Re-build Search Index')
+		          //.targetEvent(ev)
+		          .ok('Yes, continue!')
+		          .cancel('No, cancel.');
+			    
+				$mdDialog.show(confirm).then(function() {
+						
+					$log.debug('Rebuilding search index for store ' + storeId);
+					
+					homeRestService.rebuildStoreIndex(storeId)
+						.then( function ( jsonData ){
+							
+							$mdDialog.show(
+								      $mdDialog.alert()
+								        //.parent(angular.element(document.querySelector('#popupContainer')))
+								        .clickOutsideToClose(true)
+								        .title('Re-build Confirmation')
+								        .textContent('You have successfully triggered the re0-build process for the store search index.')
+								        .ariaLabel('Re-build Confirmation')
+								        .ok('Got it!')
+								        //.targetEvent(ev)
+								    );								
+							
+						}, function( error ){
+							alert('Error calling fetchGatekeeperCategories() service method' + JSON.stringify(error));
+						});					
+					
+					}, function() {
+						
+					});			    
+				
+			};
 			
 		},
 		
@@ -274,4 +314,4 @@
 		
 	});	
 	
-})();	
+})();

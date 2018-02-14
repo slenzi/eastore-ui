@@ -176,7 +176,17 @@
 							rootDirWriteGroup1 : '@rootDirWriteGroup1',
 							rootDirExecuteGroup1 : '@rootDirExecuteGroup1'
 						}						
-					}					
+					},
+					
+					// trigger process which rebuilds lucene search index for store
+					rebuildStoreIndex : {
+						url: appConstants.eastoreUiActionJaxrsService + '/store/reindex',
+						method: 'POST',
+						isArray: false,
+						params: {
+							storeId : '@storeId'
+						}						
+					}
 				
 				});		
 		
@@ -423,6 +433,14 @@
 				{
 					dirNodeId : dirNodeId
 				}).$promise;
+		}
+		
+		// trigger rebuild of search index for store
+		function _rebuildStoreIndex(storeId){
+			return eastoreUiActionService.rebuildStoreIndex(
+				{
+					storeId : storeId
+				}).$promise;
 		}		
 		
 		// fetch a specific path resource by node id.
@@ -563,6 +581,7 @@
 			
 			addStore : _addStore,
 			updateStore : _updateStore,
+			rebuildStoreIndex : _rebuildStoreIndex,
 			
 			addDirectory : _addDirectory,
 			updateDirectory : _updateDirectory,

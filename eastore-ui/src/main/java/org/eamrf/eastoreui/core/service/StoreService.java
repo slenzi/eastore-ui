@@ -595,6 +595,30 @@ public class StoreService {
     	
     	return htmlResponse;		
 		
+	}
+
+	/**
+     * Trigger process which rebuilds search (Lucene) index for store
+     * 
+     * @param storeId - ID of store
+	 * @return
+	 */
+	public String rebuildStoreIndex(Long storeId) throws ServiceException {
+
+    	EAStoreActionClient client = eaStoreClientProvider.getActionClient();
+    	
+    	String userId = authService.getUserId();
+    	
+    	String htmlResponse = null;
+    	try {
+    		htmlResponse = client.rebuildStoreIndex(storeId, userId);
+		} catch (WebServiceException e) {
+			throw new ServiceException("Error triggering process to rebuild store search index, storeId=" + 
+					storeId + ", userId=" + userId + ", " + e.getMessage(), e);
+		}
+    	
+    	return htmlResponse;    	
+		
 	}	
     
 }

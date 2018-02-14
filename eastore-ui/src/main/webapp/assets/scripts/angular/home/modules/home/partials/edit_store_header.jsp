@@ -9,4 +9,8 @@
 
 	<div flex></div>
 	
+	<md-button class="md-raised standardButton md-accent" ng-click="storeCtrl.rebuildSearchIndex(storeCtrl.editStoreModel.storeId)">
+		Re-build Search Index
+	</md-button>	
+	
 </md-toolbar>

@@ -440,4 +440,16 @@ public class UIService {
 		
 	}
 
+	/**
+     * Trigger process which rebuilds search (Lucene) index for store
+     * 
+     * @param storeId - ID of store
+	 * @return
+	 */
+	public String rebuildStoreIndex(Long storeId) throws ServiceException {
+		
+		return storeService.rebuildStoreIndex(storeId);
+		
+	}
+
 }

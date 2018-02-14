@@ -163,7 +163,36 @@ public class UIActionResource extends BaseResourceHandler {
 		
 		return Response.ok(jsonResponse, MediaType.APPLICATION_JSON).build();
     	
-    }    
+    }
+    
+    /**
+     * Trigger process which rebuilds search (Lucene) index for store
+     * 
+     * @param storeId - ID of store
+     * @return
+     * @throws WebServiceException
+     */
+    @POST
+    @Path("/store/reindex")
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response rebuildStoreIndex(
+    		@QueryParam("storeId") Long storeId) throws WebServiceException {
+    	
+    	if(storeId == null) {
+    		handleError("Missing storeId, cannot reindex store.", WebExceptionType.CODE_IO_ERROR);    		
+    	}
+    	
+    	String jsonResponse = null;
+    	try {
+	    	jsonResponse = uiService.rebuildStoreIndex(storeId);
+		} catch (ServiceException e) {
+			logger.error(e.getMessage(), e);
+			throw new WebServiceException(WebExceptionType.CODE_IO_ERROR, e.getMessage(), e);
+		}
+		
+		return Response.ok(jsonResponse, MediaType.APPLICATION_JSON).build();    	
+    	
+    }
 	
 	/**
 	 * Processes the uploaded file and forwards it to eastore
