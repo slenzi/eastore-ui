@@ -3,6 +3,7 @@ package org.eamrf.eastoreui.web.jaxrs.eastore.provider;
 import org.eamrf.core.logging.stereotype.InjectLogger;
 import org.eamrf.eastore.client.jaxrs.v1.EAStoreActionClient;
 import org.eamrf.eastore.client.jaxrs.v1.EAStoreJsonClient;
+import org.eamrf.eastore.client.jaxrs.v1.EAStoreSearchClient;
 import org.eamrf.eastore.client.jaxrs.v1.EAStoreTreeClient;
 import org.slf4j.Logger;
 import org.springframework.beans.factory.annotation.Value;
@@ -47,6 +48,12 @@ public class EAStoreClientProvider {
 	public EAStoreTreeClient getTreeClient(){
 		
 		return new EAStoreTreeClient(serviceUrl, serviceUser, servicePass);
+		
+	}	
+	
+	public EAStoreSearchClient getSearchClient(){
+		
+		return new EAStoreSearchClient(serviceUrl, serviceUser, servicePass);
 		
 	}	
 

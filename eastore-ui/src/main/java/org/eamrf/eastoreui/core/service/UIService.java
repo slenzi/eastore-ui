@@ -1,7 +1,5 @@
 package org.eamrf.eastoreui.core.service;
 
-import java.io.IOException;
-import java.util.ArrayList;
 import java.util.List;
 
 import javax.activation.DataHandler;
@@ -11,17 +9,11 @@ import org.eamrf.eastore.client.model.file.FileResponse;
 import org.eamrf.eastoreui.core.aop.profiler.MethodTimer;
 import org.eamrf.eastoreui.core.exception.ServiceException;
 import org.eamrf.eastoreui.core.service.security.GatekeeperService;
-import org.eamrf.eastoreui.web.security.authworld.AuthWorldService;
 import org.eamrf.gatekeeper.web.service.jaxws.model.Category;
 import org.eamrf.gatekeeper.web.service.jaxws.model.Group;
-import org.frontier.ecog.webapp.authworld.model.AuthWorldUser;
 import org.slf4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.JsonNode;
-import com.fasterxml.jackson.databind.ObjectMapper;
 
 /**
  * Main service class for feeding data back to our front-end (javascript/angular UI),
@@ -37,6 +29,9 @@ public class UIService {
     
     @Autowired
     private StoreService storeService;
+    
+    @Autowired
+    private SearchService searchService;
     
     @Autowired
     private GatekeeperService gatekeeperService;
@@ -271,6 +266,7 @@ public class UIService {
      * @throws JsonProcessingException
      * @throws IOException
      */
+    /*
     private List<String> getProtNames(String jsonResponse) throws JsonProcessingException, IOException{
     	
     	ObjectMapper mapper = new ObjectMapper();
@@ -289,6 +285,7 @@ public class UIService {
     	return prots;
     	
     }
+    */
     
     /**
      * Call E-A Store /fsys/action/copyFile
@@ -449,6 +446,20 @@ public class UIService {
 	public String rebuildStoreIndex(Long storeId) throws ServiceException {
 		
 		return storeService.rebuildStoreIndex(storeId);
+		
+	}
+	
+	/**
+	 * Run a basic file content search within the store.
+	 * 
+	 * @param storeId - ID of store to search in
+	 * @param searchTerm - the search term/value
+	 * @return
+	 * @throws ServiceException
+	 */
+	public String runBasicContentSearch(Long storeId, String searchTerm) throws ServiceException {
+		
+		return searchService.runBasicContentSearch(storeId, searchTerm);
 		
 	}
 

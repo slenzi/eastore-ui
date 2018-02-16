@@ -39,6 +39,7 @@
 			eastoreUiActionJaxrsService: '@eastore.ui.action.jax.rs.service@',
 			eastoreUiAuthJaxrsService: '@eastore.ui.auth.jax.rs.service@',
 			eastoreUiTreeJaxrsService: '@eastore.ui.tree.jax.rs.service@',
+			eastoreUiSearchJaxrsService: '@eastore.ui.search.jax.rs.service@',
 			httpUploadHandler : '@eastore.ui.action.jax.rs.service@/uploadFile',
 			eastoreStompSockJsUrl : '@eastore.websocket.stomp.sockjs@',
 			leftNavComponentId : 'MyLeftNav'

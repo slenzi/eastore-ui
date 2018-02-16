@@ -12,6 +12,7 @@ import org.eamrf.eastoreui.web.jaxrs.local.TestResource;
 import org.eamrf.eastoreui.web.jaxrs.local.UIActionResource;
 import org.eamrf.eastoreui.web.jaxrs.local.UIAuthResource;
 import org.eamrf.eastoreui.web.jaxrs.local.UIJsonResource;
+import org.eamrf.eastoreui.web.jaxrs.local.UISearchResource;
 import org.eamrf.eastoreui.web.jaxrs.local.UITreeResource;
 import org.eamrf.eastoreui.web.jaxrs.security.interceptor.AuthWorldInterceptor;
 import org.eamrf.web.rs.exception.WebServiceExceptionMapper;
@@ -66,7 +67,8 @@ public class CxfConfig {
 			// Add service beans
 			factory.setServiceBeans(
 				Arrays.<Object>asList(
-					getTestResource(), getUIJsonResource(), getUIActionResource(), getUIAuthResource(), getUITreeResource()
+					getTestResource(), getUIJsonResource(), getUIActionResource(), 
+					getUIAuthResource(), getUITreeResource(), getUISearchResource()
 				)
 			);
 			
@@ -123,7 +125,12 @@ public class CxfConfig {
 		@Bean
 		public UITreeResource getUITreeResource(){
 			return new UITreeResource();
-		}		
+		}
+		
+		@Bean
+		public UISearchResource getUISearchResource() {
+			return new UISearchResource();
+		}
 		
 		@Bean
 		public AuthWorldInterceptor getAuthWorldInterceptor() {
