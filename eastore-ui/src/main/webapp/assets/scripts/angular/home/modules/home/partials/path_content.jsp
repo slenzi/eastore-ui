@@ -106,6 +106,9 @@
 					{{searchHit.resourceName}}
 				</span>
 				<span class="item-metadata">
+					<b>Store:</b> {{searchHit.storeName}}, <b>Path:</b> {{searchHit.resourceRelativePath}}
+				</span>
+				<span class="item-metadata">
 					<span ng-repeat="fragment in searchHit.fragments | limitTo:1">{{fragment}}</span>
 				</span>
 			</md-item-template>

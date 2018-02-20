@@ -127,6 +127,7 @@ body {
 }
 .autocomplete-store-search-template .item-title{
 	font-weight: bold;
+	font-style: italic;
 }
 .autocomplete-store-search-template .item-title,
 .autocomplete-store-search-template .item-metadata {
