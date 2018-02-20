@@ -463,6 +463,7 @@
 				
 			};
 			
+			// perform move operation
 			this.doMove = function (sourceStore, sourceDirectory, destinationStore, destinationDirectory, pathResources){
 
 				if(sourceDirectory.nodeId === destinationDirectory.nodeId){
@@ -751,6 +752,35 @@
 				var originatorEv = event;
 				
 				$mdMenu.open(event);
+				
+			};
+			
+			// handle search for the search autocomplete box
+			this.querySearch = function(store, searchText){
+				
+				$log.debug('search text = ' + searchText);
+				
+				var storeId = store.id;
+				
+				if(searchText.length > 2){
+					return homeRestService
+						.searchBasicContent(storeId, searchText)
+						.then( function ( jsonData ){
+							
+							$log.debug('Search results = ' + JSON.stringify(jsonData));
+							if(jsonData.hits != null){
+								return jsonData.hits;
+							}else{
+								return [];
+							}
+							
+						}, function( error ){
+							alert('Error perform search' + JSON.stringify(error));
+						});					
+				}else{
+					$log.debug('search term too short = ' + searchText);
+					return [];
+				}			
 				
 			};
 			

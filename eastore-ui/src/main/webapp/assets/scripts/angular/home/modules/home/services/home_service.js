@@ -302,6 +302,22 @@
 				}				
 			
 			});
+			
+		var eastoreUiSearchService = $resource(
+				appConstants.eastoreUiSearchJaxrsService, { }, {
+					
+					// call add directory service method
+					basicContentSearch: {
+						url: appConstants.eastoreUiSearchJaxrsService + '/basic/content',
+						method: 'GET',
+						isArray: false,
+						params: {
+							storeId : '@storeId',
+							searchTerm : '@searchTerm'
+						}					
+					},
+
+				});					
 		
 		
 		// *********************************
@@ -566,6 +582,13 @@
 			});
 		}
 		
+		// perform lucene search, on file content
+		function _searchBasicContent(storeId, searchTerm){
+			
+			return eastoreUiSearchService.basicContentSearch({ storeId : storeId,  searchTerm : searchTerm}).$promise;
+			
+		}
+		
 		// *********************************
 		// External API
 		// *********************************
@@ -614,7 +637,9 @@
 			fetchGatekeeperGroupByGroupCode : _fetchGatekeeperGroupByGroupCode,
 			fetchGatekeeperCategoryByGroupCode : _fetchGatekeeperCategoryByGroupCode,
 			
-			getPathResourceDownloadTree : _getPathResourceDownloadTree
+			getPathResourceDownloadTree : _getPathResourceDownloadTree,
+			
+			searchBasicContent : _searchBasicContent
 	    	
 	    };
 		

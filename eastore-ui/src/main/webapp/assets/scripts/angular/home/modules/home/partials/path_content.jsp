@@ -77,9 +77,46 @@
 				</md-menu-item>				
 				
 			</md-menu-content>
-		</md-menu>	
+		</md-menu>
 		
-		<div flex></div>	
+		<!--id="store-search-autocomplete"-->
+		<md-autocomplete
+			md-dropdown-items = "7"
+			ng-disabled="false"
+			md-no-cache="true"
+			md-selected-item="pathCtrl.selectedSearchHit"
+			md-search-text-change="pathCtrl.searchTextChange(pathCtrl.searchText)"
+			md-search-text="pathCtrl.searchText"
+			md-selected-item-change="pathCtrl.selectedSearchHitChange(searchHit)"
+			md-items="searchHit in pathCtrl.querySearch(pathCtrl.store, pathCtrl.searchText)"
+			md-item-text="searchHit.resourceName"
+			md-min-length="0"
+			placeholder="Search files..."
+			md-menu-class="autocomplete-store-search-template"
+			flex layout-fill>
+			
+			<!-- simple template
+			<md-item-template>
+				<span md-highlight-text="pathCtrl.searchText" md-highlight-flags="^i">{{searchHit.resourceName}}</span>
+			</md-item-template>
+			-->
+			
+			<md-item-template>
+				<span class="item-title">
+					{{searchHit.resourceName}}
+				</span>
+				<span class="item-metadata">
+					<span ng-repeat="fragment in searchHit.fragments | limitTo:1">{{fragment}}</span>
+				</span>
+			</md-item-template>
+			
+			<md-not-found>
+				No matching results for "{{pathCtrl.searchText}}" were found.
+			</md-not-found>
+			
+		</md-autocomplete>		
+		
+		<!--<div flex></div>-->
 		
 		<!--
 		<md-button class="md-raised standardButton" ng-click="pathCtrl.unselectPathResource(pathCtrl.getPathResources())"  ng-disabled="!pathCtrl.haveSelectedPathResource(pathCtrl.getPathResources())">

@@ -102,3 +102,40 @@ md-tab-item.md-active  span {
 body {
     overflow-y: auto!important;
 }
+
+
+
+/**
+ * set the size of the results dropdown for autocomplete boxes
+ */
+ /*
+#store-search-autocomplete .md-virtual-repeat-container.md-autocomplete-suggestions-container {
+    height: 400px;
+    max-height: 400px !important;
+}
+*/
+
+.autocomplete-store-search-template li {
+  border-bottom: 1px solid #ccc;
+  height: auto;
+  padding-top: 8px;
+  padding-bottom: 8px;
+  white-space: normal;
+}
+.autocomplete-store-search-template li:last-child {
+  border-bottom-width: 0;
+}
+.autocomplete-store-search-template .item-title{
+	font-weight: bold;
+}
+.autocomplete-store-search-template .item-title,
+.autocomplete-store-search-template .item-metadata {
+  display: block;
+  line-height: 2;
+}
+.autocomplete-store-search-template .item-title md-icon {
+  height: 18px;
+  width: 18px;
+}
+
+
