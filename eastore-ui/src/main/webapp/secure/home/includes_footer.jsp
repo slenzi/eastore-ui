@@ -60,6 +60,7 @@ application scripts
 <script type="text/javascript" src="<%=request.getContextPath()%>/assets/scripts/angular/home/modules/home/directives.js"></script>
 <script type="text/javascript" src="<%=request.getContextPath()%>/assets/scripts/angular/home/modules/home/components/root_component.js"></script>
 <script type="text/javascript" src="<%=request.getContextPath()%>/assets/scripts/angular/home/modules/home/components/left_menu_component.js"></script>
+<script type="text/javascript" src="<%=request.getContextPath()%>/assets/scripts/angular/home/modules/home/components/search_component.js"></script>
 <script type="text/javascript" src="<%=request.getContextPath()%>/assets/scripts/angular/home/modules/home/components/title_header_component.js"></script>
 <script type="text/javascript" src="<%=request.getContextPath()%>/assets/scripts/angular/home/modules/home/components/store_list_component.js"></script>
 <script type="text/javascript" src="<%=request.getContextPath()%>/assets/scripts/angular/home/modules/home/components/create_store_component.js"></script>

@@ -32,6 +32,7 @@
 				
 			};
 			
+			// load view which shows a list of all stores
 			this.clickStoreList = function(){
 				
 				$state.go('stores');
@@ -42,11 +43,19 @@
 				
 			};
 			
-			this.toggleProgress = function(){
+			// load search view
+			this.clickLoadSearchView = function(){
 				
-				sharedDataService.setProgressBarEnabled(!sharedDataService.isProgressBarEnabled());
+				$state.go('search');
 				
 			};
+			
+			// method used during development and testing phase
+			//this.toggleProgress = function(){
+			//	
+			//	sharedDataService.setProgressBarEnabled(!sharedDataService.isProgressBarEnabled());
+			//	
+			//};
 			
 		},
 		

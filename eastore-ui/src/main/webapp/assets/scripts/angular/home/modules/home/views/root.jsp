@@ -34,12 +34,6 @@
 			</md-toolbar>
 
 			<md-content layout="column" class="md-hue-1" style="padding-top: 0px;">
-			
-				<md-toolbar class="md-toolbar-tools md-hue-1">
-				
-					<!--&nbsp;Menu Header-->	
-				
-				</md-toolbar>
 
 				<ui-view name="uileftmenu"></ui-view>
 				

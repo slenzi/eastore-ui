@@ -226,6 +226,73 @@
 		//
 		$stateProvider.state(
 		
+			'search', {
+				parent: 'root',
+				url: '/search',
+				views : {
+					uicontent : {
+						component : 'searchContentComponent'
+					},
+					uiheader : {
+						component : 'searchHeaderComponent'
+					},
+					uiprogress : {
+						component : 'progressComponent'
+					},					
+					uititle : {
+						component : 'titleHeaderComponent'
+					},
+					uileftmenu : {
+						component : 'leftMenuComponent'
+					}
+				},
+				params : defaultStateParams,
+				resolve : {
+					
+					headerTitle : function ($log, $stateParams){
+						
+						$log.debug('------------ [search state] resolving header title ');
+						return 'Search';
+						
+					},
+					
+					stores : function ($log, $stateParams, haveUserInSession, resolveService) {
+						
+						$log.debug('------------ [search state] resolving stores');
+						
+						if(haveUserInSession){
+							return resolveService.resolveStores($stateParams);
+						}
+						
+					},
+					
+					searchModel : function($log, stores){
+						
+						var model = {
+							selectedStore : stores[0],
+							searchText : ''
+						}
+						
+						return model;
+						
+					}
+					
+					// if one resolve depends on another, inject the first resolve into
+					// the second resolved statement. The first one will resolve first so
+					// that you have it when you resolve the second dependency
+					//
+					// https://stackoverflow.com/questions/43347819/ui-router-resolve-depends-on-other-resolve						
+					
+				}					
+			}				
+			
+		);			
+		
+		//
+		// store listing state - display a list of stores
+		//
+		$stateProvider.state(
+		
 			'stores', {
 				parent: 'root',
 				url: '/stores',
@@ -998,7 +1065,7 @@
 			
 			
 		//
-		// login root state - the parent state of all our 'login' state
+		// login root state - the parent state of all our 'login' states
 		//
 		$stateProvider.state(
 			'loginroot', {

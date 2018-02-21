@@ -91,7 +91,7 @@
 			md-items="searchHit in pathCtrl.querySearch(pathCtrl.store, pathCtrl.searchText)"
 			md-item-text="searchHit.resourceName"
 			md-min-length="0"
-			placeholder="Search files..."
+			placeholder="Search this store..."
 			md-menu-class="autocomplete-store-search-template"
 			flex layout-fill>
 			
