@@ -767,7 +767,7 @@
 						.searchBasicContent(storeId, searchText)
 						.then( function ( jsonData ){
 							
-							$log.debug('Search results = ' + JSON.stringify(jsonData));
+							//$log.debug('Search results = ' + JSON.stringify(jsonData));
 							if(jsonData.hits != null){
 								return jsonData.hits;
 							}else{
@@ -781,6 +781,16 @@
 					$log.debug('search term too short = ' + searchText);
 					return [];
 				}			
+				
+			};
+			
+			this.selectedSearchHitChange = function(hit){
+				
+				//$log.debug('selected hit => ' + JSON.stringify(hit));
+				
+				if(hit != null){
+					homeRestService.downloadFile(hit.resourceId);
+				}
 				
 			};
 			

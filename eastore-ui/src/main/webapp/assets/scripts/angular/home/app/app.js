@@ -270,7 +270,8 @@
 						
 						var model = {
 							selectedStore : stores[0],
-							searchText : ''
+							searchText : '',
+							searchResults: []
 						}
 						
 						return model;

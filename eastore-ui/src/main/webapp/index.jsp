@@ -10,6 +10,7 @@
 		<title><spring:eval expression="@appProperties.getProperty('application.title')" /></title>
 	
 		<script type="text/javascript">
+		// if you change /spring/private/main/home the you also need to change it in search_component.js
 		window.location.href = "<%=request.getContextPath() %>/spring/private/main/home";
 		</script>
 		

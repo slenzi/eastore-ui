@@ -6,8 +6,10 @@
 	
 		<md-input-container>
 			
+			<!--
 			<label>Store</label>
-		
+			-->
+			
 			<md-select style="background-color:#fff;" ng-model="searchCtrl.searchModel.selectedStore" ng-model-options="{trackBy: '$value.id'}" ng-change="searchCtrl.storeChange()">
 				<md-option ng-repeat="store in searchCtrl.stores" ng-value="store">
 					{{store.name}}
@@ -26,10 +28,44 @@
 	
 	</md-card>
 	
-	<md-card md-theme-watch>
-
-	Search results appear here...
+	<!--
+	<md-card md-theme-watch ng-if="searchCtrl.searchModel.searchResults.length == 0 && searchCtrl.searchModel.searchText != '' ">
+	No results for {{searchCtrl.searchModel.searchText}}
+	</md-card>
+	-->
 	
+	<md-card md-theme-watch ng-repeat="hit in searchCtrl.searchModel.searchResults">
+		
+		<span style="font-weight: bold;">
+			{{ "#" + $index }} -
+			<a href ng-click="searchCtrl.downloadFile(hit.resourceId)">{{hit.resourceName}}</a>
+		</span>
+		
+		<br>
+		
+		<!--
+		<span><b>Store:</b> {{hit.storeName}}</span>
+		-->
+		<!--
+		<span><b>Full Path:</b> {{hit.resourceRelativePath}}</span>
+		-->
+		<!--
+		<span><b>Directory:</b> {{hit.directoryName}}</span>
+		-->
+		
+		<span>
+			<b>Directory:</b> <a href ng-click="searchCtrl.loadDirectory(hit.storeName, hit.directoryRelativePath)" target="_blank">{{hit.directoryRelativePath}}</a>
+			<hr>
+		</span>
+		
+		<!--
+		<span ng-repeat="fragment in hit.fragments | limitTo:2" ng-bind-html="fragment">
+		-->
+		<span ng-repeat="fragment in hit.fragments ">
+			<i>{{fragment}}</i>
+			<hr ng-if="$index < (hit.fragments.length) - 1">
+		</span>
+		
 	</md-card>
 		
 </md-content>
