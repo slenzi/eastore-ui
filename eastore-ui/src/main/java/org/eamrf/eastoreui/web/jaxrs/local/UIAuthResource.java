@@ -102,7 +102,7 @@ public class UIAuthResource extends BaseResourceHandler {
     	}
     	
     	String cookieData = getAuthWorldCredentialCookieValue(headers);
-    	if(cookieData.equals("")) {
+    	if(cookieData == null || cookieData.equals("")) {
     		return false;
     	}
     	
@@ -203,6 +203,9 @@ public class UIAuthResource extends BaseResourceHandler {
      * @return
      */
     private Cookie getAuthWorldCredentialsCookie(HttpHeaders headers) {
+    	if(headers == null) {
+    		return null;
+    	}
     	Map<String, Cookie> cookieMap = headers.getCookies();
     	logger.info("Authworld cookie name => " + authService.getAuthWorldCookieName());
     	return cookieMap.get(authService.getAuthWorldCookieName());
