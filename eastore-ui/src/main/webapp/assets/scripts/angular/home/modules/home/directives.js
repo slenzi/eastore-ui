@@ -179,234 +179,6 @@
 		
 	}])
 	//
-	// directive for display directory path resources in a smart table
-	// currently we aren't using this directive. We use smartTableResourceList.
-	//
-	/*
-	.directive('smartTableDirectoryList', ['$log', function($log) {
-		
-		var controller = ['$scope', function ($scope) {
-
-			function init() {
-				
-				$scope.storeViewObj = $scope.store;
-				$scope.$watch('store', function(newStore, oldStore){
-					$scope.storeViewObj = newStore;
-				}, true);				
-				
-				$scope.resourceListSafe = $scope.resourceList;
-				// a separate list copy for display. this is needed for smart table
-				$scope.resourceListView = [].concat($scope.resourceList);
-				
-				// update shipment list when resourceList array changes
-				$scope.$watch('resourceList', function(newResourceList, oldResourceList){
-					$scope.resourceListSafe = newResourceList;
-					$scope.resourceListView = [].concat(newResourceList);
-				}, true);				
-				
-			}
-
-			init();
-
-			$scope.tableGetters = function(){
-				return {
-					getNodeId: function (pathResObj) {
-						return pathResObj.nodeId;
-					},
-					getNodeName: function (pathResObj) {
-						return pathResObj.nodeName;
-					},
-					getDescription: function (pathResObj) {
-						return pathResObj.desc;
-					}					
-				}
-			};
-			
-			$scope.viewChildResources = function(storeObj, pathResObj){
-				$scope.resourceClickHandler({
-						theStore : storeObj,
-						thePathResource: pathResObj
-					});
-			};
-			
-		}];
-		
-		// track by $index
-
-		var template = 
-			'<table st-table="resourceListView" st-safe-src="resourceListSafe" class="table mySmartTable">' +
-			'	<thead>' +
-			'	<tr>' +
-			//'        <th>&nbsp;</th>' +
-			//'        <th st-sort="tableGetters().getNodeId">ID</th>' +
-			'        <th st-sort="tableGetters().getNodeName">Name</th>' +
-			'        <th st-sort="tableGetters().getDescription">Description</th>' +	
-			'	</tr>' +
-			'	<tr>' +
-			//'		<th></th>' +
-			//'		<th><input st-search="nodeId" placeholder="search by node id" class="input-sm form-control" type="search"/></th>' +
-			'		<th><input st-search="nodeName" placeholder="search by name" class="input-sm form-control" type="search"/></th>' +	
-			'		<th><input st-search="desc" placeholder="search by description" class="input-sm form-control" type="search"/></th>' +				
-			'	</tr>' +			
-			'	</thead>' +
-			'	<tbody>' +
-			'	<tr st-select-row="pathResObj" st-select-mode="multiple" ng-repeat="pathResObj in resourceListView" ng-if="pathResObj.resourceType === \'DIRECTORY\' ">' +
-			//'		 <td><md-button class=\"md-raised\" ng-click=\"viewChildResources(pathResObj);  $event.stopPropagation();\">View Documents</md-button></td>' +		
-			//'        <td>{{pathResObj.nodeId}}</td>' +
-			'        <td><a href ng-click=\"viewChildResources(storeViewObj, pathResObj);  $event.stopPropagation();\">{{pathResObj.nodeName}}</a></td>' +
-			'        <td>{{pathResObj.desc}}</td>' +	
-			'	</tr>' +
-			'	</tbody>' +
-			'	<tfoot>' +
-			'		<tr>' +		
-			'			<td colspan="2" class="text-center">' +
-			'				<div st-pagination="" st-items-by-page="20" st-displayed-pages="15"></div>' +
-			'			</td>' +
-			'		</tr>' +
-			'	</tfoot>' +		
-			'</table>';
-
-		return {
-			restrict: 'AE',
-			scope: {
-				store: '=',
-				resourceList: '=',
-				resourceClickHandler: '&'
-			},
-			controller: controller,
-			template: template
-		};
-		
-	}])
-	//
-	// directive for display file meta path resources in a smart table
-	// currently we aren't using this directive. We use smartTableResourceList.
-	//
-	.directive('smartTableFileList', ['$log', function($log) {
-		
-		var controller = ['$scope', function ($scope) {
-
-			function init() {
-				
-				$scope.storeViewObj = $scope.store;
-				$scope.$watch('store', function(newStore, oldStore){
-					$scope.storeViewObj = newStore;
-				}, true);
-				
-				$scope.resourceListSafe = $scope.resourceList;
-				// a separate list copy for display. this is needed for smart table
-				$scope.resourceListView = [].concat($scope.resourceList);
-				
-				// update shipment list when resourceList array changes
-				$scope.$watch('resourceList', function(newResourceList, oldResourceList){
-					$scope.resourceListSafe = newResourceList;
-					$scope.resourceListView = [].concat(newResourceList);
-				}, true);				
-				
-			}
-
-			init();
-
-			$scope.tableGetters = function(){
-				return {
-					getNodeId: function (pathResObj) {
-						return pathResObj.nodeId;
-					},
-					getNodeName: function (pathResObj) {
-						return pathResObj.nodeName;
-					},
-					getDescription: function (pathResObj) {
-						return pathResObj.desc;
-					},
-					getMimeType: function (pathResObj) {
-						return pathResObj.mimeType;
-					},
-					getSize: function (pathResObj) {
-						return pathResObj.fileSize;
-					}
-				}
-			};
-			
-			$scope.viewChildResources = function(storeObj, pathResObj){
-				$scope.resourceClickHandler({
-						theStore : storeObj,
-						thePathResource: pathResObj
-					});
-			};
-			
-			$scope.humanFileSize = function(bytes, si){
-				var thresh = si ? 1000 : 1024;
-				if(Math.abs(bytes) < thresh) {
-					return bytes + ' B';
-				}
-				var units = si
-					? ['kB','MB','GB','TB','PB','EB','ZB','YB']
-					: ['KiB','MiB','GiB','TiB','PiB','EiB','ZiB','YiB'];
-				var u = -1;
-				do {
-					bytes /= thresh;
-					++u;
-				} while(Math.abs(bytes) >= thresh && u < units.length - 1);
-				return bytes.toFixed(1)+' '+units[u];				
-			};			
-			
-		}];
-		
-		// track by $index
-
-		var template = 
-			'<table st-table="resourceListView" st-safe-src="resourceListSafe" class="table mySmartTable">' +
-			'	<thead>' +
-			'	<tr>' +
-			//'        <th>&nbsp;</th>' +
-			//'        <th st-sort="tableGetters().getNodeId">ID</th>' +
-			'        <th st-sort="tableGetters().getNodeName">Name</th>' +
-			'        <th st-sort="tableGetters().getDescription">Description</th>' +
-			'        <th st-sort="tableGetters().getMimeType">Type</th>' +
-			'        <th st-sort="tableGetters().getSize">Size</th>' +
-			'	</tr>' +
-			'	<tr>' +
-			//'		<th></th>' +
-			//'		<th><input st-search="nodeId" placeholder="search by node id" class="input-sm form-control" type="search"/></th>' +
-			'		<th><input st-search="nodeName" placeholder="search by name" class="input-sm form-control" type="search"/></th>' +	
-			'		<th><input st-search="desc" placeholder="search by description" class="input-sm form-control" type="search"/></th>' +
-			'		<th><input st-search="mimeType" placeholder="search by type" class="input-sm form-control" type="search"/></th>' +
-			'		<th><input st-search="fileSize" placeholder="search by size" class="input-sm form-control" type="search"/></th>' +
-			'	</tr>' +			
-			'	</thead>' +
-			'	<tbody>' +
-			'	<tr st-select-row="pathResObj" st-select-mode="multiple" ng-repeat="pathResObj in resourceListView" ng-if="pathResObj.resourceType === \'FILE\' ">' +
-			//'		 <td><md-button class=\"md-raised\" ng-click=\"viewChildResources(pathResObj);  $event.stopPropagation();\">Download</md-button></td>' +		
-			//'        <td>{{pathResObj.nodeId}}</td>' +
-			'        <td><a href ng-click=\"viewChildResources(storeViewObj, pathResObj);  $event.stopPropagation();\">{{pathResObj.nodeName}}</a></td>' +
-			'        <td>{{pathResObj.desc}}</td>' +
-			'        <td>{{pathResObj.mimeType}}</td>' +
-			'        <td>{{humanFileSize(pathResObj.fileSize, true)}}</td>' +
-			'	</tr>' +
-			'	</tbody>' +
-			'	<tfoot>' +
-			'		<tr>' +		
-			'			<td colspan="4" class="text-center">' +
-			'				<div st-pagination="" st-items-by-page="20" st-displayed-pages="15"></div>' +
-			'			</td>' +
-			'		</tr>' +
-			'	</tfoot>' +		
-			'</table>';
-
-		return {
-			restrict: 'AE',
-			scope: {
-				store: '=',
-				resourceList: '=',
-				resourceClickHandler: '&'
-			},
-			controller: controller,
-			template: template
-		};
-		
-	}])
-	*/
-	//
 	// directive for displaying path resources (both file meta and directory) in a smart table
 	//
 	.directive('smartTableResourceList', ['$log', function($log) {
@@ -662,6 +434,113 @@
 				resourceList: '=',
 				resourceClickHandler: '&',
 				resourceEditClickHandler: '&'
+			},
+			controller: controller,
+			template: template
+		};
+		
+	}])
+	//
+	// directive for displaying lucene search results a smart table 
+	//
+	.directive('smartTableSearchResults', ['$log', function($log) {
+		
+		var controller = ['$scope', function ($scope) {
+
+			function init() {
+				
+				$scope.resultsListSafe = $scope.resultsList;
+				// a separate list copy for display. this is needed for smart table
+				$scope.resultsListView = [].concat($scope.resultsList);
+				
+				// update shipment list when resultsList array changes
+				$scope.$watch('resultsList', function(newResultsList, oldResultsList){
+					$scope.resultsListSafe = newResultsList;
+					$scope.resultsListView = [].concat(newResultsList);
+				}, true);				
+				
+			}
+
+			init();
+
+			$scope.tableGetters = function(){
+				return {
+					getHitResourceId: function (hitObject) {
+						return hitObject.resourceId;
+					},
+					getHitResourceName: function (hitObject) {
+						return hitObject.resourceName;
+					},
+					getHitStoreName: function (hitObject) {
+						return hitObject.storeName;
+					},
+					getHitDirectoryName: function (hitObject) {
+						return hitObject.directoryName;
+					},
+					getHitDirectoryRelativePath: function (hitObject) {
+						return hitObject.directoryRelativePath;
+					},
+					getHitFragments: function(hitObject){
+						return hitObject.fragments;
+					}
+				}
+			};
+			
+			$scope.clickFile = function(hitObject){
+				$scope.hitClickFileHandler( {theHit: hitObject} );
+			};
+			
+			$scope.clickDirectory = function(hitObject){
+				$scope.hitClickDirectoryHandler( {theHit: hitObject} );
+			};
+			
+		}];
+		
+		// track by $index
+
+		var template = 
+			'<table st-table="resultsListView" st-safe-src="resultsListSafe" class="table mySmartTable">' +
+			'	<thead>' +
+			'	<tr>' +
+			'        <th st-ratio="20" st-sort="tableGetters().getHitResourceName" style="min-width: 300px;">File</th>' +
+			'        <th st-ratio="25" st-sort="tableGetters().getHitDirectoryName">Directory</th>' +
+			'        <th st-ratio="55">Fragments</th>' +
+			'	</tr>' +
+			'	<tr>' +
+			'		<th><input st-search="resourceName" placeholder="search by file" class="input-sm form-control" type="search"/></th>' +
+			'		<th><input st-search="directoryName" placeholder="search by directory" class="input-sm form-control" type="search"/></th>' +
+			'		<th></th>' +				
+			'	</tr>' +			
+			'	</thead>' +
+			'	<tbody>' +
+			'	<tr st-select-row="hitObject" st-select-mode="multiple" ng-repeat="hitObject in resultsListView">' +
+			'        <td><a href ng-click="clickFile( hitObject )" target="_blank">{{ tableGetters().getHitResourceName(hitObject) }}</a></td>' +
+			'        <td style="white-space: nowrap;">' +
+			'			<a href ng-click="clickDirectory( hitObject )" target="_blank">{{ tableGetters().getHitDirectoryName(hitObject) }}</a><br><br>' +
+			'			<a href ng-click="clickDirectory( hitObject )" target="_blank">({{ tableGetters().getHitDirectoryRelativePath(hitObject) }})</a>' +			
+			'		 </td>' +
+			'        <td>' +
+			'           <span ng-repeat="fragment in tableGetters().getHitFragments(hitObject)">' +
+			'				<i>{{fragment}}</i><hr ng-if="$index < (tableGetters().getHitFragments(hitObject).length) - 1">'+
+			'			</span>' +
+			'		 </td>' +
+			'	</tr>' +
+			'	</tbody>' +
+			'	<tfoot>' +
+			'		<tr>' +		
+			'			<td colspan="3" class="text-center">' +
+			'				<div st-pagination="" st-items-by-page="10" st-displayed-pages="15"></div>' +
+			'			</td>' +
+			'		</tr>' +
+			'	</tfoot>' +		
+			'</table>';
+
+		return {
+			restrict: 'AE',
+			scope: {
+				resultsList: '=',
+				hitClickFileHandler: '&',
+				hitClickDirectoryHandler: '&'
 			},
 			controller: controller,
 			template: template

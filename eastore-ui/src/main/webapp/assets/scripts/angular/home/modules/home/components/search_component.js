@@ -84,15 +84,15 @@
 				
 			};
 			
-			this.downloadFile = function(fileId){
+			this.downloadFile = function(theHit){
 				
-				homeRestService.downloadFile(fileId);				
+				homeRestService.downloadFile(theHit.resourceId);				
 				
 			};
 			
-			this.loadDirectory = function(storeName, dirRelativePath){
+			this.loadDirectory = function(theHit){
 				
-				var newUrlPath = '/' + storeName + dirRelativePath;				
+				var newUrlPath = '/' + theHit.storeName + theHit.directoryRelativePath;				
 				
 				/*
 				$state.go('path', {

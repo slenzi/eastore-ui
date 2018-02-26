@@ -28,12 +28,11 @@
 	
 	</md-card>
 	
-	<!--
-	<md-card md-theme-watch ng-if="searchCtrl.searchModel.searchResults.length == 0 && searchCtrl.searchModel.searchText != '' ">
-	No results for {{searchCtrl.searchModel.searchText}}
-	</md-card>
-	-->
+	<div smart-table-search-results  results-list="searchCtrl.searchModel.searchResults"
+		hit-click-file-handler="searchCtrl.downloadFile(theHit)"
+		hit-click-directory-handler="searchCtrl.loadDirectory(theHit)"></div>	
 	
+	<%--
 	<md-card md-theme-watch ng-repeat="hit in searchCtrl.searchModel.searchResults">
 		
 		<span style="font-weight: bold;">
@@ -42,16 +41,6 @@
 		</span>
 		
 		<br>
-		
-		<!--
-		<span><b>Store:</b> {{hit.storeName}}</span>
-		-->
-		<!--
-		<span><b>Full Path:</b> {{hit.resourceRelativePath}}</span>
-		-->
-		<!--
-		<span><b>Directory:</b> {{hit.directoryName}}</span>
-		-->
 		
 		<span>
 			<b>Directory:</b> <a href ng-click="searchCtrl.loadDirectory(hit.storeName, hit.directoryRelativePath)" target="_blank">{{hit.directoryRelativePath}}</a>
@@ -67,5 +56,6 @@
 		</span>
 		
 	</md-card>
+	--%>
 		
 </md-content>
