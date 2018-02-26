@@ -509,7 +509,7 @@
 			'	<tr>' +
 			'		<th><input st-search="resourceName" placeholder="search by file" class="input-sm form-control" type="search"/></th>' +
 			'		<th><input st-search="directoryName" placeholder="search by directory" class="input-sm form-control" type="search"/></th>' +
-			'		<th></th>' +				
+			'		<th><input st-search="fragments" placeholder="search by fragment" class="input-sm form-control" type="search"/></th>' +				
 			'	</tr>' +			
 			'	</thead>' +
 			'	<tbody>' +
