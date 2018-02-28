@@ -521,7 +521,11 @@
 			'		 </td>' +
 			'        <td>' +
 			'           <span ng-repeat="fragment in tableGetters().getHitFragments(hitObject)">' +
-			'				<i>{{fragment}}</i><hr ng-if="$index < (tableGetters().getHitFragments(hitObject).length) - 1">'+
+			
+			// to use ng-bind-html you need ngSanitize ($sanitize) module added to your angular app.
+			// https://docs.angularjs.org/api/ngSanitize/service/$sanitize
+			
+			'				<i ng-bind-html="fragment"></i><hr ng-if="$index < (tableGetters().getHitFragments(hitObject).length) - 1">'+
 			'			</span>' +
 			'		 </td>' +
 			'	</tr>' +

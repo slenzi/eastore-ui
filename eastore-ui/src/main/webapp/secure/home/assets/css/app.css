@@ -139,4 +139,12 @@ body {
   width: 18px;
 }
 
+/*
+highlight lucene search results with yellow background color and bold font
+*/
+.luceneBasicHighlight {
+	font-weight:bold;
+	background-color:yellow;
+}
+
 

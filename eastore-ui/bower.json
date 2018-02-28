@@ -13,6 +13,7 @@
     	"angular-animate": "^1.6.x",
     	"angular-aria": "^1.6.x",
     	"angular-ui-router": "1.0.x",
+    	"angular-sanitize" : "latest",
     	"angular-material": "latest",
     	"angular-smart-table" : "2.1.x",
 		"jquery" : "latest",

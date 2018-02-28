@@ -20,13 +20,16 @@
 	 * ui.router ----- Routing frameworks, essentially more powerful version of built in ngRoute.
 	 * ngMaterial ---- Material design UI components
 	 * ngResource ---- Provides interaction support with RESTful services via the $resource service
+	 * ngSanitize ---- Sanitizes an html string by stripping all potentially dangerous tokens.
 	 * smart-table --- Lightweight table module
 	 * 
 	 */
 	homeApp = angular
 		.module('eastore-ui-home-app',
 				[
-				 'ui.router', 'ngMaterial', 'ngResource', 'eastore-ui-main', 'eastore-ui-login', 'eastore-ui-util', 'ea-upload-module', 'ea-stomp-module', 'smart-table'
+				 'ui.router', 'ngMaterial', 'ngResource', 'ngSanitize', 
+				 'eastore-ui-main', 'eastore-ui-login', 'eastore-ui-util', 'ea-upload-module', 'ea-stomp-module', 
+				 'smart-table'
 				 ])
 		// @xyz@ values are replaced/filtered by maven during build process
 		.constant('appConstants', {

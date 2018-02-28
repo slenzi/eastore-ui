@@ -8,26 +8,29 @@
 third party scripts
 
 --------------------------------------------- -->
-<script type="text/javascript" src="<%=request.getContextPath()%>/assets/bower/angular/angular.js"></script>
-<script type="text/javascript" src="<%=request.getContextPath()%>/assets/bower/angular-resource/angular-resource.js"></script>
-<script type="text/javascript" src="<%=request.getContextPath()%>/assets/bower/angular-touch/angular-touch.js"></script>
-<script type="text/javascript" src="<%=request.getContextPath()%>/assets/bower/angular-animate/angular-animate.js"></script>
-<script type="text/javascript" src="<%=request.getContextPath()%>/assets/bower/angular-aria/angular-aria.js"></script>
+<script type="text/javascript" src="<%=request.getContextPath()%>/assets/bower/angular/angular.min.js"></script>
+<script type="text/javascript" src="<%=request.getContextPath()%>/assets/bower/angular-resource/angular-resource.min.js"></script>
+<script type="text/javascript" src="<%=request.getContextPath()%>/assets/bower/angular-touch/angular-touch.min.js"></script>
+<script type="text/javascript" src="<%=request.getContextPath()%>/assets/bower/angular-animate/angular-animate.min.js"></script>
+<script type="text/javascript" src="<%=request.getContextPath()%>/assets/bower/angular-aria/angular-aria.min.js"></script>
 <!-- needed? -->
-<script type="text/javascript" src="<%=request.getContextPath()%>/assets/bower/angular-messages/angular-messages.js"></script>
+<script type="text/javascript" src="<%=request.getContextPath()%>/assets/bower/angular-messages/angular-messages.min.js"></script>
 
 <!-- defacto standard for routing in angular js -->
-<script type="text/javascript" src="<%=request.getContextPath()%>/assets/bower/angular-ui-router/release/angular-ui-router.js"></script>
+<script type="text/javascript" src="<%=request.getContextPath()%>/assets/bower/angular-ui-router/release/angular-ui-router.min.js"></script>
 
 <!-- angular UI elements following Google's material UI guidlines -->
-<script type="text/javascript" src="<%=request.getContextPath()%>/assets/bower/angular-material/angular-material.js"></script>
+<script type="text/javascript" src="<%=request.getContextPath()%>/assets/bower/angular-material/angular-material.min.js"></script>
+
+<!-- Sanitizes an html string by stripping all potentially dangerous tokens -->
+<script type="text/javascript" src="<%=request.getContextPath()%>/assets/bower/angular-sanitize/angular-sanitize.min.js"></script>
 
 <!-- angular smart table module -->
-<script type="text/javascript" src="<%=request.getContextPath()%>/assets/bower/angular-smart-table/dist/smart-table.js"></script>
+<script type="text/javascript" src="<%=request.getContextPath()%>/assets/bower/angular-smart-table/dist/smart-table.min.js"></script>
 
 <!-- stomp messaging over websockets using sockjs -->
-<script type="text/javascript" src="<%=request.getContextPath()%>/assets/bower/sockjs-client/dist/sockjs.js"></script>
-<script type="text/javascript" src="<%=request.getContextPath()%>/assets/bower/stomp-websocket/lib/stomp.js"></script>
+<script type="text/javascript" src="<%=request.getContextPath()%>/assets/bower/sockjs-client/dist/sockjs.min.js"></script>
+<script type="text/javascript" src="<%=request.getContextPath()%>/assets/bower/stomp-websocket/lib/stomp.min.js"></script>
 
 <!-- currently only needed for our cycling banner -->
 <script type="text/javascript" src="<%=request.getContextPath()%>/assets/bower/jquery/dist/jquery.min.js"></script>
@@ -37,7 +40,7 @@ third party scripts
 <!--
 <script type="text/javascript" src="<%=request.getContextPath()%>/assets/bower/datejs/build/production/date.min.js"></script>
 -->
-<script type="text/javascript" src="<%=request.getContextPath()%>/assets/bower/moment/moment.js"></script>
+<script type="text/javascript" src="<%=request.getContextPath()%>/assets/bower/moment/min/moment.min.js"></script>
 
 <!-- -------------------------------------------
 
