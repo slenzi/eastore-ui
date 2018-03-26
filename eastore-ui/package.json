@@ -1,0 +1,26 @@
+{
+  "name": "eastore",
+  "version": "1.0.0",
+  "description": "ECOG-ACRIN File Store UI",
+  "main": "index.jsp",
+  "repository": "ssh://webappsx@ada.dfci.harvard.edu/homes10/900/webappsx/git/eastore-ui",
+  "author": "Seth Lenzi",
+  "license": "MIT",
+  "dependencies": {
+    "@uirouter/angularjs": "^1.0.15",
+    "angular": "^1.6.9",
+    "angular-animate": "^1.6.9",
+    "angular-aria": "^1.6.9",
+    "angular-material": "^1.1.8",
+    "angular-messages": "^1.6.9",
+    "angular-resource": "^1.6.9",
+    "angular-sanitize": "^1.6.9",
+    "angular-smart-table": "^2.1.11",
+    "angular-touch": "^1.6.9",
+    "jquery": "^3.3.1",
+    "jquery.cycle2": "^2.1.7",
+    "moment": "^2.21.0",
+    "sockjs-client": "^1.1.4",
+    "stomp-websocket": "^2.3.4-next"
+  }
+}
