@@ -109,7 +109,15 @@
 			<properties>
 				<property.file>eamrf.triton.properties</property.file>
 			</properties>
-		</profile>					
+		</profile>
+		
+		<!-- deployment on triton-dev at EA-MRF, using development database -->
+		<profile>
+			<id>eamrf.triton-dev</id>
+			<properties>
+				<property.file>eamrf.triton-dev.properties</property.file>
+			</properties>
+		</profile>						
 	
 	</profiles>
 	
