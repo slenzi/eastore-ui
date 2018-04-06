@@ -46,9 +46,80 @@
 			httpUploadHandler : '@eastore.ui.action.jax.rs.service@/uploadFile',
 			eastoreStompSockJsUrl : '@eastore.websocket.stomp.sockjs@',
 			leftNavComponentId : 'MyLeftNav'
-		})
+		})	
 		// inject our own constants into our config
 		.config(['appConstants', '$locationProvider', '$mdThemingProvider', '$stateProvider', '$urlRouterProvider', '$httpProvider', appConfig]);
+	
+	
+	homeApp.run(['$log', '$transitions', '$trace', 'homeRestService', 'sharedDataService', function($log, $transitions, $trace, homeRestService, sharedDataService) {
+		
+		$log.debug('Running eastore-ui');
+		
+		/*
+		var fubar = homeRestService.haveAuthWorldUserInSession().then(function (data){
+			
+			$log.debug('data = ' + data);
+			$log.debug('--> Have AuthWorldUser In Session? = ' + JSON.stringify(data));
+			return data;
+			
+		});
+		*/
+		
+		//var fubar = homeRestService.haveAuthWorldUserInSession();
+		
+		//$log.debug('--> fubar = ' + JSON.stringify(fubar));						
+		
+		//$trace.enable('TRANSITION');
+		
+		$transitions.onStart({ }, function(trans) {
+			
+			//$log.debug('Transition started [from = ' + trans.from().name + ', to = ' + trans.to().name + ']');
+			//$log.debug(JSON.stringify($stateParams));
+			
+			sharedDataService.setProgressBarEnabled(true);
+			
+		});
+		
+		$transitions.onFinish({ }, function(trans) {
+			
+			//$log.debug('Transition started [from = ' + trans.from().name + ', to = ' + trans.to().name + ']');
+			//$log.debug(JSON.stringify($stateParams));
+			
+			sharedDataService.setProgressBarEnabled(false);
+			
+		});		
+		
+		// $transitions.onExit
+		// $transitions.onRetain
+		// $transitions.onEnter // runs after onRetain
+		// $transitions.onFinish
+		// $transitions.onSuccess
+		// $transitions.onError
+		
+	}])	
+	
+	/*
+	homeApp.run(['$log', '$rootScope', function($log, $rootScope) {
+		
+		$log.debug('Running eastore-ui');
+		
+		$rootScope.$on('$stateChangeStart', function(event, toState, toParams, fromState, fromParams) {
+			$log.debug('state change start: toState = ' + toState + ', fromState = ' + fromState)
+		});		
+		
+	}]);
+	*/
+	
+	// not sure why we call run() on our app. It was in the angular1 'hello galaxy' example
+	// https://ui-router.github.io/ng1/tutorial/hellogalaxy
+	
+	//homeApp.run(function($http, $uiRouter, $log) {
+	//	$log.debug('Running prodocui');
+		//window['ui-router-visualizer'].visualizer($uiRouter);
+		//$http.get('data/people.json', { cache: true });
+	//});	
+	
+	
 	
 	/**
 	 * Main app config
@@ -1132,63 +1203,6 @@
 			}
 		);
 		
-	};
-	
-	homeApp.run(['$log', '$transitions', '$trace', 'homeRestService', function($log, $transitions, $trace, homeRestService) {
-		
-		$log.debug('Running eastore-ui');
-		
-		/*
-		var fubar = homeRestService.haveAuthWorldUserInSession().then(function (data){
-			
-			$log.debug('data = ' + data);
-			$log.debug('--> Have AuthWorldUser In Session? = ' + JSON.stringify(data));
-			return data;
-			
-		});
-		*/
-		
-		//var fubar = homeRestService.haveAuthWorldUserInSession();
-		
-		//$log.debug('--> fubar = ' + JSON.stringify(fubar));						
-		
-		//$trace.enable('TRANSITION');
-		
-		$transitions.onStart({ }, function(trans) {
-			
-			$log.debug('Transition started [from = ' + trans.from().name + ', to = ' + trans.to().name + ']');
-			//$log.debug(JSON.stringify($stateParams));
-			
-		});
-		
-		// $transitions.onExit
-		// $transitions.onRetain
-		// $transitions.onEnter // runs after onRetain
-		// $transitions.onFinish
-		// $transitions.onSuccess
-		// $transitions.onError
-		
-	}])	
-	
-	/*
-	homeApp.run(['$log', '$rootScope', function($log, $rootScope) {
-		
-		$log.debug('Running eastore-ui');
-		
-		$rootScope.$on('$stateChangeStart', function(event, toState, toParams, fromState, fromParams) {
-			$log.debug('state change start: toState = ' + toState + ', fromState = ' + fromState)
-		});		
-		
-	}]);
-	*/
-	
-	// not sure why we call run() on our app. It was in the angular1 'hello galaxy' example
-	// https://ui-router.github.io/ng1/tutorial/hellogalaxy
-	
-	//homeApp.run(function($http, $uiRouter, $log) {
-	//	$log.debug('Running prodocui');
-		//window['ui-router-visualizer'].visualizer($uiRouter);
-		//$http.get('data/people.json', { cache: true });
-	//});		
+	};		
 		
 })();

@@ -36,10 +36,7 @@
 			this.clickStoreList = function(){
 				
 				$state.go('stores');
-				
-				if($mdSidenav(appConstants.leftNavComponentId).isOpen()){
-					$mdSidenav(appConstants.leftNavComponentId).close();
-				}				
+				closeSideNav();
 				
 			};
 			
@@ -47,6 +44,16 @@
 			this.clickLoadSearchView = function(){
 				
 				$state.go('search');
+				closeSideNav();
+				
+			};
+			
+			// close the side nav
+			this.closeSideNav = function(){
+				
+				if($mdSidenav(appConstants.leftNavComponentId).isOpen()){
+					$mdSidenav(appConstants.leftNavComponentId).close();
+				}					
 				
 			};
 			
