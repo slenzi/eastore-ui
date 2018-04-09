@@ -20,6 +20,8 @@
 			
 			//$log.debug('leftMenuComponent controller');
 			
+			var thisCtrl = this;
+			
 			this.clickEchoTest = function(){
 				
 				homeRestService
@@ -36,7 +38,7 @@
 			this.clickStoreList = function(){
 				
 				$state.go('stores');
-				closeSideNav();
+				thisCtrl.closeSideNav();
 				
 			};
 			
@@ -44,7 +46,7 @@
 			this.clickLoadSearchView = function(){
 				
 				$state.go('search');
-				closeSideNav();
+				thisCtrl.closeSideNav();
 				
 			};
 			
