@@ -32,6 +32,7 @@ import org.springframework.stereotype.Controller;
 @Import({
 	PropertyConfig.class
 	,CxfConfig.class
+	, WebSocketConfig.class
 	
 	// project doesn't currently use any databases
 	//,DataSourceConfig.class

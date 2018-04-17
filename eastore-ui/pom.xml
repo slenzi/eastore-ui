@@ -193,11 +193,27 @@
 		</dependency>
 		
 		<!-- https://mvnrepository.com/artifact/org.springframework/spring-jdbc -->
+		<!--
 		<dependency>
 		    <groupId>org.springframework</groupId>
 		    <artifactId>spring-jdbc</artifactId>
 		    <version>${version.spring}</version>
-		</dependency>		
+		</dependency>
+		-->
+		
+		<!-- https://mvnrepository.com/artifact/org.springframework/spring-websocket -->
+		<dependency>
+		    <groupId>org.springframework</groupId>
+		    <artifactId>spring-websocket</artifactId>
+		    <version>${version.spring}</version>
+		</dependency>
+				
+		<!-- https://mvnrepository.com/artifact/org.springframework/spring-messaging -->
+		<dependency>
+		    <groupId>org.springframework</groupId>
+		    <artifactId>spring-messaging</artifactId>
+		    <version>${version.spring}</version>
+		</dependency>			
 		
 		<!-- JSON provider used in our RESTful services -->		
 		<dependency>
@@ -231,11 +247,13 @@
 		
 		<!-- database connection pooling library -->
 		<!-- https://mvnrepository.com/artifact/com.zaxxer/HikariCP -->
+		<!--
 		<dependency>
 		    <groupId>com.zaxxer</groupId>
 		    <artifactId>HikariCP</artifactId>
 		    <version>${version.hikaricp}</version>
-		</dependency>		
+		</dependency>
+		-->	
 		
 		<dependency>
 		    <groupId>org.frontier.ecog</groupId>
