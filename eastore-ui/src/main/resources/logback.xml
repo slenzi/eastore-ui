@@ -3,6 +3,14 @@ Configure logback logging
  -->
 <configuration>
 
+	<appender name="STDOUT" class="ch.qos.logback.core.ConsoleAppender">
+		<layout class="ch.qos.logback.classic.PatternLayout">
+			<Pattern>
+				%d{yyyy-MM-dd HH:mm:ss} [%thread] %-5level %logger{36} - %msg%n
+			</Pattern>
+		</layout>
+	</appender>
+
 	<appender name="FILE" class="ch.qos.logback.core.rolling.RollingFileAppender">
 
 		<file>@log.file@</file>
@@ -21,10 +29,11 @@ Configure logback logging
 	</appender>
 
 	<root level="@log.level@">
+	
 		<appender-ref ref="FILE" />
-		<!--
+
 		<appender-ref ref="STDOUT" />
-		-->
+
 	</root>
 
 </configuration>

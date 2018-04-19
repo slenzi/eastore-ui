@@ -5,8 +5,9 @@ package org.eamrf.eastore.ui.core.socket.client;
 
 import java.lang.reflect.Type;
 
-import org.apache.log4j.Logger;
 import org.eamrf.eastore.ui.core.socket.messaging.model.ResourceChangeMessage;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.messaging.simp.stomp.StompCommand;
 import org.springframework.messaging.simp.stomp.StompHeaders;
 import org.springframework.messaging.simp.stomp.StompSession;
@@ -19,7 +20,7 @@ import org.springframework.messaging.simp.stomp.StompSessionHandlerAdapter;
  */
 public class ResourceChangeSessionHandler extends StompSessionHandlerAdapter {
 
-	private Logger logger = Logger.getLogger(ResourceChangeSessionHandler.class);
+	private Logger logger = LoggerFactory.getLogger(ResourceChangeSessionHandler.class.getName());
 	
 	// Subscription to EA Store 'resource change' messages
 	//
@@ -77,7 +78,7 @@ public class ResourceChangeSessionHandler extends StompSessionHandlerAdapter {
 		
 		// TODO - forward message along to front-end
 		
-		logger.info(message);
+		logger.info(message.toString());
 		
 	}
 	
