@@ -44,6 +44,8 @@
 		<version.jackson>2.9.2</version.jackson> <!-- was 2.8.1 -->
 		<version.jodatime>2.9.9</version.jodatime> <!-- was 2.9.3 -->
 		<version.hikaricp>2.7.2</version.hikaricp> <!-- was 2.6.1 -->
+		<version.guava>24.1-jre</version.guava>
+		<version.guava-retrying>2.0.0</version.guava-retrying>
 		
 		<!-- EA-MRF dependencies -->
 		<version.eamrf.eastore.rs.client>1.2.0</version.eamrf.eastore.rs.client>
@@ -305,8 +307,23 @@
 		    <groupId>org.eamrf</groupId>
 		    <artifactId>eastore-rs-client</artifactId>
 		    <version>${version.eamrf.eastore.rs.client}</version>
-		</dependency>													
-	
+		</dependency>
+		
+		<!-- https://mvnrepository.com/artifact/com.google.guava/guava -->
+		<dependency>
+		    <groupId>com.google.guava</groupId>
+		    <artifactId>guava</artifactId>
+		    <version>${version.guava}</version>
+		</dependency>
+		
+		<!-- https://mvnrepository.com/artifact/com.github.rholder/guava-retrying -->
+		<dependency>
+		    <groupId>com.github.rholder</groupId>
+		    <artifactId>guava-retrying</artifactId>
+		    <version>${version.guava-retrying}</version>
+		</dependency>
+		
+															
 	</dependencies>
 	
 	<!-- for upload to artifactory -->
