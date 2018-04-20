@@ -1,6 +1,7 @@
 package org.eamrf.eastore.ui.core.socket.messaging.client;
 
 import java.net.URI;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
@@ -18,8 +19,10 @@ import org.springframework.messaging.simp.stomp.StompSessionHandler;
 import org.springframework.scheduling.concurrent.ThreadPoolTaskScheduler;
 import org.springframework.stereotype.Service;
 import org.springframework.util.concurrent.ListenableFuture;
+import org.springframework.web.socket.client.WebSocketClient;
 import org.springframework.web.socket.client.standard.StandardWebSocketClient;
 import org.springframework.web.socket.messaging.WebSocketStompClient;
+import org.springframework.web.socket.sockjs.client.RestTemplateXhrTransport;
 import org.springframework.web.socket.sockjs.client.SockJsClient;
 import org.springframework.web.socket.sockjs.client.Transport;
 import org.springframework.web.socket.sockjs.client.WebSocketTransport;
@@ -119,7 +122,14 @@ public class StompWebSocketService {
 	}	
 	
 	private List<Transport> createTransportClient() {
-		return Collections.singletonList(new WebSocketTransport(new StandardWebSocketClient()));
+		
+		// https://docs.spring.io/spring-framework/docs/4.1.6.RELEASE/spring-framework-reference/html/websocket.html#websocket-fallback-sockjs-client
+		
+		return Arrays.asList(
+				new WebSocketTransport(new StandardWebSocketClient()),
+				new RestTemplateXhrTransport()); // fallback for xhr-streaming and xhr-polling
+		
+		//return Collections.singletonList(new WebSocketTransport(new StandardWebSocketClient()));
 	}
 	
 	/**
@@ -129,15 +139,14 @@ public class StompWebSocketService {
 	 */
 	private WebSocketStompClient getStompClient() {
 		
-		WebSocketStompClient client = new WebSocketStompClient(
-				new SockJsClient(createTransportClient()));
+		WebSocketClient socketClient = new SockJsClient(createTransportClient());
+		WebSocketStompClient stompClient = new WebSocketStompClient(socketClient);
 		
 		MappingJackson2MessageConverter converter = new MappingJackson2MessageConverter();
 		converter.setObjectMapper(objectMapper());
-		
-		client.setMessageConverter(converter);
+		stompClient.setMessageConverter(converter);
 
-		return client;
+		return stompClient;
 		
 	}
 	
@@ -151,8 +160,7 @@ public class StompWebSocketService {
 		WebSocketStompClient client = getStompClient();
 		
 		ThreadPoolTaskScheduler taskScheduler = new ThreadPoolTaskScheduler();
-		taskScheduler.afterPropertiesSet();		
-
+		taskScheduler.afterPropertiesSet();
 		client.setTaskScheduler(taskScheduler);
 
 		return client;
