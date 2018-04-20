@@ -4,10 +4,10 @@ import java.util.List;
 
 import javax.activation.DataHandler;
 
+import org.eamrf.core.exception.ServiceException;
 import org.eamrf.core.logging.stereotype.InjectLogger;
 import org.eamrf.eastore.client.model.file.FileResponse;
 import org.eamrf.eastore.ui.core.aop.profiler.MethodTimer;
-import org.eamrf.eastore.ui.core.exception.ServiceException;
 import org.eamrf.eastore.ui.core.service.security.GatekeeperService;
 import org.eamrf.gatekeeper.web.service.jaxws.model.Category;
 import org.eamrf.gatekeeper.web.service.jaxws.model.Group;

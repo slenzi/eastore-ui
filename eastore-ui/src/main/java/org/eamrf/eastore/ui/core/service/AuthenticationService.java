@@ -4,10 +4,10 @@ import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.eamrf.core.exception.ServiceException;
 import org.eamrf.core.logging.stereotype.InjectLogger;
 import org.eamrf.core.util.DateUtil;
 import org.eamrf.core.util.StringUtil;
-import org.eamrf.eastore.ui.core.exception.ServiceException;
 import org.eamrf.eastore.ui.web.security.authworld.AuthWorldService;
 import org.frontier.ecog.webapp.authworld.model.AuthWorldUser;
 import org.slf4j.Logger;

@@ -4,7 +4,7 @@ import java.io.UnsupportedEncodingException;
 
 import javax.servlet.http.HttpServletRequest;
 
-import org.eamrf.eastore.ui.core.exception.ServiceException;
+import org.eamrf.core.exception.ServiceException;
 import org.frontier.ecog.exception.EcogDatabaseException;
 import org.frontier.ecog.webapp.authworld.client.AuthworldLoginService;
 import org.frontier.ecog.webapp.authworld.model.AuthWorldUser;

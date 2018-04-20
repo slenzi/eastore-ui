@@ -1,7 +1,7 @@
 /**
  * 
  */
-package org.eamrf.eastore.ui.core.socket.messaging;
+package org.eamrf.eastore.ui.core.socket.messaging.model;
 
 import java.security.Principal;
 

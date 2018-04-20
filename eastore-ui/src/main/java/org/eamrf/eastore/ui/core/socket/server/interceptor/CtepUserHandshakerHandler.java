@@ -11,7 +11,7 @@ import java.util.logging.Logger;
 
 import org.eamrf.core.util.CollectionUtil;
 import org.eamrf.core.util.StringUtil;
-import org.eamrf.eastore.ui.core.socket.messaging.StompPrincipal;
+import org.eamrf.eastore.ui.core.socket.messaging.model.StompPrincipal;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.server.ServerHttpRequest;
 import org.springframework.web.socket.WebSocketHandler;

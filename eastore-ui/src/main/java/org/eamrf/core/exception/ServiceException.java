@@ -1,7 +1,7 @@
 /**
  * 
  */
-package org.eamrf.eastore.ui.core.exception;
+package org.eamrf.core.exception;
 
 /**
  * @author sal

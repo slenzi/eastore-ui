@@ -3,9 +3,9 @@
  */
 package org.eamrf.eastore.ui.core.service;
 
+import org.eamrf.core.exception.ServiceException;
 import org.eamrf.core.logging.stereotype.InjectLogger;
 import org.eamrf.eastore.client.jaxrs.v1.EAStoreSearchClient;
-import org.eamrf.eastore.ui.core.exception.ServiceException;
 import org.eamrf.eastore.ui.web.jaxrs.eastore.provider.EAStoreClientProvider;
 import org.eamrf.web.rs.exception.WebServiceException;
 import org.slf4j.Logger;

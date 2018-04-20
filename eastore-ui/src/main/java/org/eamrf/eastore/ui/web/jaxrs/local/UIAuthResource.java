@@ -17,9 +17,9 @@ import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.NewCookie;
 import javax.ws.rs.core.Response;
 
+import org.eamrf.core.exception.ServiceException;
 import org.eamrf.core.logging.stereotype.InjectLogger;
 import org.eamrf.core.util.StringUtil;
-import org.eamrf.eastore.ui.core.exception.ServiceException;
 import org.eamrf.eastore.ui.core.service.AuthenticationService;
 import org.eamrf.eastore.ui.web.jaxrs.BaseResourceHandler;
 import org.eamrf.eastore.ui.web.security.authworld.AuthWorldProps;

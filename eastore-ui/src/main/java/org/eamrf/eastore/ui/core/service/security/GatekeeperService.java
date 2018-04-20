@@ -5,8 +5,8 @@ package org.eamrf.eastore.ui.core.service.security;
 
 import java.util.List;
 
+import org.eamrf.core.exception.ServiceException;
 import org.eamrf.core.logging.stereotype.InjectLogger;
-import org.eamrf.eastore.ui.core.exception.ServiceException;
 import org.eamrf.gatekeeper.web.service.jaxrs.client.GatekeeperRestClient;
 import org.eamrf.gatekeeper.web.service.jaxws.model.Category;
 import org.eamrf.gatekeeper.web.service.jaxws.model.Group;

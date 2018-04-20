@@ -10,8 +10,8 @@ import javax.ws.rs.Produces;
 import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.MediaType;
 
+import org.eamrf.core.exception.ServiceException;
 import org.eamrf.core.logging.stereotype.InjectLogger;
-import org.eamrf.eastore.ui.core.exception.ServiceException;
 import org.eamrf.eastore.ui.core.service.UIService;
 import org.eamrf.eastore.ui.web.jaxrs.BaseResourceHandler;
 import org.eamrf.web.rs.exception.WebServiceException;

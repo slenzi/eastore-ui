@@ -1,11 +1,11 @@
 /**
  * 
  */
-package org.eamrf.eastore.ui.core.socket.client;
+package org.eamrf.eastore.ui.core.socket.messaging.client;
 
 import java.lang.reflect.Type;
+import java.util.function.Consumer;
 
-import org.eamrf.eastore.ui.core.socket.messaging.model.ResourceChangeMessage;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.messaging.simp.stomp.StompCommand;
@@ -14,26 +14,29 @@ import org.springframework.messaging.simp.stomp.StompSession;
 import org.springframework.messaging.simp.stomp.StompSessionHandlerAdapter;
 
 /**
- * A stomp session handler for processing incoming 'ResourceChangeMessage' objects from eastore. 
+ * A stomp session handler for processing incoming frames (messages). 
  * 
  * @author slenzi
  */
-public class ResourceChangeSessionHandler extends StompSessionHandlerAdapter {
+public class GenericSessionHandler<T> extends StompSessionHandlerAdapter {
 
-	private Logger logger = LoggerFactory.getLogger(ResourceChangeSessionHandler.class.getName());
-	
-	// Subscription to EA Store 'resource change' messages
-	//
-	// @see eastore codebase:
-	// org.eamrf.eastore.core.socket.messaging.ResourceChangeService
-	// org.eamrf.eastore.core.config.WebSocketConfig
-	private final String EA_STORE_RESOURCE_CHANGE_STOMP_SUBSCRIPTION = "/topic/resource/change";
+	private Logger logger = LoggerFactory.getLogger(GenericSessionHandler.class.getName());
+    
+	private String destination = null;
+    private Consumer<T> handleFrameConsumer = null;
+    private Class<T> typeParameterClass = null;
 	
 	/**
+	 * Create instance of resource change session handler
 	 * 
+	 * @param destination - the destination to subscribe to 
+	 * @param handleFrameConsumer - the consumer that will process incoming resource change messages
+	 * @param typeParameterClass - the class type of resource change message
 	 */
-	public ResourceChangeSessionHandler() {
-		
+	public GenericSessionHandler(String destination, Consumer<T> handleFrameConsumer, Class<T> typeParameterClass) {
+		this.destination = destination;
+		this.handleFrameConsumer = handleFrameConsumer;
+		this.typeParameterClass = typeParameterClass;
 	}
 
 	/* (non-Javadoc)
@@ -44,7 +47,7 @@ public class ResourceChangeSessionHandler extends StompSessionHandlerAdapter {
 
 		logger.info("New session established : " + session.getSessionId());
 		
-		session.subscribe(EA_STORE_RESOURCE_CHANGE_STOMP_SUBSCRIPTION, this);
+		session.subscribe(destination, this);
 		
 	}
 
@@ -53,8 +56,9 @@ public class ResourceChangeSessionHandler extends StompSessionHandlerAdapter {
 	 */
 	@Override
 	public Type getPayloadType(StompHeaders headers) {
+	
+		return typeParameterClass;
 		
-		return ResourceChangeMessage.class;
 	}
 	
 
@@ -74,14 +78,8 @@ public class ResourceChangeSessionHandler extends StompSessionHandlerAdapter {
 	@Override
 	public void handleFrame(StompHeaders headers, Object payload) {
 		
-		ResourceChangeMessage message = (ResourceChangeMessage)payload;
-		
-		// TODO - forward message along to front-end
-		
-		logger.info(message.toString());
+		handleFrameConsumer.accept((T) payload);
 		
 	}
-	
-
 
 }

@@ -1,4 +1,4 @@
-package org.eamrf.eastore.ui.core.socket.client;
+package org.eamrf.eastore.ui.core.socket.messaging.client;
 
 import java.net.URI;
 import java.util.Collections;
@@ -9,8 +9,8 @@ import java.util.concurrent.ExecutionException;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.TimeoutException;
 
+import org.eamrf.core.exception.ServiceException;
 import org.eamrf.core.logging.stereotype.InjectLogger;
-import org.eamrf.eastore.ui.core.exception.ServiceException;
 import org.slf4j.Logger;
 import org.springframework.messaging.converter.MappingJackson2MessageConverter;
 import org.springframework.messaging.simp.stomp.StompSession;

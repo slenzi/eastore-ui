@@ -5,4 +5,4 @@
  * @author slenzi
  *
  */
-package org.eamrf.eastore.ui.core.socket.client;
+package org.eamrf.core.exception;
