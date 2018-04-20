@@ -44,7 +44,11 @@
 			eastoreUiTreeJaxrsService: '@eastore.ui.tree.jax.rs.service@',
 			eastoreUiSearchJaxrsService: '@eastore.ui.search.jax.rs.service@',
 			httpUploadHandler : '@eastore.ui.action.jax.rs.service@/uploadFile',
-			eastoreStompSockJsUrl : '@eastore.stomp.service@',
+			
+			// no longer connect directly to eastore. use the new eastore-ui websocket relay
+			//eastoreStompSockJsUrl : '@eastore.stomp.service@',
+			eastoreStompSockJsUrl : '@eastore.ui.stomp.service@',
+			
 			leftNavComponentId : 'MyLeftNav'
 		})	
 		// inject our own constants into our config
