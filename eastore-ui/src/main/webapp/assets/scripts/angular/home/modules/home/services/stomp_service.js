@@ -20,7 +20,16 @@
 			if(!_isInitialized){
 				$log.debug('Initializing Stomp messaging');
 				_stompClient = new EAStomp({
-	                sockJsUrl: appConstants.eastoreStompSockJsUrl
+	                sockJsUrl: appConstants.eastoreStompSockJsUrl,
+	                sockJsOptions : {
+	                	sessionId : function(){
+	                		// create random 10 character/digit value for session id
+	                		return 'fubar_' + (Math.random() + 1).toString(36).substring(10);
+	                	}
+	                },
+	                stompHeaders: {
+	                	userId: 'How Now Brown Cow!'
+	                }
 	            }); 
 				_stompClient.setDebug(stompSocketDebug);
 				_stompClient.connect(myStompConnect, myStompConnectError);

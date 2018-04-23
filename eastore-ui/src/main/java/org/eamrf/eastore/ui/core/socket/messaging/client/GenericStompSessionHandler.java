@@ -4,8 +4,10 @@
 package org.eamrf.eastore.ui.core.socket.messaging.client;
 
 import java.lang.reflect.Type;
+import java.util.List;
+import java.util.Set;
+import java.util.StringJoiner;
 import java.util.function.BiConsumer;
-import java.util.function.Consumer;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -26,7 +28,7 @@ public class GenericStompSessionHandler<T> extends StompSessionHandlerAdapter {
     
 	private String destination = null;
 	private Class<T> typeParameterClass = null;
-    private Consumer<T> frameConsumer = null;
+    private BiConsumer<StompHeaders, T> frameConsumer = null;
     private BiConsumer<StompSession, Throwable> disconnectConsumer = null;
 	
 	/**
@@ -38,7 +40,7 @@ public class GenericStompSessionHandler<T> extends StompSessionHandlerAdapter {
 	 * @param disconnectConsumer - the consumer that handles disconnect events
 	 */
 	public GenericStompSessionHandler(String destination, Class<T> typeParameterClass, 
-			Consumer<T> frameConsumer, BiConsumer<StompSession, Throwable> disconnectConsumer) {
+			BiConsumer<StompHeaders, T> frameConsumer, BiConsumer<StompSession, Throwable> disconnectConsumer) {
 		
 		this.destination = destination;
 		this.typeParameterClass = typeParameterClass;
@@ -87,7 +89,7 @@ public class GenericStompSessionHandler<T> extends StompSessionHandlerAdapter {
 	public void handleFrame(StompHeaders headers, Object payload) {
 		
 		if(frameConsumer != null) {
-			frameConsumer.accept((T) payload);
+			frameConsumer.accept(headers, (T) payload);
 		}
 		
 	}

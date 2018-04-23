@@ -2,6 +2,9 @@ package org.eamrf.eastore.ui.core.service;
 
 import java.net.URI;
 import java.net.URISyntaxException;
+import java.util.List;
+import java.util.Set;
+import java.util.StringJoiner;
 import java.util.concurrent.Callable;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.ExecutorService;
@@ -67,9 +70,26 @@ public class MessagingService {
 	private GenericStompSessionHandler<ResourceChangeMessage> resourceChangeSessionHandler = new GenericStompSessionHandler<ResourceChangeMessage>(
 			EA_STORE_RESOURCE_CHANGE_STOMP_SUBSCRIPTION,
 			ResourceChangeMessage.class,
-			message -> {
-				logger.info(websocketMarker, "Received resource change message from eastore, " + message.toString());
+			(stompHeaders, message) -> {
+				
+				logger.info(websocketMarker, "Received resource change message from eastore:");		
+				
+				logger.info("Headers =\n");
+				List<String> headerValueList = null;
+				Set<String> headerKeySet = stompHeaders.keySet();
+				for(String headerKey : headerKeySet) {
+					headerValueList = stompHeaders.get(headerKey);
+					StringJoiner sj = new StringJoiner(":", headerKey + " [", "]");
+					for(String headerValue : headerValueList) {
+						sj.add(headerValue);
+					}
+					logger.info(sj.toString());
+				}				
+				
+				logger.info("Message =\n" + message.toString());
+				
 				resourceChangeBroadcaster.broadcast(message);
+				
 			},
 			(stompSession, throwable) -> {
 				logger.info(websocketMarker, "Session {} was lost, {}", stompSession.getSessionId(), throwable.getMessage(), throwable);

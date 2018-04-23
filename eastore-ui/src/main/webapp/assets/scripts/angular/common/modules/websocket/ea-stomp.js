@@ -15,7 +15,9 @@ Angular module for STOMP messaging over web sockets
 	// set default options
 	eaStompModule.value('eaStompOptions', {
 		sockJsUrl: '',
-		sockJsOptions: {},
+		sockJsOptions: {
+			sessionId: 10
+		},
 		sockJsProtocols: { 
 			protocols_whitelist: [
 			      "websocket", "xhr-streaming", "xdr-streaming", "xhr-polling", 
@@ -67,7 +69,9 @@ Angular module for STOMP messaging over web sockets
 
 				angular.extend(eaStomp, defaultOptions, options);
 				
-				eaStomp.connection.sock  = new SockJS(eaStomp.sockJsUrl); // url, protocols, options
+				// https://github.com/sockjs/sockjs-client
+				eaStomp.connection.sock  = new SockJS(
+						eaStomp.sockJsUrl, null, this.sockJsProtocols.sessionId); // url, protocols, options
 				eaStomp.connection.stomp = Stomp.over(eaStomp.connection.sock);
 				eaStomp.connection.stomp.debug = eaStomp.debug;
 				eaStomp.connection.sock.onclose = _onSocketClose;
@@ -114,6 +118,7 @@ Angular module for STOMP messaging over web sockets
 				}				
 
 				this.connection.stomp.connect(
+					$log.debug("Stomp connect with headers = " + JSON.stringify(this.stompHeaders));
 					this.stompHeaders, connectCallback, connectErrorCallback
 				);					
 				
