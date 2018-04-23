@@ -71,7 +71,7 @@ Angular module for STOMP messaging over web sockets
 				
 				// https://github.com/sockjs/sockjs-client
 				eaStomp.connection.sock  = new SockJS(
-						eaStomp.sockJsUrl, null, this.sockJsProtocols.sessionId); // url, protocols, options
+						eaStomp.sockJsUrl, null, eaStomp.sockJsProtocols.sessionId); // url, protocols, options
 				eaStomp.connection.stomp = Stomp.over(eaStomp.connection.sock);
 				eaStomp.connection.stomp.debug = eaStomp.debug;
 				eaStomp.connection.sock.onclose = _onSocketClose;
@@ -117,8 +117,8 @@ Angular module for STOMP messaging over web sockets
 					return;
 				}				
 
+				$log.debug("Stomp connect with headers = " + JSON.stringify(this.stompHeaders));
 				this.connection.stomp.connect(
-					$log.debug("Stomp connect with headers = " + JSON.stringify(this.stompHeaders));
 					this.stompHeaders, connectCallback, connectErrorCallback
 				);					
 				

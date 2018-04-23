@@ -18,19 +18,46 @@
 		function initializeStompMessaging(){
 			
 			if(!_isInitialized){
+				
 				$log.debug('Initializing Stomp messaging');
+				
+				/*
+				const clientOptions = {};
+				
+				Object.defineProperty(clientOptions, 'sockJsUrl', {
+					value : appConstants.eastoreStompSockJsUrl,
+					writable : false
+				});
+				Object.defineProperty(clientOptions, 'stompHeaders', {
+					value : 'How Now Brown Cow!',
+					writable : false
+				});
+				Object.defineProperty(clientOptions, 'sessionId', {
+				    get: function() {
+				    	var newSessionId = 'fubar_' + (Math.random() + 1).toString(36).substring(10);
+				    	$log.debug('SockJs Session id = ' + newSessionId);
+				        return newSessionId;
+				    },
+				    enumerable: true
+				});				
+				
+				_stompClient = new EAStomp(clientOptions);
+				*/
+				
 				_stompClient = new EAStomp({
 	                sockJsUrl: appConstants.eastoreStompSockJsUrl,
 	                sockJsOptions : {
 	                	sessionId : function(){
-	                		// create random 10 character/digit value for session id
-	                		return 'fubar_' + (Math.random() + 1).toString(36).substring(10);
+	                		var newSessionId = 'fubar_' + (Math.random() + 1).toString(36).substring(10);
+	                		$log.debug('SockJs Session id = ' + newSessionId);
+	                		return newSessionId;
 	                	}
 	                },
 	                stompHeaders: {
 	                	userId: 'How Now Brown Cow!'
 	                }
-	            }); 
+	            });
+				
 				_stompClient.setDebug(stompSocketDebug);
 				_stompClient.connect(myStompConnect, myStompConnectError);
 				_isInitialized = true;
@@ -43,7 +70,7 @@
 		}
 		
 		function myStompConnect(frame){
-	        var subscriptTest = _stompClient.subscribe('/topic/test', myStompReceiveTestMessages);
+	        //var subscriptTest = _stompClient.subscribe('/topic/test', myStompReceiveTestMessages);
 	        var subscriptResourceChange = _stompClient.subscribe('/topic/resource/change', myStompReceiveResourceChangeMessages);
 		}
 		
