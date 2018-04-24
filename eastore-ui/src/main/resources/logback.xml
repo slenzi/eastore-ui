@@ -3,7 +3,10 @@ Configure logback logging
  -->
 <configuration>
 
-	<appender name="STDOUT" class="ch.qos.logback.core.ConsoleAppender">
+	<!-- 
+	Standard out / console appender
+	-->
+	<appender name="APPENDER-STDOUT" class="ch.qos.logback.core.ConsoleAppender">
 		<layout class="ch.qos.logback.classic.PatternLayout">
 			<Pattern>
 				%d{yyyy-MM-dd HH:mm:ss} [%thread] %-5level %logger{36} - %msg%n
@@ -11,7 +14,10 @@ Configure logback logging
 		</layout>
 	</appender>
 
-	<appender name="FILE" class="ch.qos.logback.core.rolling.RollingFileAppender">
+	<!-- 
+	File appender for ECOG-ACRIN code. This is our main log file.
+	-->
+	<appender name="APPENDER-FILE-EA" class="ch.qos.logback.core.rolling.RollingFileAppender">
 
 		<file>@log.file@</file>
 
@@ -28,16 +34,37 @@ Configure logback logging
 		
 	</appender>
 	
-	<logger name="org.springframework" level="DEBUG" additivity="false">
+	<!-- 
+	File appender for SpringFramework packages.
+	-->	
+	<appender name="APPENDER-FILE-SPRING" class="ch.qos.logback.core.rolling.RollingFileAppender">
+
+		<file>@spring.log.file@</file>
+
+		<rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+			<!-- daily rollover -->
+			<fileNamePattern>@spring.log.rolling.pattern@</fileNamePattern>
+			<!-- keep X days' worth of history -->
+			<maxHistory>@spring.log.max.history@</maxHistory>
+		</rollingPolicy>
+
+		<encoder>
+			<pattern>%date %-4relative [%thread] %-5level %logger{35} - %msg%n</pattern>		
+		</encoder>
+		
+	</appender>	
+	
+	<logger name="org.eamrf" level="@log.level@">
+		<appender-ref ref="APPENDER-FILE-EA" />
+	</logger>
+	
+	<logger name="org.springframework" level="@spring.log.level@">
 		<appender-ref ref="FILE" />
-		<appender-ref ref="STDOUT" />
 	</logger>
 
 	<root level="@log.level@">
-	
-		<appender-ref ref="FILE" />
 
-		<appender-ref ref="STDOUT" />
+		<appender-ref ref="APPENDER-STDOUT" />
 
 	</root>
 

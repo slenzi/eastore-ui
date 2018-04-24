@@ -79,12 +79,20 @@
 			
 			var subscriptSocketConnect = _stompClient.subscribe('/topic/action/socket/connect', receiveSocketConnectReplyMessages);
 		
+			setInterval(sendConnectedMessage, 5000);
+	        
+		}
+		
+		function sendConnectedMessage(){
+			
+			$log.debug('Sending connected stomp mesage...');
+			
 	        // send connect message to server and pass user id
 	        var connectMessage = {
 	        	userId: 'sample user id'
 	        };
-	        _stompClient.send("/app/action/socket/connect", {}, JSON.stringify(connectMessage));
-	        
+	        _stompClient.send("/app/action/socket/connect", {}, JSON.stringify(connectMessage));			
+			
 		}
 		
 		function myStompConnectError(error){
