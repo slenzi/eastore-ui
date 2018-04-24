@@ -73,9 +73,11 @@
 		function myStompConnect(frame){
 	    
 			// on eastore has a /topic/test subscription, not eastore-ui
-			//var subscriptTest = _stompClient.subscribe('/topic/test', myStompReceiveTestMessages);
+			//var subscriptTest = _stompClient.subscribe('/topic/test', receiveTestMessages);
 	        
-			var subscriptResourceChange = _stompClient.subscribe('/topic/resource/change', myStompReceiveResourceChangeMessages);
+			var subscriptResourceChange = _stompClient.subscribe('/topic/resource/change', receiveResourceChangeMessages);
+			
+			var subscriptSocketConnect = _stompClient.subscribe('/topic/action/socket/connect', receiveSocketConnectReplyMessages);
 		
 	        // send sample messag to server
 	        var connectMessage = {
@@ -91,11 +93,15 @@
 	        $log.debug('STOMP Error = ' + JSON.stringify(error));
 		}
 		
-		function myStompReceiveTestMessages(socketMessage){
+		function receiveTestMessages(socketMessage){
 	        $log.info('STOMP Received = ' + JSON.stringify(socketMessage));
 		}
 		
-        function myStompReceiveResourceChangeMessages(socketMessage){
+		function receiveSocketConnectReplyMessages(socketMessage){
+			$log.info('STOMP socket connect reply = ' + JSON.stringify(socketMessage));
+		}
+		
+        function receiveResourceChangeMessages(socketMessage){
 
             $log.info('STOMP Resource Changed = ' + JSON.stringify(socketMessage));
 
