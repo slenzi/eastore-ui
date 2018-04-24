@@ -28,7 +28,10 @@ Configure logback logging
 		
 	</appender>
 	
-	<logger name="org.springframework" level="DEBUG" />
+	<logger name="org.springframework" level="DEBUG" additivity="false">
+		<appender-ref ref="FILE" />
+		<appender-ref ref="STDOUT" />
+	</logger>
 
 	<root level="@log.level@">
 	
