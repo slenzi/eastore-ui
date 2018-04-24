@@ -34,7 +34,8 @@
 		<version.javax.ws.rs-api>2.1</version.javax.ws.rs-api> <!-- was 2.0.1 -->	
 		
 		<!-- spring dependencies -->
-		<version.spring>4.3.12.RELEASE</version.spring> <!-- was 4.2.5.RELEASE -->		
+		<version.spring>4.3.16.RELEASE</version.spring> <!-- was 4.2.5.RELEASE -->
+		<version.spring.boot>1.5.12.RELEASE</version.spring.boot>	
 		
 		<!-- apache dependencies -->
 		<version.apache.cxf>3.2.0</version.apache.cxf> <!-- was 3.1.10 -->
@@ -190,26 +191,43 @@
 		    <version>${version.logback}</version>
 		</dependency>
 		
-		
+		<!-- now using spring-boot-starter-web
 		<dependency>
 			<groupId>org.springframework</groupId>
 			<artifactId>spring-webmvc</artifactId>
 			<version>${version.spring}</version>
 		</dependency>
+		-->
+		
+		<!-- https://mvnrepository.com/artifact/org.springframework.boot/spring-boot-starter-web -->
+		<dependency>
+		    <groupId>org.springframework.boot</groupId>
+		    <artifactId>spring-boot-starter-web</artifactId>
+		    <version>${version.spring.boot}</version>
+			<exclusions>
+				<!-- exclude embedded tomcat container. libraries will clash when we deploy war to tomcat -->
+				<exclusion>
+					<groupId>org.springframework.boot</groupId>
+					<artifactId>spring-boot-starter-tomcat</artifactId>
+				</exclusion>
+			</exclusions>		    
+		</dependency>
+		
+		<!-- now using spring-boot-test
 		<dependency>
 			<groupId>org.springframework</groupId>
 			<artifactId>spring-test</artifactId>
 			<version>${version.spring}</version>
 		</dependency>
-		
-		<!-- https://mvnrepository.com/artifact/org.springframework/spring-jdbc -->
-		<!--
-		<dependency>
-		    <groupId>org.springframework</groupId>
-		    <artifactId>spring-jdbc</artifactId>
-		    <version>${version.spring}</version>
-		</dependency>
 		-->
+		
+		<!-- https://mvnrepository.com/artifact/org.springframework.boot/spring-boot-test -->
+		<dependency>
+		    <groupId>org.springframework.boot</groupId>
+		    <artifactId>spring-boot-test</artifactId>
+		    <version>${version.spring.boot}</version>
+		    <scope>test</scope>
+		</dependency>
 		
 		<!-- https://mvnrepository.com/artifact/org.springframework/spring-websocket -->
 		<dependency>
@@ -223,7 +241,7 @@
 		    <groupId>org.springframework</groupId>
 		    <artifactId>spring-messaging</artifactId>
 		    <version>${version.spring}</version>
-		</dependency>			
+		</dependency>		
 		
 		<!-- JSON provider used in our RESTful services -->		
 		<dependency>
