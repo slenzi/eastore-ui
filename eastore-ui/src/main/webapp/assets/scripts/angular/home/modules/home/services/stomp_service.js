@@ -47,6 +47,7 @@
 				_stompClient = new EAStomp({
 	                sockJsUrl: appConstants.eastoreStompSockJsUrl,
 	                sockJsOptions : {
+	                	// currently not being utilized, angular.extend function inside estomp module is not able to copy this function
 	                	sessionId : function(){
 	                		var newSessionId = 'fubar_' + (Math.random() + 1).toString(36).substring(10);
 	                		$log.debug('SockJs Session id = ' + newSessionId);
@@ -70,8 +71,18 @@
 		}
 		
 		function myStompConnect(frame){
-	        //var subscriptTest = _stompClient.subscribe('/topic/test', myStompReceiveTestMessages);
-	        var subscriptResourceChange = _stompClient.subscribe('/topic/resource/change', myStompReceiveResourceChangeMessages);
+	    
+			// on eastore has a /topic/test subscription, not eastore-ui
+			//var subscriptTest = _stompClient.subscribe('/topic/test', myStompReceiveTestMessages);
+	        
+			var subscriptResourceChange = _stompClient.subscribe('/topic/resource/change', myStompReceiveResourceChangeMessages);
+		
+	        // send sample messag to server
+	        var connectMessage = {
+	        	userId: 'sample user id'
+	        };
+	        _stompClient.send("/app/action/socket/connect", {}, JSON.stringify(connectMessage));
+	        
 		}
 		
 		function myStompConnectError(error){

@@ -152,6 +152,17 @@ public class MessagingService {
 		    }
 		});
 		
+	}	
+	
+	@PreDestroy
+	private void destroy() {
+		
+		logger.info(websocketMarker, "Closing stomp websocket connections...");
+		
+		stompSocketService.closeAllSessions(true);
+		
+		logger.info(websocketMarker, "Closing of stomp websocket connections complete!");
+		
 	}
 	
 	private URI getEaStoreEndpoint() throws ServiceException {
@@ -166,16 +177,5 @@ public class MessagingService {
 		return stompUri;
 		
 	}	
-	
-	@PreDestroy
-	private void destroy() {
-		
-		logger.info(websocketMarker, "Closing stomp websocket connections...");
-		
-		stompSocketService.closeAllSessions(true);
-		
-		logger.info(websocketMarker, "Closing of stomp websocket connections complete!");
-		
-	}
 
 }
