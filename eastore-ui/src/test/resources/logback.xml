@@ -27,6 +27,8 @@ Configure logback logging
 		</encoder>
 		
 	</appender>
+	
+	<logger name="org.springframework" level="DEBUG" />
 
 	<root level="@test.log.level@">
 	

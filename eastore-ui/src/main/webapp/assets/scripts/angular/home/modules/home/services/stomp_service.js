@@ -72,14 +72,14 @@
 		
 		function myStompConnect(frame){
 	    
-			// on eastore has a /topic/test subscription, not eastore-ui
+			// only eastore has a /topic/test subscription, not eastore-ui
 			//var subscriptTest = _stompClient.subscribe('/topic/test', receiveTestMessages);
 	        
 			var subscriptResourceChange = _stompClient.subscribe('/topic/resource/change', receiveResourceChangeMessages);
 			
 			var subscriptSocketConnect = _stompClient.subscribe('/topic/action/socket/connect', receiveSocketConnectReplyMessages);
 		
-	        // send sample messag to server
+	        // send connect message to server and pass user id
 	        var connectMessage = {
 	        	userId: 'sample user id'
 	        };
