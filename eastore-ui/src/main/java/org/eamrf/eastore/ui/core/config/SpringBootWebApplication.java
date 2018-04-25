@@ -51,9 +51,11 @@ public class SpringBootWebApplication extends SpringBootServletInitializer {
 	 * 
 	 * @return
 	 */
+	/*
 	@Bean
 	public ServletRegistrationBean cxf() {
 	    return new ServletRegistrationBean(new CXFServlet(), "/cxf/*");
 	}
+	*/
 	
 }

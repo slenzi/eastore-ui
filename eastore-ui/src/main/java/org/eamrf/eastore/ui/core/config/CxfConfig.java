@@ -7,6 +7,7 @@ import javax.ws.rs.ext.RuntimeDelegate;
 import org.apache.cxf.bus.spring.SpringBus;
 import org.apache.cxf.endpoint.Server;
 import org.apache.cxf.jaxrs.JAXRSServerFactoryBean;
+import org.apache.cxf.transport.servlet.CXFServlet;
 import org.eamrf.eastore.ui.web.jaxrs.local.StoreUIApplication;
 import org.eamrf.eastore.ui.web.jaxrs.local.TestResource;
 import org.eamrf.eastore.ui.web.jaxrs.local.UIActionResource;
@@ -16,6 +17,7 @@ import org.eamrf.eastore.ui.web.jaxrs.local.UISearchResource;
 import org.eamrf.eastore.ui.web.jaxrs.local.UITreeResource;
 import org.eamrf.eastore.ui.web.jaxrs.security.interceptor.AuthWorldInterceptor;
 import org.eamrf.web.rs.exception.WebServiceExceptionMapper;
+import org.springframework.boot.web.servlet.ServletRegistrationBean;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.DependsOn;
@@ -41,6 +43,18 @@ public class CxfConfig {
 	public SpringBus cxf() {
 		return new SpringBus();
 	}
+	
+	/**
+	 * configure cxf servlet
+	 * 
+	 * @return
+	 */
+    @Bean
+    public ServletRegistrationBean cxfServlet() {
+        final ServletRegistrationBean servletRegistrationBean = new ServletRegistrationBean(new CXFServlet(), "/services/*");
+        servletRegistrationBean.setLoadOnStartup(1);
+        return servletRegistrationBean;
+    }
 	
 	/**
 	 * Configure StoreUI JAX-RS Services
