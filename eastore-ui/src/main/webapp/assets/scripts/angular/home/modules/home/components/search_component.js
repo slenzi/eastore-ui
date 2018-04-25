@@ -103,8 +103,8 @@
 					});
 				*/
 				
-				// if you change /spring/private/main/home the you also need to change it in index.jsp
-				var url = appConstants.applicationUrl + '/spring/private/main/home' + $state.href('path', {urlPath: newUrlPath});
+				// if you change /private/main/home the you also need to change it in index.jsp
+				var url = appConstants.applicationUrl + '/private/main/home' + $state.href('path', {urlPath: newUrlPath});
 				
 				$log.debug('url = ' + url);
 				

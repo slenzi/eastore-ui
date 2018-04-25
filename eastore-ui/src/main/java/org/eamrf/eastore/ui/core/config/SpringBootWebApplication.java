@@ -3,13 +3,10 @@
  */
 package org.eamrf.eastore.ui.core.config;
 
-import org.apache.cxf.transport.servlet.CXFServlet;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.builder.SpringApplicationBuilder;
-import org.springframework.boot.web.servlet.ServletRegistrationBean;
 import org.springframework.boot.web.support.SpringBootServletInitializer;
-import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Import;
 
 /**
@@ -45,17 +42,5 @@ public class SpringBootWebApplication extends SpringBootServletInitializer {
         SpringApplication.run(SpringBootWebApplication.class, args);
         
     }
-
-	/**
-	 * Configure Apache CXF servlet for jax-rs (REST) & jax-ws (SOAP) services
-	 * 
-	 * @return
-	 */
-	/*
-	@Bean
-	public ServletRegistrationBean cxf() {
-	    return new ServletRegistrationBean(new CXFServlet(), "/cxf/*");
-	}
-	*/
 	
 }
