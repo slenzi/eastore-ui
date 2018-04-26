@@ -6,6 +6,7 @@ import org.eamrf.eastore.ui.core.properties.ManagedProperties;
 import org.eamrf.eastore.ui.web.main.interceptors.LoggingInterceptor;
 import org.eamrf.eastore.ui.web.main.security.interceptors.AuthWorldInterceptor;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.converter.ByteArrayHttpMessageConverter;
@@ -17,6 +18,7 @@ import org.springframework.web.servlet.config.annotation.EnableWebMvc;
 import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
 import org.springframework.web.servlet.config.annotation.ResourceHandlerRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurerAdapter;
+import org.springframework.web.servlet.view.InternalResourceViewResolver;
 
 /**
  * Spring MVC configuration.
@@ -29,6 +31,7 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurerAdapter
  * 
  * @author slenzi
  */
+/*
 @Configuration
 @EnableWebMvc
 @ComponentScan(
@@ -37,6 +40,7 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurerAdapter
 		"org.eamrf.eastore.ui.web.main.controller"
 		}
 )
+*/
 public class WebMvcConfig extends WebMvcConfigurerAdapter {
 
 	@Autowired
@@ -107,5 +111,18 @@ public class WebMvcConfig extends WebMvcConfigurerAdapter {
 		//registry.addInterceptor(new LoggingInterceptor()).addPathPatterns("/fstore/administration/*");
 	
 	}
+	
+	/**
+	 * Define internal view resolver for loading JSPs
+	 * 
+	 * @return
+	 */
+	@Bean
+    public InternalResourceViewResolver viewResolver() {
+        InternalResourceViewResolver resolver = new InternalResourceViewResolver();
+        resolver.setPrefix("/");
+        //resolver.setSuffix(".jsp");
+        return resolver;
+    }	
 	
 }
