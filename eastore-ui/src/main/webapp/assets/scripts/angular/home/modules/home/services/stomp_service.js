@@ -55,7 +55,7 @@
 	                	}
 	                },
 	                stompHeaders: {
-	                	userId: 'How Now Brown Cow!'
+	                	userId: sharedDataService.getUserId()
 	                }
 	            });
 				
@@ -83,13 +83,16 @@
 	        
 		}
 		
+		//
+		// send message to server that client is connected, passing the user id
+		//
 		function sendConnectedMessage(){
 			
 			$log.debug('Sending connected stomp mesage...');
 			
 	        // send connect message to server and pass user id
 	        var connectMessage = {
-	        	userId: 'sample user id'
+	        	userId: sharedDataService.getUserId()
 	        };
 	        var jsonString = JSON.stringify(connectMessage);
 	        $log.debug("Sending => " + jsonString);

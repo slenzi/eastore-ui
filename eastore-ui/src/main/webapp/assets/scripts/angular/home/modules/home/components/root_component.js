@@ -12,7 +12,8 @@
 		
 		bindings: {
 			leftnavid : '<',
-			haveUserInSession: '<'
+			haveUserInSession: '<',
+			userId: '<'
 			//,$transition$ : '<' // https://github.com/angular-ui/ui-router/issues/3110
 		},
 		
@@ -34,6 +35,9 @@
 					$log.debug('Current location = ' + currentUrl);
 					sharedDataService.setUrl(currentUrl);
 					$state.go('login');
+				}else{
+					// store the user id of the logged in user in our shared data service
+					sharedDataService.setUserId(thisCtrl.userId);
 				}
 				
 				// if no user in session then store current URL in shared data service, then

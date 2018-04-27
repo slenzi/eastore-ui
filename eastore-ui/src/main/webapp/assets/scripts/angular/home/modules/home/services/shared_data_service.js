@@ -11,6 +11,9 @@
 	 */
 	function SharedDataService($log){
 		
+		// id of logged in user
+		var _userId;
+		
 		// current working store, directory
 		var _store;
 		var _directory;
@@ -25,6 +28,13 @@
 		var _progressBarStyle = 'indeterminate';
 		var _progressBarValue = 100; // only applicable if progress style is 'determinate'
 		var _progressBarEnabled = false;
+		
+		function _getUserId(){
+			return _userId;
+		}
+		function _setUserId(userId){
+			_userId = userId;
+		}
 		
 		function _getUrl(){
 			return _url;
@@ -78,6 +88,9 @@
 		// External API
 		// *********************************
 		return {
+			
+			getUserId : _getUserId,
+			setUserId : _setUserId,			
 			
 			getStore : _getStore,
 			setStore : _setStore,

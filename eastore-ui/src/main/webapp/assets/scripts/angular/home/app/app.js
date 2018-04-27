@@ -280,7 +280,15 @@
 							return homeRestService.isAdmin();
 						}
 						return false;
-					}
+					},
+					
+					// resolve the user id of the logged in user (ideally should combine this resolve with the 'isAdmin' resolve (above) to reduce the number of ajax calls.)
+					userId : function(haveUserInSession, homeRestService){
+						if(haveUserInSession){
+							return homeRestService.getLoggedInUserId();
+						}
+						return "";
+					},
 					
 					//,
 

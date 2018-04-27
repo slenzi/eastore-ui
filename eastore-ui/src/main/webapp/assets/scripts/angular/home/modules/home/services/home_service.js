@@ -520,6 +520,15 @@
 			return eastoreUiJsonService.gateKeeperGroupByCode({ groupCode : groupCode }).$promise;
 		}
 		
+		// get user id of logged in user
+		function _getLoggedInUserId(){
+			
+			return $http.get(appConstants.eastoreUiAuthJaxrsService + '/authworld/userId').then(function(response) {
+				return response.data;
+			});			
+			
+		}		
+		
 		// check if there is an AuthWorldUser object in the session.
 		// does NOT validate the user or their login data
 		function _haveAuthWorldUserInSession(){
@@ -601,6 +610,7 @@
 			autoLoginAuthWorldUser : _autoLoginAuthWorldUser,
 			buildAuthWorldHandOffUrl : _buildAuthWorldHandOffUrl,
 			isAdmin : _isAdmin,
+			getLoggedInUserId : _getLoggedInUserId,
 			
 			addStore : _addStore,
 			updateStore : _updateStore,

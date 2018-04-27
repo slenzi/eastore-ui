@@ -62,6 +62,28 @@ public class UIAuthResource extends BaseResourceHandler {
 
     	return authService.isAuthWorldAdmin();
     	
+    }
+    
+    /**
+     * Get the user id of the logged in user
+     * 
+     * @return
+     * @throws WebServiceException
+     */
+    @GET
+	@Path("/authworld/userId")
+    @Produces(MediaType.TEXT_PLAIN)
+    public String getUserId() throws WebServiceException {
+    	
+    	logger.debug(UIJsonResource.class.getSimpleName() + " getUserId(...) called");
+
+    	try {
+			return authService.getUserId();
+		} catch (ServiceException e) {
+			logger.error(e.getMessage(), e);
+			throw new WebServiceException(WebExceptionType.CODE_IO_ERROR, e.getMessage(), e);
+		}
+    	
     }    
 
     /**
