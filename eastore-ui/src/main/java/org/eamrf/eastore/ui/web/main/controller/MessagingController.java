@@ -45,7 +45,7 @@ public class MessagingController extends AbstractSpringController {
 		
 		logger.info("Client connected = " + message.toString());
 		
-		return "{ message: \"Server received connect message for user " + message.getUserId() + "\"}";
+		return "{ \"message\" : \"Server received connect message for user " + message.getUserId() + "\"}";
 		
 	}
 

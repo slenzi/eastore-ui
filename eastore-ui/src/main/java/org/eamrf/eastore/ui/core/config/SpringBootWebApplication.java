@@ -14,13 +14,13 @@ import org.springframework.context.annotation.ComponentScan;
  * 
  * @author slenzi
  */
-//@EnableAutoConfiguration
 @ComponentScan(
 	basePackages = {
 		"org.eamrf"
 		}
 )
 @SpringBootApplication
+//@EnableAutoConfiguration - no need for this, @SpringBootApplication already includes it
 //@Import({
 //	AppConfig.class
 //})

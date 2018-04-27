@@ -91,7 +91,9 @@
 	        var connectMessage = {
 	        	userId: 'sample user id'
 	        };
-	        _stompClient.send("/app/action/socket/connect", {}, JSON.stringify(connectMessage));			
+	        var jsonString = JSON.stringify(connectMessage);
+	        $log.debug("Sending => " + jsonString);
+	        _stompClient.send("/app/action/socket/connect", {}, jsonString);			
 			
 		}
 		

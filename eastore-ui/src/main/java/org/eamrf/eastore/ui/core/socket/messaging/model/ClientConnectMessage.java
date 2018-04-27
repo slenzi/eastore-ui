@@ -10,16 +10,18 @@ import java.io.Serializable;
  * 
  * @author slenzi
  */
-public class ClientConnectMessage implements Serializable {
+public class ClientConnectMessage {
 
-	private static final long serialVersionUID = -6378387768855920194L;
+	//private static final long serialVersionUID = -6378387768855920194L;
 	
 	private String userId;
 	
-	/**
-	 * 
-	 */
+	public ClientConnectMessage() {
+		super();
+	}
+
 	public ClientConnectMessage(String userId) {
+		super();
 		this.userId = userId;
 	}
 
