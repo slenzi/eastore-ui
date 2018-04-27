@@ -2,13 +2,19 @@ package org.eamrf.eastore.ui.core.service;
 
 import java.net.URI;
 import java.net.URISyntaxException;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
+import java.util.HashSet;
 import java.util.StringJoiner;
 import java.util.concurrent.Callable;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
+import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
 
 import javax.annotation.PostConstruct;
@@ -57,7 +63,13 @@ public class MessagingService {
     
     private final Marker websocketMarker = MarkerFactory.getMarker("[WebSocket]");
     
+    // map ctep users to their websocket connections
+    // keys are user ids, i.e., the ctep id of the logged in user
+    // values are lists of spring principal user ids for inbound websocket connections
+    private Map<String, HashSet<String>> inboundSessionMap = new HashMap<String,HashSet<String>>();
+    
     private ExecutorService executorService = Executors.newFixedThreadPool(1);
+    private ScheduledExecutorService scheduledExecutorService = Executors.newScheduledThreadPool(1);
     
 	// Subscription to EA Store 'resource change' messages
 	// @see eastore codebase:
@@ -67,7 +79,7 @@ public class MessagingService {
 	
 	// handler which receives incoming resource change events from eastore, then re-broadcasts them
 	// over the eastore-ui stomp websocket
-	private GenericStompSessionHandler<ResourceChangeMessage> resourceChangeSessionHandler = new GenericStompSessionHandler<ResourceChangeMessage>(
+	private GenericStompSessionHandler<ResourceChangeMessage> eaStoreResourceChangeSessionHandler = new GenericStompSessionHandler<ResourceChangeMessage>(
 			EA_STORE_RESOURCE_CHANGE_STOMP_SUBSCRIPTION,
 			ResourceChangeMessage.class,
 			(stompHeaders, message) -> {
@@ -93,8 +105,8 @@ public class MessagingService {
 			},
 			(stompSession, throwable) -> {
 				logger.info(websocketMarker, "Session {} was lost, {}", stompSession.getSessionId(), throwable.getMessage(), throwable);
-				logger.info("Attempting to re-establish stomp websocket connection to eastore.");
-				initStompConnection();
+				logger.info("Attempting to re-establish stomp websocket connection to EA-Store service.");
+				initEaStoreConnection();
 			});	
 	
 	public MessagingService() { }
@@ -103,19 +115,48 @@ public class MessagingService {
 	 * Initialize messaging service by connecting to eastore stomp websocket endpoint and
 	 * subscribing to the "resource change" destination. If a connection to eastore cannot
 	 * be made then it will continue to retry until successful. Once a connection has been
-	 * made, all incoming resource change messages will be re-broadcasted via the eastore-ui
+	 * made all incoming resource change messages will be re-broadcasted via the eastore-ui
 	 * websocket endpoint. 
 	 */
 	@PostConstruct
-	private void initStompConnection() {
+	private void init() {
 		
-		logger.info(websocketMarker, "Initializing eastore stomp websocket connection...");
+		initEaStoreConnection();
+		
+		sendHelloToClients();
+		
+	}	
+	
+	@PreDestroy
+	private void destroy() {
+		
+		logger.info(websocketMarker, "Shutting down messaging services...");
+	
+		executorService.shutdownNow();
+		scheduledExecutorService.shutdownNow();		
+		
+		stompSocketService.closeAllSessions(true);
+		
+		logger.info(websocketMarker, "Shutddown of messaging services complete.");
+		
+	}
+	
+	/**
+	 * Create web socket connection to EA-Store and subscribe to resource change messages.
+	 * 
+	 * If a connection to EA-Store cannot be made then it will continue to retry until successful.
+	 * Once a connection has been made all incoming resource change messages will be re-broadcasted
+	 * via the EA-Store-UI websocket endpoint.
+	 */
+	private void initEaStoreConnection() {
+		
+		logger.info(websocketMarker, "Initializing EA-Store stomp websocket connection...");
 		
 		Callable<StompSession> connectCallable = new Callable<StompSession>() {
 		    public StompSession call() throws Exception {
 		    	StompSession stompSession = null;
 		    	try {
-		    		stompSession = stompSocketService.connect(getEaStoreEndpoint(), resourceChangeSessionHandler);
+		    		stompSession = stompSocketService.connect(getEaStoreEndpoint(), eaStoreResourceChangeSessionHandler);
 				} catch (ServiceException e) {
 					logger.error(websocketMarker, "Failed to connect to eastore and subscribe to resource "
 							+ "change events, " + e.getMessage());
@@ -150,21 +191,39 @@ public class MessagingService {
 				}		    	
 				logger.info(websocketMarker, "Initialization of stomp websocket connections complete!");
 		    }
-		});
-		
-	}	
-	
-	@PreDestroy
-	private void destroy() {
-		
-		logger.info(websocketMarker, "Closing stomp websocket connections...");
-		
-		stompSocketService.closeAllSessions(true);
-		
-		logger.info(websocketMarker, "Closing of stomp websocket connections complete!");
+		});		
 		
 	}
 	
+	private void sendHelloToClients() {
+		
+		Runnable helloMessageRunnable = new Runnable() {
+		    public void run() {
+		    	Set<String> userIdSet = inboundSessionMap.keySet();
+		    	HashSet<String> socketPrincipalIdSet = null;
+		    	for(String userId : userIdSet) {
+		    		socketPrincipalIdSet = inboundSessionMap.get(userId);
+		    		for(String principalId : socketPrincipalIdSet) {
+		    			
+		    			logger.info("Sending message to " + userId + " for principal " + principalId);
+		    			
+		    			// TODO - send message to user...
+		    			
+		    		}
+		    	}
+		    }
+		};
+		
+		scheduledExecutorService.scheduleAtFixedRate(helloMessageRunnable, 0, 30, TimeUnit.SECONDS);
+		
+	}
+	
+	/**
+	 * Return the URI for the EA-Store stomp endpoint.
+	 * 
+	 * @return
+	 * @throws ServiceException
+	 */
 	private URI getEaStoreEndpoint() throws ServiceException {
 		
 		URI stompUri = null;
@@ -176,6 +235,23 @@ public class MessagingService {
 		}
 		return stompUri;
 		
+	}
+	
+	/**
+	 * Track the logged in users list of socket messaging sessions
+	 * 
+	 * @param userId
+	 * @param socketPrincipalId
+	 */
+	public void trackUserMessageSession(String userId, String socketPrincipalId) {
+		logger.info("Tracking messaging principal " + socketPrincipalId + " for user " + userId);
+		if(inboundSessionMap.containsKey(userId)) {
+			inboundSessionMap.get(userId).add(socketPrincipalId);
+		}else {
+			HashSet<String> principalList = new HashSet<String>();
+			principalList.add(socketPrincipalId);
+			inboundSessionMap.put(userId, principalList);
+		}
 	}	
 
 }

@@ -256,7 +256,7 @@ public class AuthenticationService {
 	 */
 	public Integer getAuthWorldCookieMaxAgeSeconds() {
 		return authworldService.getAuthWorldCookieMaxAgeSeconds();
-	}	
+	}
 	
 	/**
 	 * Builds a URL for authworld handoff/redirection
@@ -268,6 +268,62 @@ public class AuthenticationService {
 	 */	
 	public String buildAuthWorldHandoffUrl(String relayState) throws ServiceException {
 		return authworldService.buildAuthWorldHandoffUrl(relayState);
+	}
+	
+	/**
+	 * Fetch the authworld cookie
+	 * 
+	 * @param request
+	 * @return
+	 */
+	public Cookie getAuthWorldCookie(HttpServletRequest request) {
+		Cookie[] cookies = request.getCookies();
+		if(cookies != null && cookies.length > 0) {
+			final String authWorldCookieName = getAuthWorldCookieName();
+			for(int i=0; i<cookies.length; i++) {
+				if(cookies[i].getName().equals(authWorldCookieName)) {
+					return cookies[i];
+				}
+			}
+		}
+		return null;
+	}
+	
+	/**
+	 * Updates the last active time in the authworld cookie to the current time.
+	 * 
+	 * @param request
+	 * @param response
+	 */
+	public void updateAuthWorldCookieLastActive(HttpServletRequest request, HttpServletResponse response) {
+		
+		Cookie authCookie = getAuthWorldCookie(request);
+		
+		if(authCookie == null) {
+			logger.info("AuthWorld Credentials Cookie => null");
+			return;
+		}
+		
+		logger.info("Found AuthWorld Credentials Cookie => " + authCookie);
+		
+		String cookieData = authCookie.getValue();
+		String ctepId = getAuthWorldCookieCtepId(cookieData);
+		String loginDate = getAuthWorldCookieLoginDate(cookieData);
+		String primaryInst = getAuthWorldCookiePrimaryInst(cookieData);
+		String sessionKey = getAuthWorldCookieSessionKey(cookieData);
+		
+		String newCookieData = buildAuthWorldCookieValue(
+				ctepId, primaryInst, sessionKey, loginDate, Long.toString(DateUtil.getCurrentTime().getTime()));
+		
+		Cookie updatedCookie = new Cookie(getAuthWorldCookieName(), newCookieData);
+		updatedCookie.setDomain(getAuthWorldCookieDomain());
+		updatedCookie.setPath(getAuthWorldCookiePath());
+		updatedCookie.setMaxAge(getAuthWorldCookieMaxAgeSeconds());
+		updatedCookie.setComment(getAuthWorldCookieComments());
+		
+		logger.info("Updating AuthWorld Credentials Cookie => " + updatedCookie);
+		response.addCookie(updatedCookie);		
+		
 	}
 
 	public void cookieTest(HttpServletResponse resp) {

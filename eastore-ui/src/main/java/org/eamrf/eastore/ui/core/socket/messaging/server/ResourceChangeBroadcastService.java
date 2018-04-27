@@ -69,7 +69,7 @@ public class ResourceChangeBroadcastService {
 		
 		logger.info("Broadcasting resource change event, " + message.toString());
 		
-		template.convertAndSend(messageDestination, message);		
+		template.convertAndSend(messageDestination, message);
 		
 	}
 

@@ -65,55 +65,13 @@ public class AuthWorldInterceptor extends AbstractPhaseInterceptor<Message> {
 			//logger.info("Endpoint Address => " + enpointAddress);
 			
 			if(authenticationService.isAuthenticationActive()) {
-				Cookie authCookie = this.getAuthWorldCookie(request);
-				if(authCookie != null) {
-					
-					logger.info("Found AuthWorld Credentials Cookie => " + authCookie);
-	
-					String cookieData = authCookie.getValue();
-					String ctepId = authenticationService.getAuthWorldCookieCtepId(cookieData);
-					String loginDate = authenticationService.getAuthWorldCookieLoginDate(cookieData);
-					String primaryInst = authenticationService.getAuthWorldCookiePrimaryInst(cookieData);
-					String sessionKey = authenticationService.getAuthWorldCookieSessionKey(cookieData);
-					
-					String newCookieData = authenticationService.buildAuthWorldCookieValue(
-							ctepId, primaryInst, sessionKey, loginDate, Long.toString(DateUtil.getCurrentTime().getTime()));
-					
-					Cookie updatedCookie = new Cookie(authenticationService.getAuthWorldCookieName(), newCookieData);
-					updatedCookie.setDomain(authenticationService.getAuthWorldCookieDomain());
-					updatedCookie.setPath(authenticationService.getAuthWorldCookiePath());
-					updatedCookie.setMaxAge(authenticationService.getAuthWorldCookieMaxAgeSeconds());
-					updatedCookie.setComment(authenticationService.getAuthWorldCookieComments());
-					
-					logger.info("Updating AuthWorld Credentials Cookie => " + updatedCookie);
-					response.addCookie(updatedCookie);
-					
-				}else {
-					logger.info("AuthWorld Credentials Cookie => null");
-				}
+				
+				authenticationService.updateAuthWorldCookieLastActive(request, response);
+				
 			}			
 			
 		}
 		
 	}
-	
-	/**
-	 * Fetch the authworld credentials cookie from the request
-	 * 
-	 * @param request
-	 * @return
-	 */
-	private Cookie getAuthWorldCookie(HttpServletRequest request) {
-		Cookie[] cookies = request.getCookies();
-		if(cookies != null && cookies.length > 0) {
-			final String authWorldCookieName = authenticationService.getAuthWorldCookieName();
-			for(int i=0; i<cookies.length; i++) {
-				if(cookies[i].getName().equals(authWorldCookieName)) {
-					return cookies[i];
-				}
-			}
-		}
-		return null;
-	}	
 	
 }
