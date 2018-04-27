@@ -6,6 +6,7 @@ import org.eamrf.eastore.ui.core.properties.ManagedProperties;
 import org.eamrf.eastore.ui.web.main.interceptors.LoggingInterceptor;
 import org.eamrf.eastore.ui.web.main.security.interceptors.AuthWorldInterceptor;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.web.servlet.ServletComponentScan;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
@@ -17,6 +18,7 @@ import org.springframework.web.servlet.config.annotation.DefaultServletHandlerCo
 import org.springframework.web.servlet.config.annotation.EnableWebMvc;
 import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
 import org.springframework.web.servlet.config.annotation.ResourceHandlerRegistry;
+import org.springframework.web.servlet.config.annotation.ViewResolverRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurerAdapter;
 import org.springframework.web.servlet.view.InternalResourceViewResolver;
 
@@ -41,6 +43,12 @@ import org.springframework.web.servlet.view.InternalResourceViewResolver;
 		}
 )
 */
+
+//@ServletComponentScan - support the @WebServlet, @WebFilter, and @WebListener http://www.baeldung.com/spring-servletcomponentscan
+
+//@ComponentScan
+//@EnableWebMvc - Spring boot will automatically configure MVC features. Only use @EnableWebMvc if you want to take complete control of Spring MVC
+@Configuration
 public class WebMvcConfig extends WebMvcConfigurerAdapter {
 
 	@Autowired
@@ -55,22 +63,27 @@ public class WebMvcConfig extends WebMvcConfigurerAdapter {
 	/* (non-Javadoc)
 	 * @see org.springframework.web.servlet.config.annotation.WebMvcConfigurerAdapter#configureDefaultServletHandling(org.springframework.web.servlet.config.annotation.DefaultServletHandlerConfigurer)
 	 */
+	/*
 	@Override
 	public void configureDefaultServletHandling(DefaultServletHandlerConfigurer configurer) {
 		configurer.enable();
 	}
+	*
 
 	/* (non-Javadoc)
 	 * @see org.springframework.web.servlet.config.annotation.WebMvcConfigurerAdapter#addResourceHandlers(org.springframework.web.servlet.config.annotation.ResourceHandlerRegistry)
 	 */
+	/*
 	@Override
 	public void addResourceHandlers(ResourceHandlerRegistry registry) {
 		registry.addResourceHandler("/public/**").addResourceLocations("classpath:/public/");
 	}
+	*/
 
 	/* (non-Javadoc)
 	 * @see org.springframework.web.servlet.config.annotation.WebMvcConfigurerAdapter#configureMessageConverters(java.util.List)
 	 */
+	/*
 	@Override
 	public void configureMessageConverters(List<HttpMessageConverter<?>> converters) {
 		
@@ -85,10 +98,12 @@ public class WebMvcConfig extends WebMvcConfigurerAdapter {
 		super.configureMessageConverters(converters);
 		
 	}
+	*/
 
 	/* (non-Javadoc)
 	 * @see org.springframework.web.servlet.config.annotation.WebMvcConfigurerAdapter#addInterceptors(org.springframework.web.servlet.config.annotation.InterceptorRegistry)
 	 */
+	/*
 	@Override
 	public void addInterceptors(InterceptorRegistry registry) {
 		
@@ -111,18 +126,34 @@ public class WebMvcConfig extends WebMvcConfigurerAdapter {
 		//registry.addInterceptor(new LoggingInterceptor()).addPathPatterns("/fstore/administration/*");
 	
 	}
+	*/
 	
-	/**
-	 * Define internal view resolver for loading JSPs
-	 * 
-	 * @return
-	 */
+
+	/*
 	@Bean
     public InternalResourceViewResolver viewResolver() {
+		
         InternalResourceViewResolver resolver = new InternalResourceViewResolver();
         resolver.setPrefix("/");
         //resolver.setSuffix(".jsp");
+        
         return resolver;
-    }	
+        
+    }
+    */
+
+	/* (non-Javadoc)
+	 * @see org.springframework.web.servlet.config.annotation.WebMvcConfigurerAdapter#configureViewResolvers(org.springframework.web.servlet.config.annotation.ViewResolverRegistry)
+	 */
+	@Override
+	public void configureViewResolvers(ViewResolverRegistry registry) {
+		
+		InternalResourceViewResolver resolver = new InternalResourceViewResolver();
+		resolver.setPrefix("/"); // /WEB-INF/views/
+		//resolver.setSuffix(".jsp");
+		//resolver.setViewClass(JstlView.class);
+		registry.viewResolver(resolver);
+		
+	}	
 	
 }
