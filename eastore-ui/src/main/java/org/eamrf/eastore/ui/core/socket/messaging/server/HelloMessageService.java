@@ -14,7 +14,7 @@ import com.fasterxml.jackson.datatype.jdk8.Jdk8Module;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 
 /**
- * Sends a hello message to a specific client
+ * Sends a hello message to a specific websocket client
  * 
  * @author slenzi
  *
@@ -59,8 +59,8 @@ public class HelloMessageService {
 	/**
 	 * Send a message to a specific websocket client
 	 * 
-	 * @param principalUserId
-	 * @param message
+	 * @param principalUserId - the principal user id of the user that should receive the message
+	 * @param message - the message to send to the user
 	 */
 	public void sendHello(String principalUserId, String message) {
 		

@@ -1,7 +1,7 @@
 /**
  * 
  */
-package org.eamrf.eastore.ui.core.socket.server.interceptor;
+package org.eamrf.eastore.ui.core.socket.handler;
 
 import java.security.Principal;
 import java.util.Map;

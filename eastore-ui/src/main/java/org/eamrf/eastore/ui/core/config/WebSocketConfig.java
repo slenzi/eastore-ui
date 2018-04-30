@@ -6,16 +6,20 @@ package org.eamrf.eastore.ui.core.config;
 import org.eamrf.core.logging.stereotype.InjectLogger;
 import org.eamrf.core.util.StringUtil;
 import org.eamrf.eastore.ui.core.properties.ManagedProperties;
-import org.eamrf.eastore.ui.core.socket.server.interceptor.CtepUserHandshakerHandler;
+import org.eamrf.eastore.ui.core.socket.handler.CtepUserHandshakerHandler;
 import org.slf4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.context.event.EventListener;
 import org.springframework.messaging.simp.config.MessageBrokerRegistry;
+import org.springframework.messaging.simp.stomp.StompHeaderAccessor;
 import org.springframework.web.socket.config.annotation.AbstractWebSocketMessageBrokerConfigurer;
 import org.springframework.web.socket.config.annotation.EnableWebSocketMessageBroker;
 import org.springframework.web.socket.config.annotation.SockJsServiceRegistration;
 import org.springframework.web.socket.config.annotation.StompEndpointRegistry;
 import org.springframework.web.socket.config.annotation.StompWebSocketEndpointRegistration;
+import org.springframework.web.socket.messaging.SessionConnectedEvent;
+import org.springframework.web.socket.messaging.SessionDisconnectEvent;
 import org.springframework.web.socket.server.standard.TomcatRequestUpgradeStrategy;
 import org.springframework.web.socket.server.support.DefaultHandshakeHandler;
 
@@ -91,5 +95,27 @@ public class WebSocketConfig extends AbstractWebSocketMessageBrokerConfigurer {
 		//.setClientLibraryUrl(sockjsClientUrl);
 		
 	}
+	
+    @EventListener
+    public void onSocketConnected(SessionConnectedEvent event) {
+    	
+        StompHeaderAccessor sha = StompHeaderAccessor.wrap(event.getMessage());
+        
+        String principalUserId = sha.getUser().getName();
+        
+        logger.info("[Socket Connected] {sessionId = " + sha.getSessionId() + ", principalUseId = " + principalUserId + "}");
+        
+    }
+
+    @EventListener
+    public void onSocketDisconnected(SessionDisconnectEvent event) {
+    	
+        StompHeaderAccessor sha = StompHeaderAccessor.wrap(event.getMessage());
+        
+        String principalUserId = sha.getUser().getName();
+        
+        logger.info("[Socket Disonnected] {sessionId = " + sha.getSessionId() + ", principalUseId = " + principalUserId + "}");
+        
+    }
 
 }
