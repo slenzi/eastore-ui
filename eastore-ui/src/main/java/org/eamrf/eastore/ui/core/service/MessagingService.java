@@ -2,13 +2,8 @@ package org.eamrf.eastore.ui.core.service;
 
 import java.net.URI;
 import java.net.URISyntaxException;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 import java.util.Set;
-import java.util.HashSet;
 import java.util.StringJoiner;
 import java.util.concurrent.Callable;
 import java.util.concurrent.ExecutionException;
@@ -28,12 +23,19 @@ import org.eamrf.eastore.ui.core.socket.messaging.client.StompWebSocketService;
 import org.eamrf.eastore.ui.core.socket.messaging.model.ResourceChangeMessage;
 import org.eamrf.eastore.ui.core.socket.messaging.server.HelloMessageService;
 import org.eamrf.eastore.ui.core.socket.messaging.server.ResourceChangeBroadcastService;
+import org.eamrf.eastore.ui.core.socket.messaging.util.StompSessionTracker;
 import org.slf4j.Logger;
 import org.slf4j.Marker;
 import org.slf4j.MarkerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.event.EventListener;
+import org.springframework.messaging.simp.stomp.StompHeaderAccessor;
 import org.springframework.messaging.simp.stomp.StompSession;
 import org.springframework.stereotype.Service;
+import org.springframework.web.socket.messaging.SessionConnectedEvent;
+import org.springframework.web.socket.messaging.SessionDisconnectEvent;
+import org.springframework.web.socket.messaging.SessionSubscribeEvent;
+import org.springframework.web.socket.messaging.SessionUnsubscribeEvent;
 
 import com.github.rholder.retry.RetryException;
 import com.github.rholder.retry.Retryer;
@@ -67,10 +69,7 @@ public class MessagingService {
     
     private final Marker websocketMarker = MarkerFactory.getMarker("[WebSocket]");
     
-    // map ctep users to their websocket connections
-    // keys are user ids, i.e., the ctep id of the logged in user
-    // values are lists of spring principal user ids for inbound websocket connections
-    private Map<String, HashSet<String>> inboundSessionMap = new HashMap<String,HashSet<String>>();
+    private StompSessionTracker stompSessionTracker = new StompSessionTracker();
     
     private ExecutorService executorService = Executors.newFixedThreadPool(1);
     private ScheduledExecutorService scheduledExecutorService = Executors.newScheduledThreadPool(1);
@@ -206,21 +205,16 @@ public class MessagingService {
 		
 		Runnable helloMessageRunnable = new Runnable() {
 		    public void run() {
-		    	Set<String> userIdSet = inboundSessionMap.keySet();
-		    	HashSet<String> socketPrincipalIdSet = null;
+		    	Set<String> userIdSet = stompSessionTracker.getUserIds();
+		    	Set<String> principalIdSet = null;
 		    	for(String userId : userIdSet) {
-		    		socketPrincipalIdSet = inboundSessionMap.get(userId);
-		    		for(String principalUserId : socketPrincipalIdSet) {
-		    			
-		    			//logger.info("Sending message to " + userId + " for principal " + principalId);
-		    			
+		    		principalIdSet = stompSessionTracker.getPrincipalUserIdsForUser(userId);
+		    		for(String principalUserId : principalIdSet) {
 		    			helloMessageService.sendHello(principalUserId, "Hello user " + userId + "!");
-		    			
 		    		}
 		    	}
 		    }
 		};
-		
 		scheduledExecutorService.scheduleAtFixedRate(helloMessageRunnable, 0, 30, TimeUnit.SECONDS);
 		
 	}
@@ -245,20 +239,97 @@ public class MessagingService {
 	}
 	
 	/**
-	 * Track the logged in users list of socket messaging sessions
+	 * Track the principal user id for the ecog-acrin user. This lets us know which web socket connections
+	 * belong to which ecog-acrin users.
 	 * 
-	 * @param userId
-	 * @param socketPrincipalId
+	 * @param userId - The user id of the ecog-acrin user (i.e. ctep id)
+	 * @param principalUserId - the stomp principal user id
 	 */
-	public void trackUserMessageSession(String userId, String socketPrincipalId) {
-		logger.info("Tracking messaging principal " + socketPrincipalId + " for user " + userId);
-		if(inboundSessionMap.containsKey(userId)) {
-			inboundSessionMap.get(userId).add(socketPrincipalId);
-		}else {
-			HashSet<String> principalList = new HashSet<String>();
-			principalList.add(socketPrincipalId);
-			inboundSessionMap.put(userId, principalList);
-		}
-	}	
+	public void trackUserSession(String userId, String principalUserId) {
+		
+		logger.info("Tracking messaging principal " + principalUserId + " for user " + userId);
+		
+		stompSessionTracker.addSession(principalUserId, userId);
+	
+	}
+	
+	/**
+	 * Untrack the principal user id for the ecog-acrin user.
+	 * 
+	 * @param principalUserId - the stomp principal user id
+	 */
+	public void untrackUserSession(String principalUserId) {
+		
+		logger.info("Untracking messaging principal " + principalUserId);
+		
+		stompSessionTracker.removeSession(principalUserId);
+		
+	}
+	
+	/**
+	 * Listen for STOMP connect events.
+	 * 
+	 * @param event
+	 */
+    @EventListener
+    public void onSocketConnectedEvent(SessionConnectedEvent event) {
+    	
+        StompHeaderAccessor sha = StompHeaderAccessor.wrap(event.getMessage());
+        
+        String principalUserId = sha.getUser().getName();
+        
+        logger.info("[Stomp over WebSocket Connected Event] {sessionId = " + sha.getSessionId() + ", principalUseId = " + principalUserId + "}");
+        
+    }
+
+    /**
+     * Listen for STOMP disconnect events.
+     * 
+     * @param event
+     */
+    @EventListener
+    public void onSocketDisconnectedEvent(SessionDisconnectEvent event) {
+    	
+        StompHeaderAccessor sha = StompHeaderAccessor.wrap(event.getMessage());
+        
+        String principalUserId = sha.getUser().getName();
+        
+        logger.info("[Stomp over WebSocket Disonnected Event] {sessionId = " + sha.getSessionId() + ", principalUseId = " + principalUserId + "}");
+        
+        untrackUserSession(principalUserId);
+        
+    }
+    
+    /**
+     * Listen for STOMP subscription events.
+     * 
+     * @param event
+     */
+    @EventListener
+    public void onSocketSubscribeEvent(SessionSubscribeEvent event) {
+    	
+        StompHeaderAccessor sha = StompHeaderAccessor.wrap(event.getMessage());
+        
+        String principalUserId = sha.getUser().getName();
+        
+        logger.info("[Stomp over WebSocket Subscribed Event] {sessionId = " + sha.getSessionId() + ", principalUseId = " + principalUserId + "}");
+        
+    } 
+    
+    /**
+     * Listen for STOMP unsubscribe events.
+     * 
+     * @param event
+     */
+    @EventListener
+    public void onSocketSubscribeEvent(SessionUnsubscribeEvent event) {
+    	
+        StompHeaderAccessor sha = StompHeaderAccessor.wrap(event.getMessage());
+        
+        String principalUserId = sha.getUser().getName();
+        
+        logger.info("[Stomp over WebSocket Unsubscribed Event] {sessionId = " + sha.getSessionId() + ", principalUseId = " + principalUserId + "}");
+        
+    }	
 
 }

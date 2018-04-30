@@ -59,7 +59,7 @@ public class MessagingController extends AbstractSpringController {
 		String socketPrincipalId = headerAccessor.getUser().getName();
 		String userId = message.getUserId();
 		
-		messagingService.trackUserMessageSession(userId, socketPrincipalId);
+		messagingService.trackUserSession(userId, socketPrincipalId);
 		
 		return new ClientConnectReplyMessage("User " + userId + " has connected.");
 		

@@ -561,7 +561,7 @@ public class StoreService {
     	
     	String userId = authService.getUserId();
     	
-    	// TODO - check for user permission to add store?
+    	// TODO - check for user permission to update store?
     	
 		try {
 			return client.updateStore(storeId, storeName, storeDesc, rootDirName, rootDirDesc, 
