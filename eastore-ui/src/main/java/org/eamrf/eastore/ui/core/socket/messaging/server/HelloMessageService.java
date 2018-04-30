@@ -1,13 +1,8 @@
-/**
- * 
- */
 package org.eamrf.eastore.ui.core.socket.messaging.server;
 
 import javax.annotation.PostConstruct;
 
 import org.eamrf.core.logging.stereotype.InjectLogger;
-import org.eamrf.eastore.ui.core.socket.messaging.model.ResourceChangeMessage;
-
 import org.slf4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.messaging.converter.MappingJackson2MessageConverter;
@@ -19,25 +14,26 @@ import com.fasterxml.jackson.datatype.jdk8.Jdk8Module;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 
 /**
- * Message service for notifying clients that resources have changed on the server.
- * 
- * Messages are broadcasted to /topic/resource/change
+ * Sends a hello message to a specific client
  * 
  * @author slenzi
+ *
  */
 @Service
-public class ResourceChangeBroadcastService {
+public class HelloMessageService {
 
 	@InjectLogger
 	private Logger logger;	
 	
     @Autowired
-    private SimpMessagingTemplate template; 
+    private SimpMessagingTemplate template;
     
-    private final String messageDestination = "/topic/resource/change";
+    private final String messageDestination = "/topic/hello";
 	
-	public ResourceChangeBroadcastService() { }
-    
+	public HelloMessageService() {
+	
+	}
+	
 	@PostConstruct
 	public void init(){
 		
@@ -61,15 +57,16 @@ public class ResourceChangeBroadcastService {
 	}
 	
 	/**
-	 * Broadcast a resource change message
+	 * Send a message to a specific websocket client
 	 * 
+	 * @param principalUserId
 	 * @param message
 	 */
-	public void broadcast(ResourceChangeMessage message) {
+	public void sendHello(String principalUserId, String message) {
 		
-		logger.info("Broadcasting resource change event, " + message.toString());
+		logger.info("Sending hello message to principal user id " + principalUserId + ", " + message.toString());		
 		
-		template.convertAndSend(messageDestination, message);
+		template.convertAndSendToUser(principalUserId, messageDestination, message);
 		
 	}
 

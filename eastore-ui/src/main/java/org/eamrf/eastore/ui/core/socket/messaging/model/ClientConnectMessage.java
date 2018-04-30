@@ -6,13 +6,13 @@ package org.eamrf.eastore.ui.core.socket.messaging.model;
 import java.io.Serializable;
 
 /**
- * SockJS client (from angular layer) send a ClientConnectMessage after connecting
+ * SockJS client (from angular layer) sends a ClientConnectMessage after connecting.
  * 
  * @author slenzi
  */
-public class ClientConnectMessage {
-
-	//private static final long serialVersionUID = -6378387768855920194L;
+public class ClientConnectMessage implements Serializable {
+	
+	private static final long serialVersionUID = 3490921021319586245L;
 	
 	private String userId;
 	

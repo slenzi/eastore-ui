@@ -4,14 +4,12 @@
 package org.eamrf.eastore.ui.web.main.controller;
 
 import java.security.Principal;
-import java.util.List;
-import java.util.Set;
 import java.util.StringJoiner;
-import java.util.UUID;
 
 import org.eamrf.core.logging.stereotype.InjectLogger;
 import org.eamrf.eastore.ui.core.service.MessagingService;
 import org.eamrf.eastore.ui.core.socket.messaging.model.ClientConnectMessage;
+import org.eamrf.eastore.ui.core.socket.messaging.model.ClientConnectReplyMessage;
 import org.slf4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.messaging.MessageHeaders;
@@ -52,7 +50,7 @@ public class MessagingController extends AbstractSpringController {
 	 */
 	@MessageMapping("/action/socket/connect")
 	@SendTo("/topic/action/socket/connect")
-	public String processConnectMessaga(@Payload ClientConnectMessage message, SimpMessageHeaderAccessor headerAccessor) {
+	public ClientConnectReplyMessage processConnectMessaga(@Payload ClientConnectMessage message, SimpMessageHeaderAccessor headerAccessor) {
 		
 		logger.info("Received Client Connect Message");
 		logger.info("message = " + message.toString());
@@ -63,7 +61,9 @@ public class MessagingController extends AbstractSpringController {
 		
 		messagingService.trackUserMessageSession(userId, socketPrincipalId);
 		
-		return "{ \"message\" : \"Server received connect message for user " + message.getUserId() + "\"}";
+		return new ClientConnectReplyMessage("User " + userId + " has connected.");
+		
+		//return "{ \"message\" : \"Server received connect message for user " + message.getUserId() + "\"}";
 		
 	}
 	

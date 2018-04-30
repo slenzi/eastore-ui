@@ -26,6 +26,7 @@ import org.eamrf.eastore.ui.core.properties.ManagedProperties;
 import org.eamrf.eastore.ui.core.socket.messaging.client.GenericStompSessionHandler;
 import org.eamrf.eastore.ui.core.socket.messaging.client.StompWebSocketService;
 import org.eamrf.eastore.ui.core.socket.messaging.model.ResourceChangeMessage;
+import org.eamrf.eastore.ui.core.socket.messaging.server.HelloMessageService;
 import org.eamrf.eastore.ui.core.socket.messaging.server.ResourceChangeBroadcastService;
 import org.slf4j.Logger;
 import org.slf4j.Marker;
@@ -60,6 +61,9 @@ public class MessagingService {
     
     @Autowired
     private ResourceChangeBroadcastService resourceChangeBroadcaster;
+    
+    @Autowired
+    private HelloMessageService helloMessageService;
     
     private final Marker websocketMarker = MarkerFactory.getMarker("[WebSocket]");
     
@@ -195,6 +199,9 @@ public class MessagingService {
 		
 	}
 	
+	/**
+	 * Creates a thread which periodically sends a hello message to all connected websocket clients.
+	 */
 	private void sendHelloToClients() {
 		
 		Runnable helloMessageRunnable = new Runnable() {
@@ -203,11 +210,11 @@ public class MessagingService {
 		    	HashSet<String> socketPrincipalIdSet = null;
 		    	for(String userId : userIdSet) {
 		    		socketPrincipalIdSet = inboundSessionMap.get(userId);
-		    		for(String principalId : socketPrincipalIdSet) {
+		    		for(String principalUserId : socketPrincipalIdSet) {
 		    			
-		    			logger.info("Sending message to " + userId + " for principal " + principalId);
+		    			//logger.info("Sending message to " + userId + " for principal " + principalId);
 		    			
-		    			// TODO - send message to user...
+		    			helloMessageService.sendHello(principalUserId, "Hello user " + userId + "!");
 		    			
 		    		}
 		    	}

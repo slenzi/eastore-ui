@@ -5,7 +5,7 @@ import java.time.LocalDate;
 import java.time.LocalTime;
 
 /**
- * Message object used to notify clients that a resource had changed on the server.
+ * Message object used to notify clients that a resource has changed on the server.
  * 
  * @author slenzi
  *

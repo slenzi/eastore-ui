@@ -75,12 +75,19 @@
 			// only eastore has a /topic/test subscription, not eastore-ui
 			//var subscriptTest = _stompClient.subscribe('/topic/test', receiveTestMessages);
 	        
+			// subscribe to eastore resource change messages that are broadcasted to everyone 
 			var subscriptResourceChange = _stompClient.subscribe('/topic/resource/change', receiveResourceChangeMessages);
 			
+			// subscribe to socket connect messages that are broadcasted to everyone
 			var subscriptSocketConnect = _stompClient.subscribe('/topic/action/socket/connect', receiveSocketConnectReplyMessages);
+			
+			// subscribe to user specific hello messages. client will only receieve hello messages that are specifically sent to them
+			var subscriptSocketConnect = _stompClient.subscribe('/user/topic/hello', receiveUserHello);
 		
-			setInterval(sendConnectedMessage, 5000);
+			//setInterval(sendConnectedMessage, 5000);
 	        
+			sendConnectedMessage();
+			
 		}
 		
 		//
@@ -88,7 +95,7 @@
 		//
 		function sendConnectedMessage(){
 			
-			$log.debug('Sending connected stomp mesage...');
+			//$log.debug('Sending connected stomp mesage...');
 			
 	        // send connect message to server and pass user id
 	        var connectMessage = {
@@ -114,16 +121,20 @@
 			$log.info('STOMP socket connect reply = ' + JSON.stringify(socketMessage));
 		}
 		
+		function receiveUserHello(socketMessage){
+			$log.info('STOMP user hello = ' + JSON.stringify(socketMessage));
+		}		
+		
         function receiveResourceChangeMessages(socketMessage){
 
             $log.info('STOMP Resource Changed = ' + JSON.stringify(socketMessage));
 
             var messageData = JSON.parse(socketMessage.body);
-            $log.info('messageData = ' + JSON.stringify(messageData));
+            //$log.info('messageData = ' + JSON.stringify(messageData));
 
             //if($state && $stateParams && messageData && $stateParams.currDirResource){
 
-            $log.debug('Current state = ' + $state.current.name);
+            //$log.debug('Current state = ' + $state.current.name);
 
             var messageCode = messageData.code;
             var messageNodeId = messageData.nodeId;
@@ -132,7 +143,7 @@
             var currDir = sharedDataService.getDirectory();
             var currDirId = currDir.nodeId;
 
-            $log.debug('messageCode = ' + messageCode + ', messageNodeId = ' + messageNodeId + ', currDirId = ' + currDirId);
+            //$log.debug('messageCode = ' + messageCode + ', messageNodeId = ' + messageNodeId + ', currDirId = ' + currDirId);
 
             // Don't really want to re-load the entire state because that will re-fetch all resolves, including the resolves
             // for the parent 'root' state which contains the stomp web socket component, essentially closing and
@@ -149,7 +160,7 @@
 
             if($state.current.name === 'path' && messageCode == 'DIRECTORY_CONTENTS_CHANGED' && currDirId === messageNodeId){
 
-                $log.debug('reload path resources!');
+                //$log.debug('reload path resources!');
 				
 				resolveService.resolvePathResourcesForDirectory(currStore, currDir).then(function (data){
 					sharedDataService.setPathResources(data);
