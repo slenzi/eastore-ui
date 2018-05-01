@@ -84,7 +84,7 @@ public class MessagingController extends AbstractSpringController {
 		joiner.add("mimeType = " + ((mimeType != null) ? mimeType.getType() : "null"));
 		joiner.add("sessionId = " + headerAccessor.getSessionId());
 		joiner.add("timeStamp = " + headerAccessor.getTimestamp());
-		joiner.add("userPrincipalName = " + userPrincipal.getName());
+		joiner.add("userPrincipalName = " + ((userPrincipal != null) ? userPrincipal.getName() : "principal user object is null"));
 		joiner.add("simpleMessageType = " + headerAccessor.getMessageType().toString());
 		joiner.add("subscriptionId = " + headerAccessor.getSubscriptionId());
 		

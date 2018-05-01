@@ -2,6 +2,7 @@ package org.eamrf.eastore.ui.core.service;
 
 import java.net.URI;
 import java.net.URISyntaxException;
+import java.security.Principal;
 import java.util.List;
 import java.util.Set;
 import java.util.StringJoiner;
@@ -276,9 +277,16 @@ public class MessagingService {
     	
         StompHeaderAccessor sha = StompHeaderAccessor.wrap(event.getMessage());
         
-        String principalUserId = sha.getUser().getName();
+        Principal principal = sha.getUser();
         
-        logger.info("[Stomp over WebSocket Connected Event] {sessionId = " + sha.getSessionId() + ", principalUseId = " + principalUserId + "}");
+        if(principal != null) {
+            String principalUserId = sha.getUser().getName();
+            logger.info("[Stomp over WebSocket Connected Event] {sessionId = " + sha.getSessionId() + ", principalUseId = " + principalUserId + "}");        	
+        }else {
+        	logger.warn("[Stomp over WebSocket Connected Event] principal user object is null");
+        }
+        
+
         
     }
 
@@ -292,11 +300,15 @@ public class MessagingService {
     	
         StompHeaderAccessor sha = StompHeaderAccessor.wrap(event.getMessage());
         
-        String principalUserId = sha.getUser().getName();
+        Principal principal = sha.getUser();
         
-        logger.info("[Stomp over WebSocket Disonnected Event] {sessionId = " + sha.getSessionId() + ", principalUseId = " + principalUserId + "}");
-        
-        untrackUserSession(principalUserId);
+        if(principal != null) {
+            String principalUserId = sha.getUser().getName();
+            logger.info("[Stomp over WebSocket Disonnected Event] {sessionId = " + sha.getSessionId() + ", principalUseId = " + principalUserId + "}");
+            untrackUserSession(principalUserId);
+        }else {
+        	logger.warn("[Stomp over WebSocket Disonnected Event] principal user object is null");
+        }
         
     }
     
@@ -310,9 +322,14 @@ public class MessagingService {
     	
         StompHeaderAccessor sha = StompHeaderAccessor.wrap(event.getMessage());
         
-        String principalUserId = sha.getUser().getName();
+        Principal principal = sha.getUser();
         
-        logger.info("[Stomp over WebSocket Subscribed Event] {sessionId = " + sha.getSessionId() + ", principalUseId = " + principalUserId + "}");
+        if(principal != null) {        
+	        String principalUserId = sha.getUser().getName();
+	        logger.info("[Stomp over WebSocket Subscribed Event] {sessionId = " + sha.getSessionId() + ", principalUseId = " + principalUserId + "}");
+        }else {
+        	logger.warn("[Stomp over WebSocket Subscribed Event] principal user object is null");
+        }        
         
     } 
     
@@ -326,9 +343,14 @@ public class MessagingService {
     	
         StompHeaderAccessor sha = StompHeaderAccessor.wrap(event.getMessage());
         
-        String principalUserId = sha.getUser().getName();
+        Principal principal = sha.getUser();
         
-        logger.info("[Stomp over WebSocket Unsubscribed Event] {sessionId = " + sha.getSessionId() + ", principalUseId = " + principalUserId + "}");
+        if(principal != null) {        
+	        String principalUserId = sha.getUser().getName();
+	        logger.info("[Stomp over WebSocket Unsubscribed Event] {sessionId = " + sha.getSessionId() + ", principalUseId = " + principalUserId + "}");
+        }else {
+        	logger.warn("[Stomp over WebSocket Unsubscribed Event] principal user object is null");
+        }        
         
     }	
 
