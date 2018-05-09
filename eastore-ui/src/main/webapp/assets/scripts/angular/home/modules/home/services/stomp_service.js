@@ -76,7 +76,7 @@
 			//var subscriptTest = _stompClient.subscribe('/topic/test', receiveTestMessages);
 	        
 			// subscribe to eastore resource change messages that are broadcasted to everyone 
-			var subscriptResourceChange = _stompClient.subscribe('/topic/resource/change', receiveResourceChangeMessages);
+			var subscriptResourceChange = _stompClient.subscribe('/topic/resource/change', receiveResourceChangeMessages);		
 			
 			// subscribe to socket connect messages that are broadcasted to everyone
 			var subscriptSocketConnect = _stompClient.subscribe('/topic/action/socket/connect', receiveSocketConnectReplyMessages);
