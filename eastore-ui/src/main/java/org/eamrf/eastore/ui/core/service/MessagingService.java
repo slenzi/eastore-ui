@@ -21,7 +21,9 @@ import org.eamrf.core.logging.stereotype.InjectLogger;
 import org.eamrf.eastore.ui.core.properties.ManagedProperties;
 import org.eamrf.eastore.ui.core.socket.messaging.client.GenericStompSessionHandler;
 import org.eamrf.eastore.ui.core.socket.messaging.client.StompWebSocketService;
+import org.eamrf.eastore.ui.core.socket.messaging.model.FileServiceTaskStatus;
 import org.eamrf.eastore.ui.core.socket.messaging.model.ResourceChangeMessage;
+import org.eamrf.eastore.ui.core.socket.messaging.server.FileServiceTaskBroadcastService;
 import org.eamrf.eastore.ui.core.socket.messaging.server.HelloMessageService;
 import org.eamrf.eastore.ui.core.socket.messaging.server.ResourceChangeBroadcastService;
 import org.eamrf.eastore.ui.core.socket.messaging.util.StompSessionTracker;
@@ -31,6 +33,7 @@ import org.slf4j.MarkerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.event.EventListener;
 import org.springframework.messaging.simp.stomp.StompHeaderAccessor;
+import org.springframework.messaging.simp.stomp.StompHeaders;
 import org.springframework.messaging.simp.stomp.StompSession;
 import org.springframework.stereotype.Service;
 import org.springframework.web.socket.messaging.SessionConnectedEvent;
@@ -66,6 +69,9 @@ public class MessagingService {
     private ResourceChangeBroadcastService resourceChangeBroadcaster;
     
     @Autowired
+    private FileServiceTaskBroadcastService fileServiceTaskBroadcaster;
+    
+    @Autowired
     private HelloMessageService helloMessageService;
     
     private final Marker websocketMarker = MarkerFactory.getMarker("[WebSocket]");
@@ -78,55 +84,64 @@ public class MessagingService {
 	// Subscription to EA Store 'resource change' messages
 	// @see eastore codebase:
 	// org.eamrf.eastore.core.socket.messaging.ResourceChangeService
-	// org.eamrf.eastore.core.config.WebSocketConfig
 	private final String EA_STORE_RESOURCE_CHANGE_STOMP_SUBSCRIPTION = "/topic/resource/change";
 	
-	// handler which receives incoming resource change events from eastore, then re-broadcasts them
-	// over the eastore-ui stomp websocket
+	// Subscription to EA Store 'file service task' messages
+	// @see eastore codebase:
+	// org.eamrf.eastore.core.socket.messaging.FileServiceTaskMessageService	
+	private final String EA_STORE_FILE_SERVICE_TASK_STOMP_SUBSCRIPTION = "/topic/file/task";
+	
+	// handler which receives incoming resource change messages from eastore, then re-broadcasts them
+	// over the eastore-ui stomp websocket using ResourceChangeBroadcastService
 	private GenericStompSessionHandler<ResourceChangeMessage> eaStoreResourceChangeSessionHandler = new GenericStompSessionHandler<ResourceChangeMessage>(
 			EA_STORE_RESOURCE_CHANGE_STOMP_SUBSCRIPTION,
 			ResourceChangeMessage.class,
 			(stompHeaders, message) -> {
-				
 				logger.info(websocketMarker, "Received resource change message from eastore:");		
-				
-				logger.info("Headers =\n");
-				List<String> headerValueList = null;
-				Set<String> headerKeySet = stompHeaders.keySet();
-				for(String headerKey : headerKeySet) {
-					headerValueList = stompHeaders.get(headerKey);
-					StringJoiner sj = new StringJoiner(":", headerKey + " [", "]");
-					for(String headerValue : headerValueList) {
-						sj.add(headerValue);
-					}
-					logger.info(sj.toString());
-				}				
-				
+				logStompHeaders(stompHeaders);
 				logger.info("Message =\n" + message.toString());
-				
 				resourceChangeBroadcaster.broadcast(message);
-				
 			},
 			(stompSession, throwable) -> {
 				logger.info(websocketMarker, "Session {} was lost, {}", stompSession.getSessionId(), throwable.getMessage(), throwable);
-				logger.info("Attempting to re-establish stomp websocket connection to EA-Store service.");
-				initEaStoreConnection();
+				logger.info("Attempting to re-establish stomp websocket connection to EA-Store service for monitoring resource change messages.");
+				initEaStoreResourceChangeConnection();
+			});
+	
+	// handler which receives incoming file service task status messages from eastore, then re-broadcasts them
+	// over the eastore-ui stomp websocket using FileServiceTaskBroadcastService
+	private GenericStompSessionHandler<FileServiceTaskStatus> eaStoreFileServiceTaskSessionHandler = new GenericStompSessionHandler<FileServiceTaskStatus>(
+			EA_STORE_FILE_SERVICE_TASK_STOMP_SUBSCRIPTION,
+			FileServiceTaskStatus.class,
+			(stompHeaders, message) -> {
+				logger.info(websocketMarker, "Received file service task status message from eastore:");		
+				logStompHeaders(stompHeaders);
+				logger.info("Message =\n" + message.toString());
+				broadcastFileServiceTaskStatusMessage(message);
+			},
+			(stompSession, throwable) -> {
+				logger.info(websocketMarker, "Session {} was lost, {}", stompSession.getSessionId(), throwable.getMessage(), throwable);
+				logger.info("Attempting to re-establish stomp websocket connection to EA-Store service for monitoring file service task status messages.");
+				initEaStoreFileServiceTaskConnection();
 			});	
 	
-	public MessagingService() { }
+	public MessagingService() {
+		
+		
+	}
 	
 	/**
 	 * Initialize messaging service by connecting to eastore stomp websocket endpoint and
 	 * subscribing to the "resource change" destination. If a connection to eastore cannot
 	 * be made then it will continue to retry until successful. Once a connection has been
 	 * made all incoming resource change messages will be re-broadcasted via the eastore-ui
-	 * websocket endpoint. 
+	 * websocket endpoint using ResourceChangeBroadcastService. 
 	 */
 	@PostConstruct
 	private void init() {
 		
-		initEaStoreConnection();
-		
+		initEaStoreResourceChangeConnection();
+		initEaStoreFileServiceTaskConnection();
 		sendHelloToClients();
 		
 	}	
@@ -152,9 +167,9 @@ public class MessagingService {
 	 * Once a connection has been made all incoming resource change messages will be re-broadcasted
 	 * via the EA-Store-UI websocket endpoint.
 	 */
-	private void initEaStoreConnection() {
+	private void initEaStoreResourceChangeConnection() {
 		
-		logger.info(websocketMarker, "Initializing EA-Store stomp websocket connection...");
+		logger.info(websocketMarker, "Initializing EA-Store stomp websocket connection for resource change messages...");
 		
 		Callable<StompSession> connectCallable = new Callable<StompSession>() {
 		    public StompSession call() throws Exception {
@@ -163,7 +178,7 @@ public class MessagingService {
 		    		stompSession = stompSocketService.connect(getEaStoreEndpoint(), eaStoreResourceChangeSessionHandler);
 				} catch (ServiceException e) {
 					logger.error(websocketMarker, "Failed to connect to eastore and subscribe to resource "
-							+ "change events, " + e.getMessage());
+							+ "change messages, " + e.getMessage());
 					return null;
 				}
 		    	return stompSession;
@@ -174,7 +189,7 @@ public class MessagingService {
 				.retryIfResult(Predicates.<StompSession>isNull())
 		        .retryIfResult(stompSession -> {
 		        	if(!stompSession.isConnected()) {
-		        		logger.info(websocketMarker, "Stomp session for eastore resource change events is not connected. Retrying again...");
+		        		logger.info(websocketMarker, "Stomp session for eastore resource change messages is not connected. Retrying again...");
 		        		return true;
 		        	}
 		        	return false;
@@ -192,12 +207,64 @@ public class MessagingService {
 				    e.printStackTrace();
 				} catch (ExecutionException e) {
 				    e.printStackTrace();
-				}		    	
-				logger.info(websocketMarker, "Initialization of stomp websocket connections complete!");
+				}
 		    }
 		});		
 		
 	}
+	
+	/**
+	 * Create web socket connection to EA-Store and subscribe to file service task status messages
+	 * 
+	 * If a connection to EA-Store cannot be made then it will continue to retry until successful.
+	 * Once a connection has been made all incoming file service task status messages will be re-broadcasted
+	 * via the EA-Store-UI websocket endpoint.
+	 */
+	private void initEaStoreFileServiceTaskConnection() {
+		
+		logger.info(websocketMarker, "Initializing EA-Store stomp websocket connection for file service task status messages...");
+		
+		Callable<StompSession> connectCallable = new Callable<StompSession>() {
+		    public StompSession call() throws Exception {
+		    	StompSession stompSession = null;
+		    	try {
+		    		stompSession = stompSocketService.connect(getEaStoreEndpoint(), eaStoreFileServiceTaskSessionHandler);
+				} catch (ServiceException e) {
+					logger.error(websocketMarker, "Failed to connect to eastore and subscribe to file service task "
+							+ "status messages, " + e.getMessage());
+					return null;
+				}
+		    	return stompSession;
+		    }
+		};
+		
+		Retryer<StompSession> retryer = RetryerBuilder.<StompSession>newBuilder()
+				.retryIfResult(Predicates.<StompSession>isNull())
+		        .retryIfResult(stompSession -> {
+		        	if(!stompSession.isConnected()) {
+		        		logger.info(websocketMarker, "Stomp session for eastore file service task ststus messages is not connected. Retrying again...");
+		        		return true;
+		        	}
+		        	return false;
+		        })
+		        .withWaitStrategy(WaitStrategies.fixedWait(30, TimeUnit.SECONDS))
+		        .withStopStrategy(StopStrategies.neverStop())
+		        .build();
+		
+		executorService.execute(new Runnable() {
+		    public void run() {
+				StompSession stompSession = null;
+				try {
+					stompSession = retryer.call(connectCallable);
+				} catch (RetryException e) {
+				    e.printStackTrace();
+				} catch (ExecutionException e) {
+				    e.printStackTrace();
+				}
+		    }
+		});		
+		
+	}	
 	
 	/**
 	 * Creates a thread which periodically sends a hello message to all connected websocket clients.
@@ -240,6 +307,22 @@ public class MessagingService {
 	}
 	
 	/**
+	 * Broadcast the file service task status message. The status will only be sent to the user that initiated the task.
+	 * 
+	 * @param taskStatus
+	 */
+	private void broadcastFileServiceTaskStatusMessage(FileServiceTaskStatus taskStatus) {
+		
+		String userId = taskStatus.getUserId();
+		
+		Set<String> principalUserIdSet = stompSessionTracker.getPrincipalUserIdsForUser(userId);
+		for(String principalId : principalUserIdSet) {
+			fileServiceTaskBroadcaster.broadcastToUser(taskStatus, principalId);
+		}
+		
+	}
+	
+	/**
 	 * Track the principal user id for the ecog-acrin user. This lets us know which web socket connections
 	 * belong to which ecog-acrin users.
 	 * 
@@ -249,9 +332,8 @@ public class MessagingService {
 	public void trackUserSession(String userId, String principalUserId) {
 		
 		logger.info("Tracking messaging principal " + principalUserId + " for user " + userId);
-		
 		stompSessionTracker.addSession(principalUserId, userId);
-	
+		
 	}
 	
 	/**
@@ -262,7 +344,6 @@ public class MessagingService {
 	public void untrackUserSession(String principalUserId) {
 		
 		logger.info("Untracking messaging principal " + principalUserId);
-		
 		stompSessionTracker.removeSession(principalUserId);
 		
 	}
@@ -276,17 +357,13 @@ public class MessagingService {
     public void onSocketConnectedEvent(SessionConnectedEvent event) {
     	
         StompHeaderAccessor sha = StompHeaderAccessor.wrap(event.getMessage());
-        
         Principal principal = sha.getUser();
-        
         if(principal != null) {
             String principalUserId = sha.getUser().getName();
             logger.info("[Stomp over WebSocket Connected Event] {sessionId = " + sha.getSessionId() + ", principalUseId = " + principalUserId + "}");        	
         }else {
         	logger.warn("[Stomp over WebSocket Connected Event] principal user object is null");
         }
-        
-
         
     }
 
@@ -299,9 +376,7 @@ public class MessagingService {
     public void onSocketDisconnectedEvent(SessionDisconnectEvent event) {
     	
         StompHeaderAccessor sha = StompHeaderAccessor.wrap(event.getMessage());
-        
         Principal principal = sha.getUser();
-        
         if(principal != null) {
             String principalUserId = sha.getUser().getName();
             logger.info("[Stomp over WebSocket Disonnected Event] {sessionId = " + sha.getSessionId() + ", principalUseId = " + principalUserId + "}");
@@ -321,15 +396,13 @@ public class MessagingService {
     public void onSocketSubscribeEvent(SessionSubscribeEvent event) {
     	
         StompHeaderAccessor sha = StompHeaderAccessor.wrap(event.getMessage());
-        
         Principal principal = sha.getUser();
-        
         if(principal != null) {        
 	        String principalUserId = sha.getUser().getName();
 	        logger.info("[Stomp over WebSocket Subscribed Event] {sessionId = " + sha.getSessionId() + ", principalUseId = " + principalUserId + "}");
         }else {
         	logger.warn("[Stomp over WebSocket Subscribed Event] principal user object is null");
-        }        
+        }
         
     } 
     
@@ -342,16 +415,35 @@ public class MessagingService {
     public void onSocketSubscribeEvent(SessionUnsubscribeEvent event) {
     	
         StompHeaderAccessor sha = StompHeaderAccessor.wrap(event.getMessage());
-        
         Principal principal = sha.getUser();
-        
         if(principal != null) {        
 	        String principalUserId = sha.getUser().getName();
 	        logger.info("[Stomp over WebSocket Unsubscribed Event] {sessionId = " + sha.getSessionId() + ", principalUseId = " + principalUserId + "}");
         }else {
         	logger.warn("[Stomp over WebSocket Unsubscribed Event] principal user object is null");
-        }        
+        }
         
-    }	
+    }
+    
+    /**
+     * Log stomp headers
+     * 
+     * @param stompHeaders
+     */
+    private void logStompHeaders(StompHeaders stompHeaders) {
+    	
+		logger.info("StompHeaders:\n");
+		List<String> headerValueList = null;
+		Set<String> headerKeySet = stompHeaders.keySet();
+		for(String headerKey : headerKeySet) {
+			headerValueList = stompHeaders.get(headerKey);
+			StringJoiner sj = new StringJoiner(":", headerKey + " [", "]");
+			for(String headerValue : headerValueList) {
+				sj.add(headerValue);
+			}
+			logger.info(sj.toString());
+		}
+		
+    }
 
 }

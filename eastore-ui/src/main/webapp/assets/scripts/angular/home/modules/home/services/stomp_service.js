@@ -76,12 +76,15 @@
 			//var subscriptTest = _stompClient.subscribe('/topic/test', receiveTestMessages);
 	        
 			// subscribe to eastore resource change messages that are broadcasted to everyone 
-			var subscriptResourceChange = _stompClient.subscribe('/topic/resource/change', receiveResourceChangeMessages);		
+			var subscriptResourceChange = _stompClient.subscribe('/topic/resource/change', receiveResourceChangeMessages);
+			
+			// subscribe to eastore file service task status messages that are broadcasted to specific users
+			var subscriptFileServiceTaskStatus = _stompClient.subscribe('/user/topic/file/task', receiveFileSystemTaskStatusMessages);			
 			
 			// subscribe to socket connect messages that are broadcasted to everyone
 			var subscriptSocketConnect = _stompClient.subscribe('/topic/action/socket/connect', receiveSocketConnectReplyMessages);
 			
-			// subscribe to user specific hello messages. client will only receieve hello messages that are specifically sent to them
+			// subscribe to user specific hello messages. client will only receive hello messages that are specifically sent to them
 			var subscriptSocketConnect = _stompClient.subscribe('/user/topic/hello', receiveUserHello);
 		
 			//setInterval(sendConnectedMessage, 5000);
@@ -95,7 +98,7 @@
 		//
 		function sendConnectedMessage(){
 			
-			//$log.debug('Sending connected stomp mesage...');
+			//$log.debug('Sending connected stomp message...');
 			
 	        // send connect message to server and pass user id
 	        var connectMessage = {
@@ -169,6 +172,12 @@
             }
 			
 		}
+        
+        function receiveFileSystemTaskStatusMessages(socketMessage){
+        	
+        	$log.info('STOMP file service task status = ' + JSON.stringify(socketMessage));
+        	
+        }
 		
 		// *********************************
 		// External API

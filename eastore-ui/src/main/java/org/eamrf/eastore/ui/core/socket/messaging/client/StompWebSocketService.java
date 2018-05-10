@@ -68,8 +68,7 @@ public class StompWebSocketService {
 			stompClient = getStompClientWithScheduler();			
 		}
 		
-		ListenableFuture<StompSession> stompSessionFuture = stompClient.connect(
-				stompEndpoint.toString(), handler);
+		ListenableFuture<StompSession> stompSessionFuture = stompClient.connect(stompEndpoint.toString(), handler);
 		
 		StompSession stompSession;
 		try {
