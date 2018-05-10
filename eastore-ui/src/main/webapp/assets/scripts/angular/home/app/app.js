@@ -17,11 +17,12 @@
 	 * 
 	 * Third Party Modules:
 	 * 
-	 * ui.router ----- Routing frameworks, essentially more powerful version of built in ngRoute.
-	 * ngMaterial ---- Material design UI components
-	 * ngResource ---- Provides interaction support with RESTful services via the $resource service
-	 * ngSanitize ---- Sanitizes an html string by stripping all potentially dangerous tokens.
-	 * smart-table --- Lightweight table module
+	 * ui.router ------------ Routing frameworks, essentially more powerful version of built in ngRoute.
+	 * ngMaterial ----------- Material design UI components
+	 * ngResource ----------- Provides interaction support with RESTful services via the $resource service
+	 * ngSanitize ----------- Sanitizes an html string by stripping all potentially dangerous tokens.
+	 * smart-table ---------- Lightweight table module
+	 * growlNotifications --- Growl notifications (popup style messages)
 	 * 
 	 */
 	homeApp = angular
@@ -29,7 +30,7 @@
 				[
 				 'ui.router', 'ngMaterial', 'ngResource', 'ngSanitize', 
 				 'eastore-ui-main', 'eastore-ui-login', 'eastore-ui-util', 'ea-upload-module', 'ea-stomp-module', 
-				 'smart-table'
+				 'smart-table', 'growlNotifications'
 				 ])
 		// @xyz@ values are replaced/filtered by maven during build process
 		.constant('appConstants', {
@@ -289,6 +290,10 @@
 						}
 						return "";
 					},
+					
+					fileServiceTasks : function(sharedDataService){
+						return sharedDataService.fileServiceTasks();
+					}
 					
 					//,
 

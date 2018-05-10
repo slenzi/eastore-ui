@@ -147,4 +147,26 @@ highlight lucene search results with yellow background color and bold font
 	background-color:yellow;
 }
 
+/*
+ * Growl notifications
+ */
+growl-notifications {
+    position: fixed;
+    bottom: 5px;
+    right: 5px;
+    z-index: 1000;
+}
+growl-notifications growl-notification {
+    background: rgba(256,256, 256, 0.9);
+    padding: 15px 30px;
+    width: 300px;
+    display: block;
+    border-radius: 5px;
+    margin-top: 15px;
+    border: 1px solid #ccc;
+    border-left-width: 5px;
+    border-radius: 3px;
+    border-left-color: #f0ad4e;
+}
+
 

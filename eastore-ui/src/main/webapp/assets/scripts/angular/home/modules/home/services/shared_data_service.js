@@ -29,6 +29,10 @@
 		var _progressBarValue = 100; // only applicable if progress style is 'determinate'
 		var _progressBarEnabled = false;
 		
+		var fileServiceTasks = {}; 
+		//fileServiceTasks['-1'] = {  id: '-1', message: 'hello eastore!' };
+		//var fileServiceTasks = [];
+		
 		function _getUserId(){
 			return _userId;
 		}
@@ -82,7 +86,24 @@
 		function _setProgressBarEnabled(isEnabled){
 			$log.debug('Progress Bar Enabled = ' + isEnabled);
 			_progressBarEnabled = isEnabled;
-		}		
+		}
+		
+		// add and track a file service task received from websocket connection
+		function _addFileServiceTask(task){
+			$log.debug('tracking file service task ' + task.id);
+			fileServiceTasks[task.id] = task;
+			//fileServiceTasks.push(task);
+		}
+		
+		// remove and untrack a file service task
+		function _removeFileServiceTask(task){
+			$log.debug('untracking file service task ' + task.id);
+			delete fileServiceTasks[task.id];
+		}
+		
+		function _fileServiceTasks(){
+			return fileServiceTasks;
+		}
 		
 		// *********************************
 		// External API
@@ -109,7 +130,11 @@
 			isProgressBarEnabled : _isProgressBarEnabled,
 			setProgressBarStyle : _setProgressBarStyle,
 			setProgressBarValue : _setProgressBarValue,
-			setProgressBarEnabled : _setProgressBarEnabled
+			setProgressBarEnabled : _setProgressBarEnabled,
+			
+			addFileServiceTask : _addFileServiceTask,
+			removeFileServiceTask : _removeFileServiceTask,
+			fileServiceTasks : _fileServiceTasks
 			
 		};		
 		

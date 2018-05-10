@@ -13,7 +13,8 @@
 		bindings: {
 			leftnavid : '<',
 			haveUserInSession: '<',
-			userId: '<'
+			userId: '<',
+			fileServiceTasks: '<'
 			//,$transition$ : '<' // https://github.com/angular-ui/ui-router/issues/3110
 		},
 		
@@ -21,9 +22,21 @@
 			return appConstants.contextPath + '/assets/scripts/angular/home/modules/home/views/root.jsp'
 		},
 
-		controller : function(appConstants, $log, $mdSidenav, $mdUtil, $location, $state, sharedDataService){
+		controller : function(appConstants, $scope, $log, $mdSidenav, $mdUtil, $location, $state, sharedDataService){
 			
 			var thisCtrl = this;
+			
+			var fileServiceTasks = {};
+			
+			/*
+			$scope.$watch(
+				function(){
+					sharedDataService.fileServiceTasks();
+				},
+				function(newValue, OldValue){
+					$log.debug('shared data service file service task list has changed');
+				});
+			*/
 			
 			this.$onInit = function() {
 				
@@ -87,6 +100,11 @@
 				.then(function () {
 					//$log.debug("close MyLeftNav is done");
 				});
+			};
+			
+			// access all ongoing file service tasks
+			this.fileServiceTasksList = function(){
+				return sharedDataService.fileServiceTasks();
 			};
 					
 		},

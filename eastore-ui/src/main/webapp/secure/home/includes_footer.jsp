@@ -27,6 +27,8 @@ third party scripts
 <script type="text/javascript" src="<%=request.getContextPath()%>/assets/node_modules/jquery.cycle2/src/jquery.cycle2.min.js"></script>
 <!-- date library -->
 <script type="text/javascript" src="<%=request.getContextPath()%>/assets/node_modules/moment/min/moment.min.js"></script>
+<!-- growl notifications -->
+<script type="text/javascript" src="<%=request.getContextPath()%>/assets/node_modules/angular-growl-notifications/dist/angular-growl-notifications.min.js"></script>
 
 
 <!-- -------------------------------------------

@@ -74,6 +74,16 @@
 		
 		<md-content layout="column">
 		
+			<growl-notifications></growl-notifications>
+			
+		    <div ng-repeat="task in rootCtrl.fileServiceTasksList()">
+
+		        <growl-notification ttl="-1">
+		            {{task.message}}
+		        </growl-notification>
+
+		    </div>				
+		
 			<ui-view name="uicontent"></ui-view>
 		
 		</md-content>

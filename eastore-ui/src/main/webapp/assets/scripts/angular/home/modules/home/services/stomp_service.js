@@ -67,7 +67,7 @@
 		}
 		
 		function stompSocketDebug(str){
-	        $log.debug('STOMP Debug = ' + str);
+	        //$log.debug('STOMP Debug = ' + str);
 		}
 		
 		function myStompConnect(frame){
@@ -113,11 +113,11 @@
 		function myStompConnectError(error){
 			//$log.debug('_onStompConnectError...');
 	        //$log.debug(error.headers.message);                 
-	        $log.debug('STOMP Error = ' + JSON.stringify(error));
+	        $log.debug('STOMP error = ' + JSON.stringify(error));
 		}
 		
 		function receiveTestMessages(socketMessage){
-	        $log.info('STOMP Received = ' + JSON.stringify(socketMessage));
+	        $log.info('STOMP test message = ' + JSON.stringify(socketMessage));
 		}
 		
 		function receiveSocketConnectReplyMessages(socketMessage){
@@ -130,9 +130,10 @@
 		
         function receiveResourceChangeMessages(socketMessage){
 
-            $log.info('STOMP Resource Changed = ' + JSON.stringify(socketMessage));
+            //$log.info('STOMP resource changed = ' + JSON.stringify(socketMessage));
 
             var messageData = JSON.parse(socketMessage.body);
+			$log.info('STOMP resource changed = ' + JSON.stringify(messageData, null, 2));
             //$log.info('messageData = ' + JSON.stringify(messageData));
 
             //if($state && $stateParams && messageData && $stateParams.currDirResource){
@@ -175,7 +176,18 @@
         
         function receiveFileSystemTaskStatusMessages(socketMessage){
         	
-        	$log.info('STOMP file service task status = ' + JSON.stringify(socketMessage));
+        	//$log.info('STOMP file service task = ' + JSON.stringify(socketMessage));
+        	
+        	var task = JSON.parse(socketMessage.body);
+        	var progress = task.progress;
+			
+			$log.info('STOMP file service task = ' + JSON.stringify(task, null, 2));
+        	
+        	if(progress == '100'){
+        		sharedDataService.removeFileServiceTask(task);
+        	}else{
+        		sharedDataService.addFileServiceTask(task);
+        	}
         	
         }
 		

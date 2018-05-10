@@ -2,9 +2,15 @@
 	
 <md-content layout-padding layout="column" class= id="reportContent" style="padding: 0px;">
 
-<!-- moved to uiprogress view, with its own component
-<md-progress-linear md-mode="determinate" value="{{pathCtrl.getProgressValue()}}" style="padding: 0px;" ></md-progress-linear>
--->
+	<!-- moved to uiprogress view, with its own component
+	<md-progress-linear md-mode="determinate" value="{{pathCtrl.getProgressValue()}}" style="padding: 0px;" ></md-progress-linear>
+	-->
+	
+	<!--
+	<growl-notification>
+	  Hello world
+	</growl-notification>
+	-->
 	
 	<section layout="row" layout-sm="row" layout-align="left left" layout-wrap>
 	
