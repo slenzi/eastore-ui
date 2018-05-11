@@ -11,10 +11,10 @@
 	mainModule.component('rootComponent', {
 		
 		bindings: {
-			leftnavid : '<',
-			haveUserInSession: '<',
-			userId: '<',
-			fileServiceTasks: '<'
+			leftnavid : '<'
+			,haveUserInSession: '<'
+			,userId: '<'
+			//,fileServiceTasks: '<'
 			//,$transition$ : '<' // https://github.com/angular-ui/ui-router/issues/3110
 		},
 		
@@ -26,17 +26,15 @@
 			
 			var thisCtrl = this;
 			
-			var fileServiceTasks = {};
-			
-			/*
-			$scope.$watch(
-				function(){
-					sharedDataService.fileServiceTasks();
-				},
-				function(newValue, OldValue){
-					$log.debug('shared data service file service task list has changed');
-				});
-			*/
+			// store file service tasks in local scope, and watch for changes
+			thisCtrl.fileServiceTasksList = sharedDataService.fileServiceTasks();
+			function getTasks(){
+				return sharedDataService.fileServiceTasks();
+			}
+			$scope.$watch(getTasks, function (updatedFileServiceTasks) {
+				$log.debug('file service task list has changed!');
+				thisCtrl.fileServiceTasksList = updatedFileServiceTasks;
+			});
 			
 			this.$onInit = function() {
 				

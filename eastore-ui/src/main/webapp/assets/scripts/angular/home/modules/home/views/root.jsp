@@ -76,7 +76,7 @@
 		
 			<growl-notifications></growl-notifications>
 			
-		    <div ng-repeat="task in rootCtrl.fileServiceTasksList()">
+		    <div ng-repeat="task in rootCtrl.fileServiceTasksList">
 
 		        <growl-notification ttl="-1">
 		            {{task.message}}

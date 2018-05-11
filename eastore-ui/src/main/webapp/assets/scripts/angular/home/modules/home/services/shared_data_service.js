@@ -84,21 +84,28 @@
 			_progressBarValue = value;
 		}
 		function _setProgressBarEnabled(isEnabled){
-			$log.debug('Progress Bar Enabled = ' + isEnabled);
+			$log.debug('progress Bar Enabled = ' + isEnabled);
 			_progressBarEnabled = isEnabled;
 		}
 		
 		// add and track a file service task received from websocket connection
 		function _addFileServiceTask(task){
-			$log.debug('tracking file service task ' + task.id);
-			fileServiceTasks[task.id] = task;
-			//fileServiceTasks.push(task);
+			if(fileServiceTasks.hasOwnProperty(task.id)){
+				$log.debug('updating tracking data for file service task: ' + JSON.stringify(task, null, 2));
+				//var existingTask = fileServiceTasks[task.id];
+				//$log.debug('existing task: ' + JSON.stringify(existingTask, null, 2));
+				fileServiceTasks[task.id].progress = task.progress;
+				fileServiceTasks[task.id].message = task.message;
+			}else{
+				$log.debug('tracking new file service task: ' + JSON.stringify(task, null, 2));
+				fileServiceTasks[task.id] = task;				
+			}
 		}
 		
 		// remove and untrack a file service task
 		function _removeFileServiceTask(task){
-			$log.debug('untracking file service task ' + task.id);
-			delete fileServiceTasks[task.id];
+			$log.debug('untracking file service task: ' + JSON.stringify(task, null, 2));
+			delete fileServiceTasks[task.id]
 		}
 		
 		function _fileServiceTasks(){

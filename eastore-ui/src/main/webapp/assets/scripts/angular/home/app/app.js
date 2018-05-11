@@ -289,11 +289,12 @@
 							return homeRestService.getLoggedInUserId();
 						}
 						return "";
-					},
-					
-					fileServiceTasks : function(sharedDataService){
-						return sharedDataService.fileServiceTasks();
 					}
+					
+					//,
+					//fileServiceTasks : function(sharedDataService){
+					//	return sharedDataService.fileServiceTasks();
+					//}
 					
 					//,
 

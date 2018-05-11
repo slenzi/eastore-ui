@@ -133,7 +133,7 @@
             //$log.info('STOMP resource changed = ' + JSON.stringify(socketMessage));
 
             var messageData = JSON.parse(socketMessage.body);
-			$log.info('STOMP resource changed = ' + JSON.stringify(messageData, null, 2));
+			//$log.info('STOMP resource changed = ' + JSON.stringify(messageData, null, 2));
             //$log.info('messageData = ' + JSON.stringify(messageData));
 
             //if($state && $stateParams && messageData && $stateParams.currDirResource){
@@ -181,7 +181,7 @@
         	var task = JSON.parse(socketMessage.body);
         	var progress = task.progress;
 			
-			$log.info('STOMP file service task = ' + JSON.stringify(task, null, 2));
+			//$log.info('STOMP file service task = ' + JSON.stringify(task, null, 2));
         	
         	if(progress == '100'){
         		sharedDataService.removeFileServiceTask(task);
