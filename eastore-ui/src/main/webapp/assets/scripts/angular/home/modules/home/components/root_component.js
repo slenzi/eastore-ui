@@ -14,7 +14,7 @@
 			leftnavid : '<'
 			,haveUserInSession: '<'
 			,userId: '<'
-			//,fileServiceTasks: '<'
+			,fileServiceTasks: '<'
 			//,$transition$ : '<' // https://github.com/angular-ui/ui-router/issues/3110
 		},
 		
@@ -27,14 +27,17 @@
 			var thisCtrl = this;
 			
 			// store file service tasks in local scope, and watch for changes
-			thisCtrl.fileServiceTasksList = sharedDataService.fileServiceTasks();
+			//thisCtrl.fileServiceTasksList = sharedDataService.fileServiceTasks();
+			
+			/*
 			function getTasks(){
 				return sharedDataService.fileServiceTasks();
 			}
 			$scope.$watch(getTasks, function (updatedFileServiceTasks) {
-				$log.debug('file service task list has changed!');
+				$log.debug('********* file service task list has changed! ***********');
 				thisCtrl.fileServiceTasksList = updatedFileServiceTasks;
 			});
+			*/
 			
 			this.$onInit = function() {
 				

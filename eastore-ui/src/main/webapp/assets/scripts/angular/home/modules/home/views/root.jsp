@@ -76,9 +76,9 @@
 		
 			<growl-notifications></growl-notifications>
 			
-		    <div ng-repeat="task in rootCtrl.fileServiceTasksList">
+		    <div ng-repeat="task in rootCtrl.fileServiceTasks track by $index">
 
-		        <growl-notification ttl="-1">
+		        <growl-notification ttl="-1" ng-if="task.progress != '100'">
 		            {{task.message}}
 		        </growl-notification>
 

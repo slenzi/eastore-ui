@@ -114,12 +114,11 @@
 		controller : function($log, $scope, $mdDialog, $state, $stateParams, sharedDataService, homeRestService, resolveService, resourceClipboardService, stompService){
 			
 			var thisCtrl = this;
-			
 			var progressValue = 0;
 			
 			// load current working store and directory into shared data service
 			// resolve first-level path resources for current working directory
-			// initialize stomp messagin service
+			// initialize stomp messaging service
 			this.$onInit = function() {
 				
 				$log.debug('pathContentComponent controller initialized');
@@ -132,8 +131,78 @@
 				// resolve first-level path resources for the current working directory
 				thisCtrl.resolvePathResources();
 				
-				// initialize stomp messaging web socket connection
-				stompService.initializeStompMessaging();
+				thisCtrl.initStompMessaging();
+
+			};
+			
+			//
+			// initialize stomp messaging web socket connection
+			//
+			this.initStompMessaging = function(){
+				
+				stompService.subscribe([{				
+						destination : '/topic/resource/change',
+						frameHandler : thisCtrl.stompHandlerResourceChangeMessage
+					},{				
+						destination : '/topic/action/socket/connect',
+						frameHandler : thisCtrl.stompHandlerConnectReplyMessages
+					},{				
+						destination : '/user/topic/file/task',
+						frameHandler : thisCtrl.stompHandlerFileSystemTaskMessage
+					}]);	
+				
+			};
+			
+			//
+			// process stomp connect reply messages from eastore
+			//
+			this.stompHandlerConnectReplyMessages = function(socketMessage){
+				$log.info('STOMP socket connect reply = ' + JSON.stringify(socketMessage));				
+			};
+			
+			//
+			// process stomp file system task status messages from eastore
+			//
+			this.stompHandlerFileSystemTaskMessage = function(socketMessage){
+				
+				//$log.info('STOMP file service task = ' + JSON.stringify(socketMessage));
+				
+				var task = JSON.parse(socketMessage.body);
+				var progress = task.progress;
+				
+				//$log.info('STOMP file service task = ' + JSON.stringify(task, null, 2));
+				
+				//if(progress == '100'){
+				//	sharedDataService.removeFileServiceTask(task);
+				//}else{
+				sharedDataService.addFileServiceTask(task);
+				//}
+
+				setTimeout(function(){
+					$scope.$apply();
+				},500);				
+				
+			};
+			
+			//
+			// process stomp resource change messages from eastore file service
+			//
+			this.stompHandlerResourceChangeMessage = function(socketMessage){
+				
+				//$log.info('STOMP resource changed = ' + JSON.stringify(socketMessage));
+				
+				var messageData = JSON.parse(socketMessage.body);
+				var messageCode = messageData.code;
+				var messageNodeId = messageData.nodeId;
+				var currStore = sharedDataService.getStore();
+				var currDir = sharedDataService.getDirectory();
+				var currDirId = currDir.nodeId;
+				
+				if($state.current.name === 'path' && messageCode == 'DIRECTORY_CONTENTS_CHANGED' && currDirId === messageNodeId){
+					resolveService.resolvePathResourcesForDirectory(currStore, currDir).then(function (data){
+						sharedDataService.setPathResources(data);
+					});
+				}
 				
 			};
 

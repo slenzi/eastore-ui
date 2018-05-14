@@ -15,34 +15,34 @@
 		
 		var _isInitialized = false;
 		
+		var _stompSubscriptions;
+		
+		/*
 		function initializeStompMessaging(){
 			
 			if(!_isInitialized){
 				
 				$log.debug('Initializing Stomp messaging');
 				
-				/*
-				const clientOptions = {};
-				
-				Object.defineProperty(clientOptions, 'sockJsUrl', {
-					value : appConstants.eastoreStompSockJsUrl,
-					writable : false
-				});
-				Object.defineProperty(clientOptions, 'stompHeaders', {
-					value : 'How Now Brown Cow!',
-					writable : false
-				});
-				Object.defineProperty(clientOptions, 'sessionId', {
-				    get: function() {
-				    	var newSessionId = 'fubar_' + (Math.random() + 1).toString(36).substring(10);
-				    	$log.debug('SockJs Session id = ' + newSessionId);
-				        return newSessionId;
-				    },
-				    enumerable: true
-				});				
-				
-				_stompClient = new EAStomp(clientOptions);
-				*/
+				//const clientOptions = {};
+				//Object.defineProperty(clientOptions, 'sockJsUrl', {
+				//	value : appConstants.eastoreStompSockJsUrl,
+				//	writable : false
+				//});
+				//Object.defineProperty(clientOptions, 'stompHeaders', {
+				//	value : 'How Now Brown Cow!',
+				//	writable : false
+				//});
+				//Object.defineProperty(clientOptions, 'sessionId', {
+				//    get: function() {
+				//    	var newSessionId = 'fubar_' + (Math.random() + 1).toString(36).substring(10);
+				//    	$log.debug('SockJs Session id = ' + newSessionId);
+				//        return newSessionId;
+				//    },
+				//    enumerable: true
+				//});				
+				//_stompClient = new EAStomp(clientOptions);
+
 				
 				_stompClient = new EAStomp({
 	                sockJsUrl: appConstants.eastoreStompSockJsUrl,
@@ -62,14 +62,109 @@
 				_stompClient.setDebug(stompSocketDebug);
 				_stompClient.connect(myStompConnect, myStompConnectError);
 				_isInitialized = true;
+				
 			}			
 			
 		}
+		*/
 		
+		function _subscribe(subscriptions){
+			
+			_initClient(subscriptions);
+			
+		}
+		
+		function _initClient(subscriptions){
+			
+			if(_isInitialized){
+				return _stompClient;
+			}
+			
+			$log.debug('initializing stomp messaging service');
+			
+			_stompSubscriptions = subscriptions;
+			
+			_stompClient = new EAStomp({
+				sockJsUrl: appConstants.eastoreStompSockJsUrl,
+				sockJsOptions : {
+					// currently not being utilized, angular.extend function inside estomp module is not able to copy this function
+					sessionId : function(){
+						var newSessionId = 'fubar_' + (Math.random() + 1).toString(36).substring(10);
+						$log.debug('SockJs Session id = ' + newSessionId);
+						return newSessionId;
+					}
+				},
+				stompHeaders: {
+					userId: sharedDataService.getUserId()
+				}
+			});
+			
+			_stompClient.setDebug(_handleStompDebug);
+			_stompClient.connect(_handleStompConnect, _handleStompConnectError);
+			_isInitialized = true;
+			
+			return _stompClient;
+			
+		}
+		
+		function _handleStompDebug(str){
+	        //$log.debug('STOMP Debug = ' + str);
+		}		
+		
+		function _handleStompConnect(frame){
+			
+			//$log.debug('sending user connected stomp message');
+			_stompClient.subscribe('/user/topic/hello', receiveUserHello);
+			_sendConnectedMessage();
+			
+			_stompSubscriptions.forEach(function(sub){
+				$log.debug('subscribing to destination => ' + sub.destination);
+				_stompClient.subscribe(sub.destination, sub.frameHandler);
+			});
+			
+		}
+		
+		function _handleStompConnectError(error){
+	        $log.debug('STOMP error = ' + JSON.stringify(error));
+		}
+
+		function _sendConnectedMessage(){
+			
+	        // send connect message to server and pass user id
+	        var connectMessage = {
+	        	userId: sharedDataService.getUserId()
+	        };
+	        var jsonString = JSON.stringify(connectMessage);
+	        $log.debug("Sending => " + jsonString);
+	        _stompClient.send("/app/action/socket/connect", {}, jsonString);			
+			
+		}
+		
+		function receiveUserHello(socketMessage){
+			$log.info('STOMP user hello = ' + JSON.stringify(socketMessage));
+		}			
+		
+		/*
+		function _subscribe(destination, messageHandlerCallback){
+			
+			var _client = _getClient();
+			
+			_client.connect(function(sessionId){
+					 _client.subscribe(destination, messageHandlerCallback);
+				},
+				_handleStompConnectError
+			);
+			
+		}
+		*/	
+		
+		/*
 		function stompSocketDebug(str){
 	        //$log.debug('STOMP Debug = ' + str);
 		}
+		*/
 		
+		/*
 		function myStompConnect(frame){
 	    
 			// only eastore has a /topic/test subscription, not eastore-ui
@@ -92,10 +187,12 @@
 			sendConnectedMessage();
 			
 		}
+		*/
 		
 		//
 		// send message to server that client is connected, passing the user id
 		//
+		/*
 		function sendConnectedMessage(){
 			
 			//$log.debug('Sending connected stomp message...');
@@ -109,25 +206,29 @@
 	        _stompClient.send("/app/action/socket/connect", {}, jsonString);			
 			
 		}
+		*/
 		
+		/*
 		function myStompConnectError(error){
 			//$log.debug('_onStompConnectError...');
 	        //$log.debug(error.headers.message);                 
 	        $log.debug('STOMP error = ' + JSON.stringify(error));
 		}
+		*/
 		
+		/*
 		function receiveTestMessages(socketMessage){
 	        $log.info('STOMP test message = ' + JSON.stringify(socketMessage));
 		}
+		*/
 		
+		/*
 		function receiveSocketConnectReplyMessages(socketMessage){
 			$log.info('STOMP socket connect reply = ' + JSON.stringify(socketMessage));
 		}
+		*/
 		
-		function receiveUserHello(socketMessage){
-			$log.info('STOMP user hello = ' + JSON.stringify(socketMessage));
-		}		
-		
+		/*
         function receiveResourceChangeMessages(socketMessage){
 
             //$log.info('STOMP resource changed = ' + JSON.stringify(socketMessage));
@@ -173,7 +274,9 @@
             }
 			
 		}
+		*/
         
+		/*
         function receiveFileSystemTaskStatusMessages(socketMessage){
         	
         	//$log.info('STOMP file service task = ' + JSON.stringify(socketMessage));
@@ -190,13 +293,19 @@
         	}
         	
         }
+		*/
 		
 		// *********************************
 		// External API
 		// *********************************
 		return {
 			
-			initializeStompMessaging : initializeStompMessaging
+			//initializeStompMessaging : initializeStompMessaging,
+			//getClient : _getClient
+			
+			subscribe : _subscribe
+			
+			//subscribe : _subscribe
 			
 		};		
 		
