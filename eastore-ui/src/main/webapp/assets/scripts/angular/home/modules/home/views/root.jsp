@@ -79,6 +79,7 @@
 		    <div ng-repeat="task in rootCtrl.fileServiceTasks track by $index">
 
 		        <growl-notification ttl="-1" ng-if="task.progress != '100'">
+		        	<md-progress-linear md-mode="determinate" value="{{task.progress}}"></md-progress-linear>
 		            {{task.message}}
 		        </growl-notification>
 
