@@ -304,7 +304,7 @@ public class UIActionResource extends BaseResourceHandler {
 			throw new WebServiceException(WebExceptionType.CODE_IO_ERROR, e.getMessage(), e);
 		}
 		
-		return writeFileToResponse(fresp.getInput(), fresp.getName());
+		return writeFileToResponse(fresp);
 		
 	}
 	
@@ -315,7 +315,7 @@ public class UIActionResource extends BaseResourceHandler {
 	 * @param fileName
 	 * @return
 	 */
-	private Response writeFileToResponse(InputStream input, String fileName) {
+	private Response writeFileToResponse(FileResponse fresp) {
 		
 		//
 		// Write data to output/response
@@ -325,6 +325,10 @@ public class UIActionResource extends BaseResourceHandler {
 		//ContentDisposition contentDisposition = ContentDisposition.type("attachment")
 		//	    .fileName("filename.csv").creationDate(new Date()).build();
 		//ContentDisposition contentDisposition = new ContentDisposition("attachment; filename=image.jpg");
+		
+		String fileName = fresp.getName();
+		String contentType = fresp.getContentType();
+		InputStream input = fresp.getInput();
 		
 		return Response.ok(
 			new StreamingOutput() {
@@ -341,7 +345,10 @@ public class UIActionResource extends BaseResourceHandler {
 					input.close();
 				}
 			}
-		).header("Content-Disposition", "attachment; filename=" + fileName).build();		
+		)
+		.header("Content-Disposition", "attachment; filename=\"" + fileName + "\"")
+		.header("Content-Type", contentType)
+		.build();		
 		
 	}
 	
