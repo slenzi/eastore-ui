@@ -330,6 +330,8 @@ public class UIActionResource extends BaseResourceHandler {
 		String contentType = fresp.getContentType();
 		InputStream input = fresp.getInput();
 		
+		logger.info("Writing file to response, fileName = " + fileName + ", contentType = " + contentType);
+		
 		return Response.ok(
 			new StreamingOutput() {
 				@Override
