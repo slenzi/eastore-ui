@@ -22,7 +22,7 @@
 		<label class="md-raised md-button" md-ink-ripple ng-click="uploadCtrl.uploader.clearQueue()" ng-disabled="uploadCtrl.uploader.isQueueEmpty()">
 			<span>Clear Files</span>
 		</label>
-		<label class="md-raised md-button" md-ink-ripple ng-click="uploadCtrl.startUpload(uploadCtrl.uploader, uploadCtrl.store, uploadCtrl.directory)" ng-disabled="uploadCtrl.uploader.isQueueEmpty()">
+		<label class="md-raised md-button" md-ink-ripple ng-click="uploadCtrl.startUpload($event, uploadCtrl.uploader, uploadCtrl.store, uploadCtrl.directory)" ng-disabled="uploadCtrl.uploader.isQueueEmpty()">
 			<span>Start Upload</span>
 		</label>		
 	</section>

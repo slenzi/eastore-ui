@@ -63,7 +63,7 @@
 			
 			//$log.debug(JSON.stringify($stateParams));
 			
-			this.startUpload = function(uploader, store, directoryResource){
+			this.startUpload = function(event, uploader, store, directoryResource){
 				
 				//$log.debug('store = ' + store.name + ', directory = ' + directoryResource.relativePath);
 				
