@@ -3,7 +3,7 @@
  */
 package org.eamrf.eastore.ui.core.socket.messaging.server;
 
-import org.eamrf.eastore.ui.core.socket.messaging.model.FileServiceTaskStatus;
+import org.eamrf.eastore.ui.core.socket.messaging.model.FileServiceTaskMessage;
 
 import org.springframework.stereotype.Service;
 
@@ -26,7 +26,7 @@ public class FileServiceTaskBroadcastService extends AbstractBroadcastService {
 	 * 
 	 * @param message
 	 */
-	public void broadcast(FileServiceTaskStatus message) {
+	public void broadcast(FileServiceTaskMessage message) {
 		convertAndSend(messageDestination, message);		
 	}
 	
@@ -36,7 +36,7 @@ public class FileServiceTaskBroadcastService extends AbstractBroadcastService {
 	 * @param message
 	 * @param principalUserId
 	 */
-	public void broadcastToUser(FileServiceTaskStatus message, String user) {
+	public void broadcastToUser(FileServiceTaskMessage message, String user) {
 		convertAndSendToUser(messageDestination, message, user);		
 	}	
 

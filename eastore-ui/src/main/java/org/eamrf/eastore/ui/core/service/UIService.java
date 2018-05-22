@@ -246,7 +246,7 @@ public class UIService {
     }
     
     /**
-     * Calls E-A Store action service, downloadFile(...) method
+     * Calls E-A Store action service, /fsys/action/download/userId/{userId}/id/{fileId}
      * 
      * @param fileNodeId - node id of the file meta resource to download
      * @return
@@ -462,5 +462,33 @@ public class UIService {
 		return searchService.runBasicContentSearch(storeId, searchTerm);
 		
 	}
+	
+	/**
+	 * Trigger process for zip-download
+	 * 
+	 * @param resourceIds - IDs of all resources (file meta and directory) to zip for download
+	 * @return
+	 * @throws ServiceException
+	 */
+	public String triggerZipDownload(List<Long> resourceIds) throws ServiceException {
+		
+		return storeService.triggerZipDownload(resourceIds);
+		
+	}
+	
+    /**
+     * Download resource logged in download table
+     * 
+     * Calls E-A Store action service, /fsys/action/download/downloadId/{downloadId}/userId/{userId}
+     * 
+     * @param downloadId - unique download id
+     * @return
+     * @throws ServiceException
+     */
+    public FileResponse getDownload(Long downloadId) throws ServiceException {
+    	
+    	return storeService.getDownload(downloadId);
+    	
+    }	
 
 }

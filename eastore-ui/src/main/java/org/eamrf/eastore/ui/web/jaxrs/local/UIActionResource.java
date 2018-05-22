@@ -23,6 +23,7 @@ import org.apache.cxf.jaxrs.ext.multipart.ContentDisposition;
 import org.apache.cxf.jaxrs.ext.multipart.MultipartBody;
 import org.eamrf.core.exception.ServiceException;
 import org.eamrf.core.logging.stereotype.InjectLogger;
+import org.eamrf.core.util.CollectionUtil;
 import org.eamrf.core.util.StringUtil;
 import org.eamrf.eastore.client.model.file.FileResponse;
 import org.eamrf.eastore.ui.core.aop.profiler.MethodTimer;
@@ -663,7 +664,75 @@ public class UIActionResource extends BaseResourceHandler {
 		
 		return Response.ok(jsonResponse, MediaType.APPLICATION_JSON).build();
     	
-    }    
+    }
+    
+    /**
+	 * Trigger zip download process. This is an asynchronous task, and clients should subscribe to
+	 * the eastore websocket stomp endpoints to be notified when the zip file has been created and is
+	 * ready for download.
+     * 
+     * @param resourceIds - IDs of all resources (file meta and directory) to zip for download
+     * @return
+     * @throws WebServiceException
+     */
+    @POST
+    @Path("/trigger/zip")
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response triggerZipDownload(
+    		@QueryParam("resourceId") List<Long> resourceIds) throws WebServiceException {
+    	
+    	//
+    	// TODO - should pass list of resource IDs in body of POST rather than the URL
+    	// especially because the list of resource IDS could be too long (reach max URL lenght)
+    	//
+    	
+    	if(CollectionUtil.isEmpty(resourceIds)) {
+    		handleError("Missing list of resourceIds, need at least one ID of resource to zip.", WebExceptionType.CODE_IO_ERROR);    		
+    	}
+    	
+    	String jsonResponse = null;
+    	try {
+	    	jsonResponse = uiService.triggerZipDownload(resourceIds);
+		} catch (ServiceException e) {
+			logger.error(e.getMessage(), e);
+			throw new WebServiceException(WebExceptionType.CODE_IO_ERROR, e.getMessage(), e);
+		}
+		
+		return Response.ok(jsonResponse, MediaType.APPLICATION_JSON).build();    	
+    	
+    }
+   
+    /**
+     * Download resource logged in download table
+     * 
+     * @param downloadId - unique download id
+     * @return
+     * @throws WebServiceException
+     */
+	@GET
+	@Path("/download/downloadId/{downloadId}")
+	@Produces(MediaType.APPLICATION_OCTET_STREAM)
+	public Response getDownload(
+			 @PathParam("downloadId") Long downloadId) throws WebServiceException {
+	
+		
+		logger.info(UIJsonResource.class.getSimpleName() + " getDownload(...) called");
+		
+		FileResponse fresp = null;
+		try {
+			fresp = uiService.getDownload(downloadId);
+		} catch (ServiceException e) {
+			if(fresp != null && fresp.hasInputStream()){
+				fresp.close();
+			}
+			logger.error(e.getMessage(), e);
+			throw new WebServiceException(WebExceptionType.CODE_IO_ERROR, e.getMessage(), e);
+		}
+		
+		return writeFileToResponse(fresp);		
+		
+		
+	}
 
 	@Override
 	public Logger getLogger() {

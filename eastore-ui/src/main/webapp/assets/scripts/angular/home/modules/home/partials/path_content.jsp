@@ -18,7 +18,7 @@
 			<md-button aria-label="Open Menu" class="md-icon-button" ng-click="pathCtrl.openMenu($mdMenu, $event)">
 				<md-icon md-menu-origin md-svg-icon="<%=request.getContextPath()%>/secure/home/assets/img/icons/ic_menu_24px.svg"></md-icon>
 			</md-button>
-			<md-menu-content width="4" style="min-height: 430px;">
+			<md-menu-content width="4" style="min-height: 475px;">
 				
 				<md-menu-item>
 					<md-button ng-click="pathCtrl.loadStateUploadForm(pathCtrl.store, pathCtrl.directory)">
@@ -32,7 +32,14 @@
 						<md-icon md-svg-icon="<%=request.getContextPath()%>/secure/home/assets/img/icons/ic_add_24px.svg" md-menu-align-target></md-icon>
 						Add Directory
 					</md-button>
-				</md-menu-item>	
+				</md-menu-item>
+				
+				<md-menu-item>
+					<md-button ng-click="pathCtrl.downloadSelectedResources(pathCtrl.store, pathCtrl.directory, pathCtrl.getPathResources())" ng-disabled="!pathCtrl.haveSelectedPathResource(pathCtrl.getPathResources())">
+						<md-icon md-svg-icon="<%=request.getContextPath()%>/secure/home/assets/img/icons/ic_file_download_24px.svg" md-menu-align-target></md-icon>
+						Download
+					</md-button>
+				</md-menu-item>				
 				
 				<md-menu-divider></md-menu-divider>
 					
@@ -51,7 +58,7 @@
 				</md-menu-item>
 
 				<md-menu-item>
-					<md-button ng-click="pathCtrl.pasteItemsFromClipboard(pathCtrl.store, pathCtrl.directory)" ng-disabled="!pathCtrl.haveResourcesOnClipboard()"">
+					<md-button ng-click="pathCtrl.pasteItemsFromClipboard(pathCtrl.store, pathCtrl.directory)" ng-disabled="!pathCtrl.haveResourcesOnClipboard()">
 						<md-icon md-svg-icon="<%=request.getContextPath()%>/secure/home/assets/img/icons/ic_content_paste_24px.svg" md-menu-align-target></md-icon>
 						Paste
 					</md-button>
@@ -69,7 +76,7 @@
 				<md-menu-divider></md-menu-divider>
 				
 				<md-menu-item>
-					<md-button ng-click="pathCtrl.selectAllPathResource(pathCtrl.getPathResources())" >
+					<md-button ng-click="pathCtrl.selectAllPathResource(pathCtrl.getPathResources())">
 						<md-icon md-svg-icon="<%=request.getContextPath()%>/secure/home/assets/img/icons/ic_select_all_24px.svg" md-menu-align-target></md-icon>
 						Select All
 					</md-button>

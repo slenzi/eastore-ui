@@ -21,11 +21,13 @@ import org.eamrf.core.logging.stereotype.InjectLogger;
 import org.eamrf.eastore.ui.core.properties.ManagedProperties;
 import org.eamrf.eastore.ui.core.socket.messaging.client.GenericStompSessionHandler;
 import org.eamrf.eastore.ui.core.socket.messaging.client.StompWebSocketService;
-import org.eamrf.eastore.ui.core.socket.messaging.model.FileServiceTaskStatus;
+import org.eamrf.eastore.ui.core.socket.messaging.model.FileServiceTaskMessage;
 import org.eamrf.eastore.ui.core.socket.messaging.model.ResourceChangeMessage;
+import org.eamrf.eastore.ui.core.socket.messaging.model.UserActionStatusMessage;
 import org.eamrf.eastore.ui.core.socket.messaging.server.FileServiceTaskBroadcastService;
 import org.eamrf.eastore.ui.core.socket.messaging.server.HelloMessageService;
 import org.eamrf.eastore.ui.core.socket.messaging.server.ResourceChangeBroadcastService;
+import org.eamrf.eastore.ui.core.socket.messaging.server.UserActionBroadcastService;
 import org.eamrf.eastore.ui.core.socket.messaging.util.StompSessionTracker;
 import org.slf4j.Logger;
 import org.slf4j.Marker;
@@ -72,6 +74,9 @@ public class MessagingService {
     private FileServiceTaskBroadcastService fileServiceTaskBroadcaster;
     
     @Autowired
+    private UserActionBroadcastService userActionBroadcaster;
+    
+    @Autowired
     private HelloMessageService helloMessageService;
     
     private final Marker websocketMarker = MarkerFactory.getMarker("[WebSocket]");
@@ -91,6 +96,11 @@ public class MessagingService {
 	// org.eamrf.eastore.core.socket.messaging.FileServiceTaskMessageService	
 	private final String EA_STORE_FILE_SERVICE_TASK_STOMP_SUBSCRIPTION = "/topic/file/task";
 	
+	// Subscription to EA Store 'user action' messages
+	// @see eastore codebase:
+	// org.eamrf.eastore.core.socket.messaging.UserActionMessageService	
+	private final String EA_STORE_USER_ACTION_STOMP_SUBSCRIPTION = "/topic/action";	
+	
 	// handler which receives incoming resource change messages from eastore, then re-broadcasts them
 	// over the eastore-ui stomp websocket using ResourceChangeBroadcastService
 	private GenericStompSessionHandler<ResourceChangeMessage> eaStoreResourceChangeSessionHandler = new GenericStompSessionHandler<ResourceChangeMessage>(
@@ -98,31 +108,48 @@ public class MessagingService {
 			ResourceChangeMessage.class,
 			(stompHeaders, message) -> {
 				logger.info(websocketMarker, "Received resource change message from eastore:");		
-				logStompHeaders(stompHeaders);
-				logger.info("Message =\n" + message.toString());
-				resourceChangeBroadcaster.broadcast(message);
+				//logStompHeaders(stompHeaders);
+				logger.info(message.toString());
+				broadcastResourceChangeMessage(message);
 			},
 			(stompSession, throwable) -> {
-				logger.info(websocketMarker, "Session {} was lost, {}", stompSession.getSessionId(), throwable.getMessage(), throwable);
-				logger.info("Attempting to re-establish stomp websocket connection to EA-Store service for monitoring resource change messages.");
+				//logger.info(websocketMarker, "Session {} was lost, {}", stompSession.getSessionId(), throwable.getMessage(), throwable);
+				//logger.info("Attempting to re-establish stomp websocket connection to EA-Store service for monitoring resource change messages.");
 				initEaStoreResourceChangeConnection();
 			});
 	
 	// handler which receives incoming file service task status messages from eastore, then re-broadcasts them
 	// over the eastore-ui stomp websocket using FileServiceTaskBroadcastService
-	private GenericStompSessionHandler<FileServiceTaskStatus> eaStoreFileServiceTaskSessionHandler = new GenericStompSessionHandler<FileServiceTaskStatus>(
+	private GenericStompSessionHandler<FileServiceTaskMessage> eaStoreFileServiceTaskSessionHandler = new GenericStompSessionHandler<FileServiceTaskMessage>(
 			EA_STORE_FILE_SERVICE_TASK_STOMP_SUBSCRIPTION,
-			FileServiceTaskStatus.class,
+			FileServiceTaskMessage.class,
 			(stompHeaders, message) -> {
 				logger.info(websocketMarker, "Received file service task status message from eastore:");		
-				logStompHeaders(stompHeaders);
-				logger.info("Message =\n" + message.toString());
+				//logStompHeaders(stompHeaders);
+				logger.info(message.toString());
 				broadcastFileServiceTaskStatusMessage(message);
 			},
 			(stompSession, throwable) -> {
-				logger.info(websocketMarker, "Session {} was lost, {}", stompSession.getSessionId(), throwable.getMessage(), throwable);
-				logger.info("Attempting to re-establish stomp websocket connection to EA-Store service for monitoring file service task status messages.");
+				//logger.info(websocketMarker, "Session {} was lost, {}", stompSession.getSessionId(), throwable.getMessage(), throwable);
+				//logger.info("Attempting to re-establish stomp websocket connection to EA-Store service for monitoring file service task status messages.");
 				initEaStoreFileServiceTaskConnection();
+			});
+	
+	// handler which receives incoming user action status messages from eastore, then re-broadcasts them
+	// over the eastore-ui stomp websocket using UserActionBroadcastService
+	private GenericStompSessionHandler<UserActionStatusMessage> eaStoreUserActionSessionHandler = new GenericStompSessionHandler<UserActionStatusMessage>(
+			EA_STORE_USER_ACTION_STOMP_SUBSCRIPTION,
+			UserActionStatusMessage.class,
+			(stompHeaders, message) -> {
+				logger.info(websocketMarker, "Received user action status message from eastore:");		
+				//logStompHeaders(stompHeaders);
+				logger.info(message.toString());
+				broadcastUserActionStatusMessage(message);
+			},
+			(stompSession, throwable) -> {
+				//logger.info(websocketMarker, "Session {} was lost, {}", stompSession.getSessionId(), throwable.getMessage(), throwable);
+				//logger.info("Attempting to re-establish stomp websocket connection to EA-Store service for monitoring file service task status messages.");
+				initEaStoreUserActionConnection();
 			});	
 	
 	public MessagingService() {
@@ -142,6 +169,7 @@ public class MessagingService {
 		
 		initEaStoreResourceChangeConnection();
 		initEaStoreFileServiceTaskConnection();
+		initEaStoreUserActionConnection();
 		sendHelloToClients();
 		
 	}	
@@ -200,6 +228,7 @@ public class MessagingService {
 		
 		executorService.execute(new Runnable() {
 		    public void run() {
+				@SuppressWarnings("unused")
 				StompSession stompSession = null;
 				try {
 					stompSession = retryer.call(connectCallable);
@@ -253,6 +282,61 @@ public class MessagingService {
 		
 		executorService.execute(new Runnable() {
 		    public void run() {
+				@SuppressWarnings("unused")
+				StompSession stompSession = null;
+				try {
+					stompSession = retryer.call(connectCallable);
+				} catch (RetryException e) {
+				    e.printStackTrace();
+				} catch (ExecutionException e) {
+				    e.printStackTrace();
+				}
+		    }
+		});		
+		
+	}
+	
+	/**
+	 * Create web socket connection to EA-Store and subscribe to user action status messages
+	 * 
+	 * If a connection to EA-Store cannot be made then it will continue to retry until successful.
+	 * Once a connection has been made all incoming user action status messages will be re-broadcasted
+	 * via the EA-Store-UI websocket endpoint.
+	 */
+	private void initEaStoreUserActionConnection() {
+		
+		logger.info(websocketMarker, "Initializing EA-Store stomp websocket connection for user action status messages...");
+		
+		Callable<StompSession> connectCallable = new Callable<StompSession>() {
+		    public StompSession call() throws Exception {
+		    	StompSession stompSession = null;
+		    	try {
+		    		stompSession = stompSocketService.connect(getEaStoreEndpoint(), eaStoreUserActionSessionHandler);
+				} catch (ServiceException e) {
+					logger.error(websocketMarker, "Failed to connect to eastore and subscribe to user action "
+							+ "status messages, " + e.getMessage());
+					return null;
+				}
+		    	return stompSession;
+		    }
+		};
+		
+		Retryer<StompSession> retryer = RetryerBuilder.<StompSession>newBuilder()
+				.retryIfResult(Predicates.<StompSession>isNull())
+		        .retryIfResult(stompSession -> {
+		        	if(!stompSession.isConnected()) {
+		        		logger.info(websocketMarker, "Stomp session for eastore user action ststus messages is not connected. Retrying again...");
+		        		return true;
+		        	}
+		        	return false;
+		        })
+		        .withWaitStrategy(WaitStrategies.fixedWait(30, TimeUnit.SECONDS))
+		        .withStopStrategy(StopStrategies.neverStop())
+		        .build();
+		
+		executorService.execute(new Runnable() {
+		    public void run() {
+				@SuppressWarnings("unused")
 				StompSession stompSession = null;
 				try {
 					stompSession = retryer.call(connectCallable);
@@ -283,7 +367,7 @@ public class MessagingService {
 		    	}
 		    }
 		};
-		scheduledExecutorService.scheduleAtFixedRate(helloMessageRunnable, 0, 30, TimeUnit.SECONDS);
+		scheduledExecutorService.scheduleAtFixedRate(helloMessageRunnable, 0, 10, TimeUnit.SECONDS);
 		
 	}
 	
@@ -307,18 +391,47 @@ public class MessagingService {
 	}
 	
 	/**
+	 * Broadcast resource change message to all subscribers.
+	 * 
+	 * @param message
+	 */
+	private void broadcastResourceChangeMessage(ResourceChangeMessage message) {
+
+		resourceChangeBroadcaster.broadcast(message);
+
+	}
+	
+	/**
 	 * Broadcast the file service task status message. The status will only be sent to the user that initiated the task.
 	 * 
 	 * @param taskStatus
 	 */
-	private void broadcastFileServiceTaskStatusMessage(FileServiceTaskStatus taskStatus) {
+	private void broadcastFileServiceTaskStatusMessage(FileServiceTaskMessage message) {
 		
-		String userId = taskStatus.getUserId();
+		String userId = message.getUserId();
 		
+		// only broadcast to specific user
 		Set<String> principalUserIdSet = stompSessionTracker.getPrincipalUserIdsForUser(userId);
 		for(String principalId : principalUserIdSet) {
-			fileServiceTaskBroadcaster.broadcastToUser(taskStatus, principalId);
+			fileServiceTaskBroadcaster.broadcastToUser(message, principalId);
 		}
+		
+	}
+	
+	/**
+	 * Broadcast the user action status message. The status will only be sent to the user that initiated the action.
+	 * 
+	 * @param message
+	 */
+	private void broadcastUserActionStatusMessage(UserActionStatusMessage message) {
+		
+		String userId = message.getUserId();
+		
+		// only broadcast to specific user
+		Set<String> principalUserIdSet = stompSessionTracker.getPrincipalUserIdsForUser(userId);
+		for(String principalId : principalUserIdSet) {
+			userActionBroadcaster.broadcastToUser(message, principalId);
+		}		
 		
 	}
 	

@@ -3,6 +3,9 @@
  */
 package org.eamrf.eastore.ui.core.service;
 
+import java.util.List;
+import java.util.StringJoiner;
+
 import javax.activation.DataHandler;
 
 import org.eamrf.core.exception.ServiceException;
@@ -338,6 +341,35 @@ public class StoreService {
 	}
 	
 	/**
+	 * Download resource logged in download table
+	 * 
+	 * Calls E-A Store action service, /fsys/action/download/downloadId/{downloadId}/userId/{userId}
+	 * 
+	 * @param downloadId - unique download id
+	 * @return
+	 * @throws ServiceException
+	 */
+    public FileResponse getDownload(Long downloadId) throws ServiceException {
+    	
+    	EAStoreActionClient client = eaStoreClientProvider.getActionClient();
+    	
+    	String userId = authService.getUserId();
+    	
+    	FileResponse fresp = null;
+    	try {
+    		fresp = client.getDownload(downloadId, userId);
+		} catch (WebServiceException e) {
+			if(fresp != null && fresp.hasInputStream()){
+				fresp.close();
+			}
+			throw new ServiceException("Error getting file input stream for download log entry, downloadId=" + 
+					downloadId + ", " + e.getMessage(), e);
+		}
+    	return fresp;
+    	
+    }
+    
+	/**
 	 * Calls E-A Store action service, /fsys/action/download/userId/{userId}/id/{fileId}
 	 * 
 	 * @param fileNodeId - node id of the file meta resource to download
@@ -362,7 +394,7 @@ public class StoreService {
 		}
     	return fresp;
     	
-    }
+    }    
     
     /**
      * Call E-A Store /fsys/action/copyFile
@@ -619,6 +651,35 @@ public class StoreService {
     	
     	return htmlResponse;    	
 		
-	}	
+	}
+	
+	/**
+	 * Trigger process for zip-download
+	 * 
+	 * @param resourceIds - IDs of all resources (file meta and directory) to zip for download
+	 * @return
+	 * @throws ServiceException
+	 */
+	public String triggerZipDownload(List<Long> resourceIds) throws ServiceException {
+		
+    	EAStoreActionClient client = eaStoreClientProvider.getActionClient();
+    	
+    	String userId = authService.getUserId();		
+		
+    	String htmlResponse = null;
+    	try {
+    		htmlResponse = client.triggerZipDownload(resourceIds, userId);
+		} catch (WebServiceException e) {
+			StringJoiner joiner = new StringJoiner(",","[","]");
+			for(Long id : resourceIds) {
+				joiner.add(String.valueOf(id));
+			}
+			throw new ServiceException("Error triggering process to create zip-download, userId=" + 
+					userId + ", resourceIds=" + joiner.toString() + ", " + e.getMessage(), e);
+		}
+    	
+    	return htmlResponse;      	
+    	
+	}
     
 }

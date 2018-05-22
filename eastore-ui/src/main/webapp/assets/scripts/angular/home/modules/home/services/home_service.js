@@ -186,6 +186,16 @@
 						params: {
 							storeId : '@storeId'
 						}						
+					},
+					
+					// trigger zip-download (TODO change to pass params as form data)
+					triggerZipDownload : {
+						url: appConstants.eastoreUiActionJaxrsService + '/trigger/zip',
+						method: 'POST',
+						isArray: false,
+						params: {
+							resourceId : '@resourceId' // pass Array of path resource IDs
+						}
 					}
 				
 				});		
@@ -457,6 +467,14 @@
 				{
 					storeId : storeId
 				}).$promise;
+		}
+
+		// resourceIdList - array of path resource IDs
+		function _triggerZipDownload(resourceIdList){
+			return eastoreUiActionService.triggerZipDownload(
+				{
+					resourceId : resourceIdList
+				}).$promise;						
 		}		
 		
 		// fetch a specific path resource by node id.
@@ -499,6 +517,12 @@
 			var downloadUrl = appConstants.eastoreUiActionJaxrsService + '/download/id/' + fileId;
 			window.location.href = downloadUrl;
 		}
+		
+		// download a file tracked in the eastore download log
+		function _downloadLogFile(downloadId){
+			var downloadUrl = appConstants.eastoreUiActionJaxrsService + '/download/downloadId/' + downloadId;
+			window.location.href = downloadUrl;
+		}		
 		
 		// fetch all gatekeeper categories
 		function _fetchGatekeeperCategories(){
@@ -615,6 +639,9 @@
 			addStore : _addStore,
 			updateStore : _updateStore,
 			rebuildStoreIndex : _rebuildStoreIndex,
+			
+			triggerZipDownload : _triggerZipDownload,
+			downloadLogFile : _downloadLogFile,
 			
 			addDirectory : _addDirectory,
 			updateDirectory : _updateDirectory,

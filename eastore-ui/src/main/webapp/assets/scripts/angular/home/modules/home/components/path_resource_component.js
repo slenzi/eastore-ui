@@ -149,6 +149,9 @@
 					},{				
 						destination : '/user/topic/file/task',
 						frameHandler : thisCtrl.stompHandlerFileSystemTaskMessage
+					},{				
+						destination : '/user/topic/action',
+						frameHandler : thisCtrl.stompHandlerUserActionMessage
 					}]);	
 				
 			};
@@ -158,6 +161,19 @@
 			//
 			this.stompHandlerConnectReplyMessages = function(socketMessage){
 				$log.info('STOMP socket connect reply = ' + JSON.stringify(socketMessage));				
+			};
+			
+			//
+			// process stomp user action status messages from eastore
+			//
+			this.stompHandlerUserActionMessage = function(socketMessage){
+				
+				var message = JSON.parse(socketMessage.body);
+				
+				$log.info('STOMP user action message = ' + JSON.stringify(message, null, 2))
+				
+				// TODO - check taskType, if ZIP then get downloadId attribute and call service method to download file
+				
 			};
 			
 			//
@@ -267,6 +283,36 @@
 				}else{
 					alert('You clicked on a path resource with an unrecognized resource type:\n\n' + JSON.stringify(resource));
 				}
+				
+			};
+			
+			this.downloadSelectedResources = function(sourceStore, sourceDirectory, pathResources){
+				
+				// require read permission on all selected resources
+				var resourcesToDownload = this.getSelectedPathResources(pathResources, true, false, false);
+
+				var resourceIds = [];
+				var nextResource;
+				for(var i=0; i<resourcesToDownload.length; i++){
+					nextResource = resourcesToDownload[i];
+					resourceIds.push(nextResource.nodeId);
+				}
+				
+				$log.debug('List of resources to download: ' + resourceIds.toString());
+				
+				homeRestService
+					.triggerZipDownload(resourceIds);
+					
+					// for some reason this service call works, but the error function is triggered. I see so error in
+					// the chrome debugger. Maybe try firtefox...
+					
+					/*
+					.then( function ( jsonData ){
+						$log.debug('Triggered zip-download process on server');
+					}, function( error ){
+						alert('Error calling triggerZipDownload(...) service method' + JSON.stringify(error));
+					});
+					*/
 				
 			};
 			
