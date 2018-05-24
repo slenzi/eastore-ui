@@ -175,8 +175,63 @@
 				// TODO - check taskType, if ZIP then get downloadId attribute and call service method to download file
 				var taskType = message.taskType;
 				if(taskType === 'ZIP'){
+					
 					var downloadId = message.attributes.downloadId;
-					homeRestService.downloadLogFile(downloadId);
+
+					$mdDialog.show({
+						controller: function($scope, $mdDialog){
+							$scope.hide = function() {
+								$mdDialog.hide();
+							};
+							$scope.cancel = function() {
+								$mdDialog.cancel();
+							};
+							$scope.doDownload = function(comenceDownload) {
+								$mdDialog.hide(comenceDownload);
+							};							
+						},
+						template:
+							'<md-dialog aria-label="Download Ready!">' +
+							'	<form ng-cloak>' +
+							'		<md-toolbar>' +
+							'			<div class="md-toolbar-tools">' +
+							'				<h2>Download Ready!</h2>' +
+							'				<span flex></span>' +
+							'				<md-button class="md-icon-button" ng-click="cancel()">' +
+							'					<md-icon md-svg-src="img/icons/ic_close_24px.svg" aria-label="Close dialog"></md-icon>' +
+							'				</md-button>' +
+							'			</div>' +
+							'		</md-toolbar>' +
+							'		<md-dialog-content>' +
+							'			<div class="md-dialog-content">' +
+							'				Your zip download is ready!' +
+							'			</div>' +
+							'		</md-dialog-content>' +
+							'		<md-dialog-actions layout="row">' +
+							'			<span flex></span>' +
+							'			<md-button ng-click="doDownload(true)">' +
+							'				Download' +
+							'			</md-button>' +							
+							'			<md-button ng-click="doDownload(false)">' +
+							'				Cancel' +
+							'			</md-button>' +
+							'		</md-dialog-actions>' +
+							'	</form>' +
+							'</md-dialog>'							
+						,
+						parent: angular.element(document.body),
+						//targetEvent: ev,
+						clickOutsideToClose:true
+						//,fullscreen: $scope.customFullscreen // Only for -xs, -sm breakpoints.
+					})
+					.then(function(comenceDownload) {
+						if(comenceDownload){
+							homeRestService.downloadLogFile(downloadId);
+						}
+					}, function() {
+						$log.debug('User cancelled the zip-download');
+					});					
+					
 				}
 				
 			};
