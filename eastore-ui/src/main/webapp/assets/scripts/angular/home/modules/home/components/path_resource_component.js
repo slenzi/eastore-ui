@@ -173,6 +173,11 @@
 				$log.info('STOMP user action message = ' + JSON.stringify(message, null, 2))
 				
 				// TODO - check taskType, if ZIP then get downloadId attribute and call service method to download file
+				var taskType = message.taskType;
+				if(taskType === 'ZIP'){
+					var downloadId = message.attributes.downloadId;
+					homeRestService.downloadLogFile(downloadId);
+				}
 				
 			};
 			
